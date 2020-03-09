@@ -9,7 +9,7 @@ A short description of the project.
 
 ### Copyright
 
-Copyright (c) 2020, Andrew Abi-Mansour
+Copyright (c) 2020, MolSSI
 
 
 #### Acknowledgements
