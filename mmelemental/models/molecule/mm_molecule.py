@@ -6,7 +6,7 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.molreader_component import MMoleculeReader
+from mmelemental.components.molreader_component import MMoleculeReaderComponent
 from mmelemental.models.molecule.molreader import MMoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
@@ -130,12 +130,12 @@ class MMolecule(qcelemental.models.Molecule):
         ext = Path(filename).suffix
 
         if not dtype:
-            if ext in MMoleculeReader._extension_maps['qcelem']:
-                dtype = MMoleculeReader._extension_maps['qcelem'][ext]
+            if ext in MMoleculeReaderComponent._extension_maps['qcelem']:
+                dtype = MMoleculeReaderComponent._extension_maps['qcelem'][ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
         
         molinput = MMoleculeReaderInput(file=FileInput(path=filename))
-        mol = MMoleculeReader.compute(molinput)
+        mol = MMoleculeReaderComponent.compute(molinput)
 
         return cls.from_data(mol, dtype=mol.obj_type)
         
@@ -215,14 +215,14 @@ class MMolecule(qcelemental.models.Molecule):
         """
         if not dtype:
             ext = Path(filename).suffix
-            for map_name in MMoleculeReader._extension_maps:
-                if ext in MMoleculeReader._extension_maps[map_name]:
+            for map_name in MMoleculeReaderComponent._extension_maps:
+                if ext in MMoleculeReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
-                    dtype = MMoleculeReader._extension_maps[map_name][ext]
+                    dtype = MMoleculeReaderComponent._extension_maps[map_name][ext]
                     break
         else:
-            for map_name in MMoleculeReader._extension_maps:
-                if dtype in MMoleculeReader._extension_maps[map_name]:
+            for map_name in MMoleculeReaderComponent._extension_maps:
+                if dtype in MMoleculeReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
                     break
 
@@ -239,11 +239,22 @@ class MMolecule(qcelemental.models.Molecule):
 
             if dtype == 'pdb':
                 writer = Chem.PDBWriter(filename)
-            elif dtype == 'something':
-                pass
+            elif dtype == 'sdf':
+                writer = Chem.SDWriter(filename)
+            elif dtype == 'smiles':
+                writer = Chem.SmilesWriter(filename)
             else:
                 raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
             writer.write(rdkmol)
             writer.close()
         else:
-            raise ValueError('Data type {dtype} not supported.')
+            raise ValueError(f'Data type {dtype} not supported.')
+
+    def to_data(self, dtype: str):
+        """ Converts MMolecule to toolkit-specific molecule (e.g. rdkit). """
+
+        if dtype == 'rdkit':
+            from mmelemental.models.molecule.rdkit_molecule import MMToRDKit
+            return MMToRDKit.convert(self)
+        else:
+            raise NotImplementedError(f'Data type {dtype} not available.')
