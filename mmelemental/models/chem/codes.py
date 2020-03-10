@@ -12,7 +12,11 @@ except Exception:
     rdkAvail = False
         
 class ChemCode(models.ProtoModel):
-    code: str
+    code: str = Field(
+        ...,
+        description = 'A chemical code that describes a molecule or molecular pattern e.g. smiles, smarts, etc. '
+        'See :class: ``Identifiers`` for supported codes.'
+    )
 
     class _CodesSupported:
         codes = ('Smiles', 'Smarts', 'Inchi', 'FASTA', 'HELM', 'Sequence')
@@ -25,8 +29,6 @@ class ChemCode(models.ProtoModel):
                 if function(code):
                     return code
             raise ValidationError
-        else:
-            raise ModuleNotFoundError('Make sure rdkit is installed for code validation.')
 
     @property
     def codeType(self):
@@ -37,4 +39,4 @@ class ChemCode(models.ProtoModel):
                     return ccode
             raise ValidationError
         else:
-            raise ModuleNotFoundError('Make sure rdkit is installed for code validation.')
+            raise ModuleNotFoundError('This feature requires rdkit.')
