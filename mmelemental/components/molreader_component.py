@@ -12,7 +12,7 @@ from mmelemental.models.molecule.molreader import MMoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 
 
-class MMoleculeReader(GenericComponent):
+class MMoleculeReaderComponent(GenericComponent):
 
     _extension_maps = {
         'qcelem':
@@ -31,7 +31,7 @@ class MMoleculeReader(GenericComponent):
             ".mol2": "mol2",
             ".tpl": "tpl",
             ".sdf": "sdf",
-            ".code": "code"
+            ".smiles": "smiles"
         },
         'parmed':
         {
@@ -56,26 +56,26 @@ class MMoleculeReader(GenericComponent):
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
         if isinstance(inputs, dict):
-            inputs = MMoleculeReader.input()(**inputs)
+            inputs = MMoleculeReaderComponent.input()(**inputs)
 
         dtype = inputs.dtype
 
         if not dtype: # try to guess data type
             if inputs.file:
-                for ext_map_key in MMoleculeReader._extension_maps:
-                    dtype = MMoleculeReader._extension_maps[ext_map_key].get(inputs.file.ext)
+                for ext_map_key in MMoleculeReaderComponent._extension_maps:
+                    dtype = MMoleculeReaderComponent._extension_maps[ext_map_key].get(inputs.file.ext)
                     if dtype:
                         break
 
             elif inputs.code:
-                dtype = '.code'
+                dtype = inputs.code.code_type.lower()
             else:
                 raise ValueError('Data type not understood. Supply a file or a chemical code.')
 
-        if '.' + dtype in MMoleculeReader._extension_maps['rdkit']:
+        if '.' + dtype in MMoleculeReaderComponent._extension_maps['rdkit']:
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             return True, RDKitMolecule.build_mol(inputs, dtype)
-        elif '.' + dtype in MMoleculeReader._extension_maps['parmed']:
+        elif '.' + dtype in MMoleculeReaderComponent._extension_maps['parmed']:
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
             return True, ParmedMolecule.build_mol(inputs, dtype)
         else:
