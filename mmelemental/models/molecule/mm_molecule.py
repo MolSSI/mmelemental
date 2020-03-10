@@ -6,7 +6,8 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.mm_reader import MMoleculeReader, MMoleculeReaderInput
+from mmelemental.components.molreader_component import MMoleculeReader
+from mmelemental.models.molecule.molreader import MMoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from pathlib import Path
@@ -50,14 +51,14 @@ class MMolecule(qcelemental.models.Molecule):
     """
     symbols: Array[str] = Field(
         None,
-        description="An ordered (nat,) array-like object of atomic elemental symbols of shape (nat,). The index of "
+        description = "An ordered (nat,) array-like object of atomic elemental symbols of shape (nat,). The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
     geometry: Array[float] = Field( 
         None,
-        description="An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
+        description = "An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
         "Atom ordering is fixed; that is, a consumer who shuffles atoms must not reattach the input "
         "(pre-shuffling) molecule schema instance to any output (post-shuffling) per-atom results "
         "(e.g., gradient). Index of the first dimension matches the 0-indexed indices of all other "
@@ -67,35 +68,43 @@ class MMolecule(qcelemental.models.Molecule):
         "or the serialized version of the array in (3*nat,) shape; all forms will be reshaped to "
         "(nat,3) for this attribute.",
     )
+    angles: Optional[List[Tuple[int, int, int]]] = Field(
+        None,
+        description = "Bond angles of three connected atoms."
+    )
+    dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
+        None,
+        description = 'Dihedral/torsion angles between planes through two sets of three atoms, having two atoms in common.')
     residues: Optional[List[Tuple[str, int]]] = Field(
         None, 
-        description="A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
+        description = "A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
         "of a polymer. Order follows atomic indices from 0 till Natoms-1. "
         "\n"
         "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1. Residue number >= 1."
         )
     chains: Optional[Dict[str, List[int]]] = Field(
-        None, description="A sequence of connected chains."
+        None, description = "A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
+        "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another."
     )
     segments: Optional[Dict[str, List[int]]] = Field(
         None, 
-        description="..."
+        description = "..."
     )
     identifiers: Optional[Identifiers] = Field(
         None, 
-        description="An optional dictionary of additional identifiers by which this MMolecule can be referenced, "
+        description = "An optional dictionary of additional identifiers by which this MMolecule can be referenced, "
         "such as INCHI, SMILES, SMARTs, etc. See the :class:``Identifiers`` model for more details."
     )
     names: Optional[List[str]] = Field(
         None, 
-        description="A list of atomic label names."
+        description = "A list of atomic label names."
     )
     rotateBonds: Optional[List[Tuple[int, int]]] = Field(
         None, 
-        description="A list of bonded atomic indices: (atom1, atom2), specifying rotatable bonds in the molecule."
+        description = "A list of bonded atomic indices: (atom1, atom2), specifying rotatable bonds in the molecule."
     )
     rigidBonds: Optional[List[Tuple[int, int]]] = Field(
-        None, description="A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule."
+        None, description = "A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule."
     )
 
     # Constructors
@@ -121,18 +130,15 @@ class MMolecule(qcelemental.models.Molecule):
         ext = Path(filename).suffix
 
         if not dtype:
-            if ext in MMoleculeReader._extension_map:
-                dtype = MMoleculeReader._extension_map[ext]
-            else:
+            if ext in MMoleculeReader._extension_maps['qcelem']:
+                dtype = MMoleculeReader._extension_maps['qcelem'][ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
         
-        if dtype == "pdb":
-            pdbFile = MMoleculeReaderInput(file=FileInput(path=filename))
-            rdkMol =  MMoleculeReader.compute(pdbFile)
-            return cls.from_data(rdkMol, dtype='rdkit')
-        else:
-            return qcelemental.models.molecule.from_file(filename, dtype, orient=orient, **kwargs)
+        molinput = MMoleculeReaderInput(file=FileInput(path=filename))
+        mol = MMoleculeReader.compute(molinput)
 
+        return cls.from_data(mol, dtype=mol.obj_type)
+        
     @classmethod
     def from_data(cls, data: Union[str, Dict[str, Any], numpy.array, bytes], dtype: Optional[str] = None, *,
         orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "MMolecule":
@@ -155,6 +161,13 @@ class MMolecule(qcelemental.models.Molecule):
         Molecule
             A constructed molecule class.
         """
+
+        if not dtype:
+            try:
+                dtype = data.objType
+            except:
+                raise ValueError('Input data type (dtype) must be specified for class method: from_data.')
+
         if dtype == "rdkit":
             try:
                 from rdkit import Chem
@@ -200,21 +213,37 @@ class MMolecule(qcelemental.models.Molecule):
         dtype : Optional[str], optional
             The type of file to write, attempts to infer dtype from the filename if not provided.
         """
-        ext = Path(filename).suffix
-
         if not dtype:
-            if ext in MMoleculeReader._extension_map:
-                dtype = MMoleculeReader._extension_map[ext]
-            else:
-                qcelemental.models.molecule.Molecule.to_file(filename, dtype)
+            ext = Path(filename).suffix
+            for map_name in MMoleculeReader._extension_maps:
+                if ext in MMoleculeReader._extension_maps[map_name]:
+                    toolkit = map_name
+                    dtype = MMoleculeReader._extension_maps[map_name][ext]
+                    break
+        else:
+            for map_name in MMoleculeReader._extension_maps:
+                if dtype in MMoleculeReader._extension_maps[map_name]:
+                    toolkit = map_name
+                    break
 
-        if dtype == 'pdb':
+        if toolkit == 'qcelem': 
+            super().to_file(filename, dtype)
+        elif toolkit == 'rdkit':
             try:
                 from rdkit import Chem
                 from mmelemental.models.molecule.rdkit_molecule import MMToRDKit
             except:
                 raise ModuleNotFoundError('Make sure rdkit is installed for code validation.')
-            writer = Chem.PDBWriter(filename)
+            
             rdkmol = MMToRDKit.convert(self)
+
+            if dtype == 'pdb':
+                writer = Chem.PDBWriter(filename)
+            elif dtype == 'something':
+                pass
+            else:
+                raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
             writer.write(rdkmol)
             writer.close()
+        else:
+            raise ValueError('Data type {dtype} not supported.')
