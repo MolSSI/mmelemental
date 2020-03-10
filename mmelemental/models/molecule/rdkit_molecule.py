@@ -20,12 +20,13 @@ class RDKitMolecule(ToolkitMolecule):
     def obj_type(self):
         return 'rdkit'
 
-    def gen3D(self, nConformers=1):
+    @classmethod
+    def gen3D(cls, mol, nConformers=1) -> Chem.rdchem.Mol:
         """ Generates 3D coords for a molecule. Should be called only when instantiating a Molecule object.
 
         :note: a single unique molecule is assumed. 
         """
-        rdkmol = Chem.AddHs(self.mol)
+        rdkmol = Chem.AddHs(mol)
         # create n conformers for molecule
         confargs = AllChem.EmbedMultipleConfs(rdkmol, nConformers)
 
@@ -35,9 +36,10 @@ class RDKitMolecule(ToolkitMolecule):
 
         return rdkmol
 
-    def remove_residues(self, residues: List[str]) -> Chem.rdchem.Mol:
-        atoms = self._mol.GetAtoms()
-        RWmol = Chem.RWMol(self.mol)
+    @classmethod
+    def remove_residues(cls, mol, residues: List[str]) -> Chem.rdchem.Mol:
+        atoms = mol.GetAtoms()
+        RWmol = Chem.RWMol(mol)
 
         for atom in atoms:
             if atom.GetPDBResidueInfo().GetResidueName() in residues:
@@ -46,7 +48,7 @@ class RDKitMolecule(ToolkitMolecule):
         return Chem.Mol(RWmol)
 
     @classmethod
-    def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> Chem.rdchem.Mol:
+    def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "RDKitMolecule":
         """ Creates an instance of rdkit.Chem.Mol by parsing an input file (pdb, etc.) or a chemical code (smiles, etc.)
         """
         if inputs.file:
@@ -72,23 +74,21 @@ class RDKitMolecule(ToolkitMolecule):
 
         # construct RDKit molecule from identifiers
         elif inputs.code:
-            codeType = inputs.code.codeType
-            function = getattr(Chem, f"MolFrom{codeType}") # should work since validation already done by ChemCode!
+            code_type = inputs.code.code_type
+            function = getattr(Chem, f"MolFrom{code_type}") # should work since validation already done by ChemCode!
             rdkmol = function(inputs.code.code)
         else:
             raise ValueError('Missing input file or code.')
 
-        rdkmol = RDKitMolecule(mol=rdkmol)
-
         if inputs.code:
-            rdkmol = rdkmol.gen3D()
+            rdkmol = cls.gen3D(rdkmol)
 
         # Do cleanup if requested
         # TODO: must check for existence of residues
         if inputs.resremove:
-            rdkmol = rdkmol.removeResidues(inputs.resremove)
+            rdkmol = cls.removeResidues(rdkmol, inputs.resremove)
 
-        return rdkmol
+        return RDKitMolecule(mol=rdkmol)
 
 class MMToRDKit:
     @staticmethod
