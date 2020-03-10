@@ -22,7 +22,7 @@ class ChemCode(models.ProtoModel):
         codes = ('Smiles', 'Smarts', 'Inchi', 'FASTA', 'HELM', 'Sequence')
 
     @validator('code')
-    def validCode(cls, code):
+    def valid_code(cls, code):
         if rdkAvail:
             for ccode in ChemCode._CodesSupported.codes:
                 function = getattr(Chem, f"MolFrom{ccode}")
@@ -31,7 +31,7 @@ class ChemCode(models.ProtoModel):
             raise ValidationError
 
     @property
-    def codeType(self):
+    def code_type(self):
         if rdkAvail:
             for ccode in ChemCode._CodesSupported.codes:
                 function = getattr(Chem, f"MolFrom{ccode}")
