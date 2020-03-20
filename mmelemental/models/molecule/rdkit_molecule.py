@@ -14,11 +14,8 @@ class Bond:
     orders = list(Chem.BondType.values.values())
 
 class RDKitMolecule(ToolkitMolecule):
-    mol: Chem.rdchem.Mol = Field(None, description = 'Rdkit molecule object.')
-        
-    @property
-    def obj_type(self):
-        return 'rdkit'
+    mol: Chem.rdchem.Mol = Field(..., description = 'Rdkit molecule object.')
+    dtype: str = Field('rdkit', description = 'Data type of mol.')
 
     @classmethod
     def gen3D(cls, mol, nConformers=1) -> Chem.rdchem.Mol:
