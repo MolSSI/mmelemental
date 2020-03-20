@@ -7,7 +7,7 @@ import string
 import numpy
 from pydantic import validator, Field, ValidationError
 from mmelemental.components.molreader_component import MMoleculeReaderComponent
-from mmelemental.models.molecule.molreader import MMoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from pathlib import Path
@@ -140,13 +140,13 @@ class MMolecule(qcelemental.models.Molecule):
         return cls.from_data(mol, dtype=mol.obj_type)
         
     @classmethod
-    def from_data(cls, data: Union[str, Dict[str, Any], numpy.array, bytes], dtype: Optional[str] = None, *,
+    def from_data(cls, data: Any, dtype: Optional[str] = None, *,
         orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "MMolecule":
         """
         Constructs a molecule object from a data structure.
         Parameters
         ----------
-        data: Union[str, Dict[str, Any], numpy.array]
+        data: Any
             Data to construct Molecule from
         dtype: Optional[str], optional
             How to interpret the data, if not passed attempts to discover this based on input type.
