@@ -8,7 +8,7 @@ from qcelemental.models import ProtoModel
 from typing import List, Optional, Any, Dict, Tuple
 
 from mmcomponents.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.molreader import MMoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 
 

@@ -3,7 +3,7 @@ from mmcomponents.components.blueprints.generic_component import GenericComponen
 from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.molecule.mm_molecule import MMolecule
-from mmelemental.models.molecule.molreader import MMoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
