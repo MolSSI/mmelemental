@@ -6,7 +6,7 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.molreader_component import MMoleculeReaderComponent
+from mmelemental.components.molreader_component import TkMoleculeReaderComponent, MMoleculeReaderComponent
 from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
@@ -130,12 +130,12 @@ class MMolecule(qcelemental.models.Molecule):
         ext = Path(filename).suffix
 
         if not dtype:
-            if ext in MMoleculeReaderComponent._extension_maps['qcelem']:
-                dtype = MMoleculeReaderComponent._extension_maps['qcelem'][ext]
+            if ext in TkMoleculeReaderComponent._extension_maps['qcelem']:
+                dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
         
         molinput = MMoleculeReaderInput(file=FileInput(path=filename))
-        mol = MMoleculeReaderComponent.compute(molinput)
+        mol = TkMoleculeReaderComponent.compute(molinput)
 
         return cls.from_data(mol, dtype=mol.obj_type)
         
@@ -161,48 +161,19 @@ class MMolecule(qcelemental.models.Molecule):
         Molecule
             A constructed molecule class.
         """
-
-        if not dtype:
+        if isinstance(data, str):
             try:
-                dtype = data.objType
+                code = ChemCode(code=data)
+                mol_input = MMoleculeReaderInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
             except:
-                raise ValueError('Input data type (dtype) must be specified for class method: from_data.')
-
-        if dtype == "rdkit":
-            try:
-                from rdkit import Chem
-            except:
-                raise ModuleNotFoundError('No installation of rdkit found. '
-                        'Make sure rdkit is properly installed on your system.')
-
-            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule, Bond
-            assert isinstance(data, RDKitMolecule)
-
-            symbs = [atom.GetSymbol() for atom in data.mol.GetAtoms()]
-            residues = [(atom.GetPDBResidueInfo().GetResidueName(), 
-                        atom.GetPDBResidueInfo().GetResidueNumber()) 
-                        for atom in data.mol.GetAtoms()]
-            names = [atom.GetPDBResidueInfo().GetName() for atom in data.mol.GetAtoms()]
-
-            connectivity = []
-
-            for bond in data.mol.GetBonds():
-                bondOrder = Bond.orders.index(bond.GetBondType())
-                connectivity.append((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx(), bondOrder))
-
-            geo = data.mol.GetConformer(0).GetPositions()
-
-            input_dict = {'symbols': symbs, 
-                          'geometry': geo, 
-                          'residues': residues, 
-                          'connectivity': connectivity,
-                          'names': names}
+                raise ValueError
+        elif isinstance(data, ChemCode):
+            mol_input = MMoleculeReaderInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
         else:
-            return qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
-
-        input_dict.update(kwargs)
-
-        return cls(orient=orient, validate=validate, **input_dict)
+            # Let's hope this is a toolkit-specific molecule and pass it as data
+            mol_input = MMoleculeReaderInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+        
+        return MMoleculeReaderComponent.compute(mol_input)
 
     def to_file(self, filename: str, dtype: Optional[str] = None) -> None:
         """Writes the Molecule to a file.
@@ -215,14 +186,14 @@ class MMolecule(qcelemental.models.Molecule):
         """
         if not dtype:
             ext = Path(filename).suffix
-            for map_name in MMoleculeReaderComponent._extension_maps:
-                if ext in MMoleculeReaderComponent._extension_maps[map_name]:
+            for map_name in TkMoleculeReaderComponent._extension_maps:
+                if ext in TkMoleculeReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
-                    dtype = MMoleculeReaderComponent._extension_maps[map_name][ext]
+                    dtype = TkMoleculeReaderComponent._extension_maps[map_name][ext]
                     break
         else:
-            for map_name in MMoleculeReaderComponent._extension_maps:
-                if dtype in MMoleculeReaderComponent._extension_maps[map_name]:
+            for map_name in TkMoleculeReaderComponent._extension_maps:
+                if dtype in TkMoleculeReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
                     break
 
