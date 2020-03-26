@@ -80,11 +80,6 @@ class RDKitMolecule(ToolkitMolecule):
         if inputs.code:
             rdkmol = cls.gen3D(rdkmol)
 
-        # Do cleanup if requested
-        # TODO: must check for existence of residues
-        if inputs.resremove:
-            rdkmol = cls.removeResidues(rdkmol, inputs.resremove)
-
         return RDKitMolecule(mol=rdkmol)
 
 class MMToRDKit:
