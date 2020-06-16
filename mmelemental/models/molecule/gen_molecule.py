@@ -1,5 +1,5 @@
 from qcelemental.models import ProtoModel
-from mmelemental.models import Base
+from mmelemental.models.base import Base
 from pydantic import Field
 from typing import Any
 
