@@ -38,7 +38,12 @@ class MMoleculeReaderComponent(GenericComponent):
         if isinstance(inputs, dict):
             inputs = MMoleculeReaderComponent.input()(**inputs)
 
-        orient, validate , kwargs = inputs.args.get('orient'), inputs.args.get('validate'), inputs.args.get('kwargs')
+        if inputs.args:
+            orient = inputs.args.get('orient')
+            validate = inputs.args.get('validate')
+            kwargs = inputs.args.get('kwargs')
+        else:
+            orient, validate, kwargs = False, None, None
 
         if inputs.data:
             dtype = inputs.data.obj_type
@@ -88,7 +93,8 @@ class MMoleculeReaderComponent(GenericComponent):
                       'connectivity': connectivity,
                       'names': names}        
 
-        input_dict.update(kwargs)
+        if kwargs:
+            input_dict.update(kwargs)
 
         if inputs.code:
             return True, MMolecule(orient=orient, validate=validate, identifiers={dtype: inputs.code}, **input_dict)
