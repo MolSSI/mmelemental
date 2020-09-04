@@ -84,7 +84,7 @@ class RDKitMolecule(ToolkitMolecule):
 
 class MMToRDKit:
     @staticmethod
-    def convert(mmol: "MMolecule") -> RDKitMolecule:
+    def convert(mmol: "Molecule") -> RDKitMolecule:
         rdkmol = Chem.Mol()
         erdkmol = Chem.EditableMol(rdkmol)
 

@@ -5,7 +5,7 @@ from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from typing import List, Optional, Union, Dict
 from pydantic import Field
 
-class MMoleculeReaderInput(ProtoModel):
+class MoleculeReaderInput(ProtoModel):
     file: Optional[Union[FileInput, str]] = Field(
         None, 
         description = 'Input filename object.'

@@ -6,8 +6,8 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.molreader_component import TkMoleculeReaderComponent, MMoleculeReaderComponent
-from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
+from mmelemental.components.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
+from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from pathlib import Path
@@ -42,7 +42,7 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
         description="A HELM code (currently only supports peptides)."
     )
 
-class MMolecule(qcelemental.models.Molecule):
+class Molecule(qcelemental.models.Molecule):
     """
     An MMSchema representation of a Molecule based on QCSchema. This model contains data for symbols, geometry, 
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
@@ -51,22 +51,22 @@ class MMolecule(qcelemental.models.Molecule):
     """
     symbols: Array[str] = Field(
         None,
-        description = "An ordered (nat,) array-like object of atomic elemental symbols of shape (nat,). The index of "
+        description = "An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    geometry: Array[float] = Field( 
+    coordinates: Array[float] = Field( 
         None,
-        description = "An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
-        "Atom ordering is fixed; that is, a consumer who shuffles atoms must not reattach the input "
-        "(pre-shuffling) molecule schema instance to any output (post-shuffling) per-atom results "
-        "(e.g., gradient). Index of the first dimension matches the 0-indexed indices of all other "
-        "per-atom settings like ``symbols`` and ``real``."
-        "\n"
-        "Can also accept array-likes which can be mapped to (nat,3) such as a 1-D list of length 3*nat, "
-        "or the serialized version of the array in (3*nat,) shape; all forms will be reshaped to "
-        "(nat,3) for this attribute.",
+        description = "An ordered (natoms, 3) array-like for XYZ atomic coordinates."
+    )
+    velocities: Array[float] = Field(
+        None,
+        description = "An ordered (natoms, 3) array-like for XYZ atomic velocities",
+    )
+    forces: Array[float] = Field(
+        None,
+        description = "An ordered (natoms, 3) array-like for XYZ atomic forces",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
         None,
@@ -92,7 +92,7 @@ class MMolecule(qcelemental.models.Molecule):
     )
     identifiers: Optional[Identifiers] = Field(
         None, 
-        description = "An optional dictionary of additional identifiers by which this MMolecule can be referenced, "
+        description = "An optional dictionary of additional identifiers by which this Molecule can be referenced, "
         "such as INCHI, SMILES, SMARTs, etc. See the :class:``Identifiers`` model for more details."
     )
     names: Optional[List[str]] = Field(
@@ -109,7 +109,7 @@ class MMolecule(qcelemental.models.Molecule):
 
     # Constructors
     @classmethod
-    def from_file(cls, filename: str, dtype: Optional[str] = None, *, orient: bool = False, **kwargs) -> "MMolecule":
+    def from_file(cls, filename: str, dtype: Optional[str] = None, *, orient: bool = False, **kwargs) -> "Molecule":
         """
         Constructs a molecule object from a file.
         Parameters
@@ -134,14 +134,14 @@ class MMolecule(qcelemental.models.Molecule):
                 dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
         
-        molinput = MMoleculeReaderInput(file=FileInput(path=filename))
+        molinput = MoleculeReaderInput(file=FileInput(path=filename))
         mol = TkMoleculeReaderComponent.compute(molinput)
 
         return cls.from_data(mol, dtype=mol.obj_type)
         
     @classmethod
     def from_data(cls, data: Any, dtype: Optional[str] = None, *,
-        orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "MMolecule":
+        orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "Molecule":
         """
         Constructs a molecule object from a data structure.
         Parameters
@@ -164,16 +164,16 @@ class MMolecule(qcelemental.models.Molecule):
         if isinstance(data, str):
             try:
                 code = ChemCode(code=data)
-                mol_input = MMoleculeReaderInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+                mol_input = MoleculeReaderInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
             except:
                 raise ValueError
         elif isinstance(data, ChemCode):
-            mol_input = MMoleculeReaderInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+            mol_input = MoleculeReaderInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
         else:
             # Let's hope this is a toolkit-specific molecule and pass it as data
-            mol_input = MMoleculeReaderInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+            mol_input = MoleculeReaderInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
         
-        return MMoleculeReaderComponent.compute(mol_input)
+        return MoleculeReaderComponent.compute(mol_input)
 
     def to_file(self, filename: str, dtype: Optional[str] = None) -> None:
         """Writes the Molecule to a file.
@@ -222,7 +222,7 @@ class MMolecule(qcelemental.models.Molecule):
             raise ValueError(f'Data type {dtype} not supported.')
 
     def to_data(self, dtype: str):
-        """ Converts MMolecule to toolkit-specific molecule (e.g. rdkit). """
+        """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
             from mmelemental.models.molecule.rdkit_molecule import MMToRDKit
