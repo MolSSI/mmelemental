@@ -8,21 +8,21 @@ from qcelemental.models import ProtoModel
 from typing import List, Optional, Any, Dict, Tuple
 
 from mmcomponents.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 
-class MMoleculeReaderComponent(GenericComponent):
+class MoleculeReaderComponent(GenericComponent):
 
-    #from mmelemental.models.molecule.mm_molecule import MMolecule
+    #from mmelemental.models.molecule.mm_molecule import Molecule
 
     @classmethod
     def input(cls):
-        return MMoleculeReaderInput
+        return MoleculeReaderInput
 
     @classmethod
     def output(cls):
-        from mmelemental.models.molecule.mm_molecule import MMolecule
-        return MMolecule
+        from mmelemental.models.molecule.mm_molecule import Molecule
+        return Molecule
 
     def execute(
         self,
@@ -33,10 +33,10 @@ class MMoleculeReaderComponent(GenericComponent):
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
         # we need to add: mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-        from mmelemental.models.molecule.mm_molecule import MMolecule
+        from mmelemental.models.molecule.mm_molecule import Molecule
 
         if isinstance(inputs, dict):
-            inputs = MMoleculeReaderComponent.input()(**inputs)
+            inputs = MoleculeReaderComponent.input()(**inputs)
 
         if inputs.args:
             orient = inputs.args.get('orient')
@@ -51,9 +51,9 @@ class MMoleculeReaderComponent(GenericComponent):
             if dtype == 'rdkit':
                 rdmol = inputs.data
             else:
-                # convert inputs.data to MMolecule
+                # convert inputs.data to Molecule
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
-                return True, MMolecule(orient=orient, validate=validate, **qmol.to_dict())
+                return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
         elif inputs.code:
             dtype = inputs.code.code_type.lower()
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
@@ -97,9 +97,9 @@ class MMoleculeReaderComponent(GenericComponent):
             input_dict.update(kwargs)
 
         if inputs.code:
-            return True, MMolecule(orient=orient, validate=validate, identifiers={dtype: inputs.code}, **input_dict)
+            return True, Molecule(orient=orient, validate=validate, identifiers={dtype: inputs.code}, **input_dict)
         else:
-            return True, MMolecule(orient=orient, validate=validate, **input_dict)
+            return True, Molecule(orient=orient, validate=validate, **input_dict)
 
 class TkMoleculeReaderComponent(GenericComponent):
 
@@ -130,7 +130,7 @@ class TkMoleculeReaderComponent(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MMoleculeReaderInput
+        return MoleculeReaderInput
 
     @classmethod
     def output(cls):

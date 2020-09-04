@@ -1,11 +1,11 @@
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.utils.output import FileOutput
 
-class MMoleculeWriter(GenericComponent):
+class MoleculeWriter(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MMolecule
+        return Molecule
 
     @classmethod
     def output(cls):

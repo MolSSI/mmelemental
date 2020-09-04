@@ -2,21 +2,21 @@ from qcelemental.models import ProtoModel
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
-from mmelemental.models.molecule.mm_molecule import MMolecule
-from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
+from mmelemental.models.molecule.mm_molecule import Molecule
+from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
 class MolConstructorComponent(GenericComponent):
-    """ Class for constructing MMolecule from ChemCode or FileInput. """
+    """ Class for constructing Molecule from ChemCode or FileInput. """
 
     @classmethod
     def input(cls):
-        return MMoleculeReaderInput
+        return MoleculeReaderInput
 
     @classmethod
     def output(cls):
-        return MMolecule
+        return Molecule
 
     def execute(
         self,
@@ -29,15 +29,15 @@ class MolConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: ProtoModel) -> MMolecule:
+    def constructor(self, model: ProtoModel) -> Molecule:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return MMolecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
-            return MMolecule.from_file(model.path)
-        elif isinstance(model, MMolecule):
+            return Molecule.from_file(model.path)
+        elif isinstance(model, Molecule):
             return model
-        elif isinstance(model, MMoleculeReaderInput):
+        elif isinstance(model, MoleculeReaderInput):
             if model.code:
                 return self.constructor(model.code)
             elif model.file:
@@ -52,7 +52,7 @@ class ForceFieldConstructorComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return MMolecule
+        return Molecule
 
     def execute(
         self,
@@ -65,13 +65,13 @@ class ForceFieldConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: ProtoModel) -> MMolecule:
+    def constructor(self, model: ProtoModel) -> Molecule:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return MMolecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
-            return MMolecule.from_file(model.path)
-        elif isinstance(model, MMolecule):
+            return Molecule.from_file(model.path)
+        elif isinstance(model, Molecule):
             return model
         else:
             raise ValueError(f'Input type {type(model)} not supported for {self.__class__}')
