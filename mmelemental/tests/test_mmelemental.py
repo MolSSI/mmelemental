@@ -7,11 +7,11 @@ import os
 import parmed
 import mmelemental
 from mmelemental.models.util.input import FileInput
-from mmelemental.models.molecule.mm_molecule import MMolecule
+from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.molecule.mol_reader import MMoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 
-from mmelemental.components.molreader_component import MMoleculeReaderComponent
+from mmelemental.components.molreader_component import MoleculeReaderComponent
 from mmelemental.components.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
 
 def test_mmelemental_imported():
@@ -24,16 +24,16 @@ def test_mmelemental_molgro(debug=True):
     
     top = parmed.gromacs.GromacsTopologyFile(topFile.path)
 
-    return MMolecule.from_file(filename=groFile.path)
+    return Molecule.from_file(filename=groFile.path)
 
 def test_mmelemental_molpdb(debug=True):
     pdbFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.pdb'))
     smiles = ChemCode(code='CCC')
 
-    mol = MMolecule.from_file(filename=pdbFile.path)
+    mol = Molecule.from_file(filename=pdbFile.path)
 
     if debug:
-        print("MMolecule info:")
+        print("Molecule info:")
         print("===============")
         print('\n')
 
@@ -67,8 +67,8 @@ def test_mmelemental_molpdb(debug=True):
 def test_mmelemental_component():
 
     smiles = ChemCode(code='CCCC')
-    mol = MolConstructorComponent.compute(MMoleculeReaderInput(code=smiles))
-    mol = MMoleculeReaderComponent.compute(MMoleculeReaderInput(code=smiles))
+    mol = MolConstructorComponent.compute(MoleculeReaderInput(code=smiles))
+    mol = MoleculeReaderComponent.compute(MoleculeReaderInput(code=smiles))
 
 test_mmelemental_imported()
 test_mmelemental_molpdb()
