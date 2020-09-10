@@ -2,8 +2,20 @@ from qcelemental import models
 from pydantic import Field
 
 from typing import Dict
-from qcelemental.extras import get_information
-from qcelemental.models.common_models import Provenance
+from mmelemental.extras import get_information
+from typing import Optional
+
+class Provenance(models.ProtoModel):
+    """
+    Provenance information.
+    """
+    creator: str = Field(..., description="The creator of the object.")
+    version: Optional[str] = Field(None, description="The version of the creator.")
+    routine: Optional[str] = Field(None, description="The routine of the creator.")
+
+    class Config(models.ProtoModel.Config):
+        canonical_repr = True
+        extra = "allow"
 
 def provenance_stamp(routine: str) -> Dict[str, str]:
     """Return dictionary satisfying QCSchema,
