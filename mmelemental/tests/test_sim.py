@@ -9,7 +9,7 @@ import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
-from mmelemental.models.sim.md import MolecularDynamics
+from mmelemental.models.sim.md import Dynamics
 
 def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
@@ -24,6 +24,6 @@ def test_mmelemental_molpdb():
     return Molecule.from_file(filename=groFile.path)
 
 mol = test_mmelemental_molpdb()
-md = MolecularDynamics(mol=mol)
+md = Dynamics(mol=mol)
 
 print(md)
