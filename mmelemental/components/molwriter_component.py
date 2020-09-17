@@ -1,5 +1,5 @@
 from mmcomponents.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.utils.output import FileOutput
+from mmelemental.models.util.output import FileOutput
 
 class MoleculeWriter(GenericComponent):
 
