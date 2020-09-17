@@ -13,8 +13,6 @@ from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 
 class MoleculeReaderComponent(GenericComponent):
 
-    #from mmelemental.models.molecule.mm_molecule import Molecule
-
     @classmethod
     def input(cls):
         return MoleculeReaderInput
