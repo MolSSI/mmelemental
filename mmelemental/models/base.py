@@ -31,3 +31,7 @@ class Base(models.ProtoModel):
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
+
+    class Config(models.ProtoModel.Config):
+        canonical_repr = True
+        extra = "allow"
