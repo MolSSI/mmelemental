@@ -10,6 +10,7 @@ from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.sim.md import Dynamics
+from mmelemental.components.simwriter_component import SimWriter
 
 def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
@@ -24,6 +25,13 @@ def test_mmelemental_molpdb():
     return Molecule.from_file(filename=groFile.path)
 
 mol = test_mmelemental_molpdb()
-md = Dynamics(mol=mol)
+md = Dynamics(
+		mol=mol,
+		engine=('NAMD', None),
+		filename='input'
+	)
 
-print(md)
+print(md) 
+
+
+file = SimWriter.compute(md)
