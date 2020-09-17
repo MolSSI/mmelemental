@@ -8,6 +8,10 @@ from typing import Any, Tuple, Union
 class Base(Base):
     """ Basic model for molecular simulation input parameters."""
 
+    # Basic attributes
+    filename: str = Field(None, description = 'Name of file to be written with the "to_file" method.')
+    engine: Tuple[str, Any] = Field(..., description = 'Name of simulation engine and version: (engine_name, x.x.x).')
+
     # System fields
     mol: Union[Tuple[Molecule], Molecule] = Field(..., description = 'Molecular mechanics molecule objects.')
     cell: Tuple[float] = Field(None, description = 'Cell dimensions.')
@@ -35,7 +39,7 @@ class Base(Base):
     freq_list: int = Field(None, description = 'Frequency to update the neighbor list and long range forces.')
     cutoff_scheme: str = Field(None, description = 'Neighbor searching scheme e.g. Verlet.')
     ns_type: str = Field(None, description = 'Method to determine neighbor list e.g. grid.')
-    longrange_type: str = Field(None, description = 'Method for computing long range electrostatic interactions e.g. PME'.)
+    longrange_type: str = Field(None, description = 'Method for computing long range electrostatic interactions e.g. PME.')
     cutoff_coulomb: float = Field(None, description = 'Short-range electrostatic cut-off.')
     cutoff_vwd: float = Field(None, description = 'Short-range Van der Waals cut-off.')
     boundary: Tuple[str] = Field(None, description = 'Boundary conditions in all dimensions e.g. (pbc, pbc, pbc) imposed periodic boundaries in 3D.')
