@@ -1,11 +1,11 @@
-from qcelemental.models import ProtoModel
+from mmelemental.models.base import Base
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from typing import List, Optional, Union, Dict
 from pydantic import Field
 
-class MoleculeReaderInput(ProtoModel):
+class MoleculeReaderInput(Base):
     file: Optional[Union[FileInput, str]] = Field(
         None, 
         description = 'Input filename object.'
