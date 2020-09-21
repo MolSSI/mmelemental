@@ -43,15 +43,15 @@ class CmdOutput(models.ProtoModel):
         return super().dict(*args, **kwargs)
 
 class FileOutput(models.ProtoModel):
-    path: str = Field(
-        ...,
-        description='path to output file.'
-    )
+    path: str = Field(..., description='Model for writing data to output file. No file is created if "write" method is not invoked.')
+    clean: bool = Field(False, description='If set to True, the file is removed once object is out of scope.')
+    mode: str = Field('w', description='File write mode. Defaults to overwriting files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
 
     @validator('path')
     def _exists(cls, v):
         if os.path.isfile(v):
-            raise IOError(f'File {v} already eixsts.')
+            pass
+            # should we: raise IOError(f'File {v} already eixsts.')  ???
         return v
 
     @property
@@ -62,7 +62,7 @@ class FileOutput(models.ProtoModel):
         return self
 
     def write(self, contents: str):
-        with open(self.path, 'w') as fp:
+        with open(self.path, self.mode) as fp:
             fp.write(contents)
 
     def remove(self):
@@ -71,7 +71,8 @@ class FileOutput(models.ProtoModel):
 
     def __exit__(self, type, value, tb):
         if not tb:
-            self.remove()
+            if self.clean:
+                self.remove()
         else:
             raise Exception
 
