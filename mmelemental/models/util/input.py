@@ -1,12 +1,12 @@
 from typing import List, Optional, Union
-from qcelemental import models
+from mmelemental.models.base import Base
 from pydantic import validator, Field
 import os
 
 from .output import FileOutput
 from pathlib import Path
 
-class FileInput(models.ProtoModel):
+class FileInput(Base):
     path: str
 
     @validator('path')
@@ -24,7 +24,7 @@ class FileInput(models.ProtoModel):
         with open(self.path, 'r') as fp:
             return fp.read()
 
-class CmdInput(models.ProtoModel):
+class CmdInput(Base):
     fileInput: Union[FileInput, List[FileInput]] = Field(
         ..., 
         description = 'FileInput object or list of FileInut objects. See the :class: ``FileInput``.'
