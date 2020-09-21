@@ -1,4 +1,4 @@
-from qcelemental.models import ProtoModel
+from mmelemental.models.base import Base
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -29,7 +29,7 @@ class MolConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: ProtoModel) -> Molecule:
+    def constructor(self, model: Base) -> Molecule:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
             return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
@@ -65,7 +65,7 @@ class ForceFieldConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: ProtoModel) -> Molecule:
+    def constructor(self, model: Base) -> Molecule:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
             return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
