@@ -5,12 +5,8 @@ from mmelemental.models.forcefield.atomtype import ForceField
 from pydantic import Field
 from typing import Any, Tuple, Union
 
-class Base(Base):
+class SimBase(Base):
     """ Basic model for molecular simulation input parameters."""
-
-    # Basic attributes
-    filename: str = Field(None, description = 'Name of file to be written with the "to_file" method.')
-    engine: Tuple[str, Any] = Field(..., description = 'Name of simulation engine and version: (engine_name, x.x.x).')
 
     # System fields
     mol: Union[Tuple[Molecule], Molecule] = Field(..., description = 'Molecular mechanics molecule objects.')
