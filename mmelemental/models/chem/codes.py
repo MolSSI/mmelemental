@@ -1,4 +1,4 @@
-from qcelemental import models
+from mmelemental.models.base import Base
 from pydantic import validator, Field, ValidationError
 import os
 
@@ -11,7 +11,7 @@ try:
 except Exception:
     rdkAvail = False
         
-class ChemCode(models.ProtoModel):
+class ChemCode(Base):
     code: str = Field(
         ...,
         description = 'A chemical code that describes a molecule or molecular pattern e.g. smiles, smarts, etc. '
