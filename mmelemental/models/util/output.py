@@ -1,10 +1,10 @@
-from qcelemental import models
+from mmelemental.models.base import Base
 from typing import List, Optional, Union
 from pydantic import validator, Field
 from pathlib import Path
 import os
 
-class CmdOutput(models.ProtoModel):
+class CmdOutput(Base):
     stdout_: str = Field(
         ...,
         description = "Standard output."
@@ -18,7 +18,7 @@ class CmdOutput(models.ProtoModel):
         description = "Logging output"
     )
 
-    class Config(models.ProtoModel.Config):
+    class Config(Base.Config):
         fields = {
             "stdout_": "stdout",
             "stderr_": "stderr",
@@ -42,10 +42,10 @@ class CmdOutput(models.ProtoModel):
         kwargs["exclude_unset"] = True
         return super().dict(*args, **kwargs)
 
-class FileOutput(models.ProtoModel):
+class FileOutput(Base):
     path: str = Field(..., description='Model for writing data to output file. No file is created if "write" method is not invoked.')
     clean: bool = Field(False, description='If set to True, the file is removed once object is out of scope.')
-    mode: str = Field('w', description='File write mode. Defaults to overwriting files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
+    mode: str = Field('a', description='File write mode. Defaults to appending to files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
 
     @validator('path')
     def _exists(cls, v):
@@ -76,7 +76,7 @@ class FileOutput(models.ProtoModel):
         else:
             raise Exception
 
-class ComputeOutput(models.ProtoModel):
+class ComputeOutput(Base):
     cmdout: Optional[CmdOutput] = Field(
         None,
         description = "Command-line output class which provides stdout, stderr, and log info."
