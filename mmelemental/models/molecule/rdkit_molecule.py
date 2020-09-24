@@ -1,13 +1,13 @@
 from qcelemental import models
-from pydantic import Field
+from pydantic import Field, validator
 from typing import List, Dict, Any
 from .gen_molecule import ToolkitMolecule
 
 try:
-    from rdkit import rdBase, Chem
+    from rdkit import Chem
     from rdkit.Chem import AllChem
 except:
-    raise ModuleNotFoundError('Make sure rdkit is installed for code validation.')
+    raise ModuleNotFoundError('Make sure rdkit is installed.')
 
 class Bond:
     """ RDKit-based bond order: {0: unspecified, 1: single, etc., up to 21} """  
@@ -16,6 +16,11 @@ class Bond:
 class RDKitMolecule(ToolkitMolecule):
     mol: Chem.rdchem.Mol = Field(..., description = 'Rdkit molecule object.')
     dtype: str = Field('rdkit', description = 'Data type of mol.')
+
+    @validator('dtype')
+    def dtype_static(cls, v):
+        assert v == 'rdkit', f'dtype ({v}) for this object must be rdkit.'
+        return v
 
     @classmethod
     def gen3D(cls, mol, nConformers=1) -> Chem.rdchem.Mol:
@@ -81,33 +86,3 @@ class RDKitMolecule(ToolkitMolecule):
             rdkmol = cls.gen3D(rdkmol)
 
         return RDKitMolecule(mol=rdkmol)
-
-class MMToRDKit:
-    @staticmethod
-    def convert(mmol: "Molecule") -> RDKitMolecule:
-        rdkmol = Chem.Mol()
-        erdkmol = Chem.EditableMol(rdkmol)
-
-        for index, symb in enumerate(mmol.symbols):
-            atom = Chem.Atom(symb)
-            resname, resnum = mmol.residues[index]
-            name = mmol.names[index]
-            residue = Chem.AtomPDBResidueInfo()
-            residue.SetResidueName(resname)
-            residue.SetName(name)
-            residue.SetResidueNumber(resnum)
-            residue.SetOccupancy(1.0)
-            residue.SetTempFactor(0.0)
-            atom.SetMonomerInfo(residue)
-            erdkmol.AddAtom(atom)
-
-        for i,j,btype in mmol.connectivity:
-            erdkmol.AddBond(i, j, Bond.orders[int(btype)])            
-
-        newmmol = erdkmol.GetMol()
-        conf = Chem.Conformer(len(mmol.geometry))
-        for i, coords in enumerate(mmol.geometry):
-            conf.SetAtomPosition(i, coords)
-        newmmol.AddConformer(conf)
-
-        return newmmol 
