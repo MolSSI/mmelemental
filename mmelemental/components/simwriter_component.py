@@ -1,13 +1,13 @@
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.sim.base import Base
+from mmelemental.models.sim.sim_writer import SimWriterInput
 from typing import Dict, List, Any, Optional, Tuple
 
 class SimWriter(GenericComponent):
 
     @classmethod
     def input(cls):
-        return Base
+        return SimWriterInput
 
     @classmethod
     def output(cls):
@@ -20,11 +20,18 @@ class SimWriter(GenericComponent):
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None,
-    ) -> Tuple[bool, Dict[str, Any]]:
+    ) -> Tuple[bool, FileOutput]:
 
-    	filename = inputs.filename
+    	file = FileOutput(path=inputs.filename)
+    	schema = inputs.model
+    	for key, value in schema:
 
-    	with open(filename, 'w') as fp:
-    		fp.write('TESTING')
+    		if key == 'mol':
+    			value.to_file('coords.pdb')
+    			if inputs.engine == 'NAMD':
+    				file.write('coordinates \t {}\n'.format('coords.pdb'))
 
-    	return True, FileOutput(path=filename)
+    		elif value and key != 'cell' and key != 'forcefield' and key != 'solvent' and key != 'provenance':
+    			file.write('{} \t {}\n'.format(key, value))
+
+    	return True, file
