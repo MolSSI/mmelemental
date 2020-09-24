@@ -9,6 +9,7 @@ from typing import List, Optional, Any, Dict, Tuple
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
+import qcelemental
 
 class MoleculeReaderComponent(GenericComponent):
 
@@ -121,7 +122,10 @@ class TkMoleculeReaderComponent(GenericComponent):
         },
         'parmed':
         {
-            ".gro": "gro"
+            ".gro": "gro",
+            ".psf": "psf",
+            ".pdb": "pdb",
+            ".top": "top"
         }
     }
 
