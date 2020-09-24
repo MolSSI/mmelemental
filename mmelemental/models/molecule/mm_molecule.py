@@ -202,11 +202,11 @@ class Molecule(qcelemental.models.Molecule):
         elif toolkit == 'rdkit':
             try:
                 from rdkit import Chem
-                from mmelemental.models.molecule.rdkit_molecule import MMToRDKit
+                from mmelemental.components.rdkit_component import MoleculeToRDKit
             except:
-                raise ModuleNotFoundError('Make sure rdkit is installed for code validation.')
+                raise ModuleNotFoundError('Make sure rdkit is installed.')
             
-            rdkmol = MMToRDKit.convert(self)
+            rdkmol = MoleculeToRDKit.compute(self)
 
             if dtype == 'pdb':
                 writer = Chem.PDBWriter(filename)
@@ -216,7 +216,7 @@ class Molecule(qcelemental.models.Molecule):
                 writer = Chem.SmilesWriter(filename)
             else:
                 raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
-            writer.write(rdkmol)
+            writer.write(rdkmol.mol)
             writer.close()
         else:
             raise ValueError(f'Data type {dtype} not supported.')
@@ -225,7 +225,7 @@ class Molecule(qcelemental.models.Molecule):
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
-            from mmelemental.models.molecule.rdkit_molecule import MMToRDKit
-            return MMToRDKit.convert(self)
+            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            return MoleculeToRDKit.compute(self).mol
         else:
             raise NotImplementedError(f'Data type {dtype} not available.')
