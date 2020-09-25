@@ -1,5 +1,6 @@
 from mmcomponents.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
+from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.rdkit_molecule import Bond
@@ -12,6 +13,7 @@ except:
 
 class MoleculeToRDKit(GenericComponent):
     """ A model for converting Molecule to RDKIT molecule object. """
+
     @classmethod
     def input(cls):
         return Molecule
@@ -46,7 +48,7 @@ class MoleculeToRDKit(GenericComponent):
             atom.SetMonomerInfo(residue)
             erdkmol.AddAtom(atom)
 
-        for i,j,btype in mmol.connectivity:
+        for i, j, btype in mmol.connectivity:
             erdkmol.AddBond(i, j, Bond.orders[int(btype)])            
 
         newmmol = erdkmol.GetMol()
@@ -56,3 +58,86 @@ class MoleculeToRDKit(GenericComponent):
         newmmol.AddConformer(conf)
 
         return True, RDKitMolecule(mol=newmmol)
+
+class RDKitToMolecule(GenericComponent):
+    """ A model for converting RDKIT molecule to Molecule object. """
+
+    @classmethod
+    def input(cls):
+        return MoleculeReaderInput
+
+    @classmethod
+    def output(cls):
+        from mmelemental.models.molecule.mm_molecule import Molecule
+        return Molecule
+
+    def execute(
+        self,
+        inputs: Dict[str, Any],
+        extra_outfiles: Optional[List[str]] = None,
+        extra_commands: Optional[List[str]] = None,
+        scratch_name: Optional[str] = None,
+        timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
+        
+        from mmelemental.models.molecule.mm_molecule import Molecule
+
+        if isinstance(inputs, dict):
+            inputs = MoleculeReaderComponent.input()(**inputs)
+        
+        if inputs.data:
+            dtype = inputs.data.obj_type
+            assert dtype == 'rdkit'
+            rdmol = inputs.data
+        elif inputs.code:
+            dtype = inputs.code.code_type.lower()
+            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
+            rdmol = RDKitMolecule.build_mol(inputs, dtype)            
+        elif inputs.file:
+            dtype = inputs.file.ext
+            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
+            rdmol = RDKitMolecule.build_mol(inputs, dtype)
+        else:
+            raise NotImplementedError
+        
+        from mmelemental.models.molecule.rdkit_molecule import Bond
+
+        if inputs.args:
+            orient = inputs.args.get('orient')
+            validate = inputs.args.get('validate')
+            kwargs = inputs.args.get('kwargs')
+        else:
+            orient, validate, kwargs = False, None, None
+
+        symbs = [atom.GetSymbol() for atom in rdmol.mol.GetAtoms()]
+
+        try:
+            residues = [(atom.GetPDBResidueInfo().GetResidueName(), 
+                        atom.GetPDBResidueInfo().GetResidueNumber()) 
+                        for atom in rdmol.mol.GetAtoms()]
+            names = [atom.GetPDBResidueInfo().GetName() for atom in rdmol.mol.GetAtoms()]
+        except:
+            residues = None
+            names = None
+        
+        connectivity = []
+
+        for bond in rdmol.mol.GetBonds():
+            bondOrder = Bond.orders.index(bond.GetBondType())
+            connectivity.append((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx(), 1)) # replace 1 with bondOrder, 
+            # for now this is a hack for qcelemental does not allow bond orders higher than 5
+
+        geo = rdmol.mol.GetConformer(0).GetPositions()
+
+        input_dict = {'symbols': symbs, 
+                      'geometry': geo, 
+                      'residues': residues, 
+                      'connectivity': connectivity,
+                      'names': names}        
+
+        if kwargs:
+            input_dict.update(kwargs)
+
+        if inputs.code:
+            return True, Molecule(orient=orient, validate=validate, identifiers={dtype: inputs.code}, **input_dict)
+        else:
+            return True, Molecule(orient=orient, validate=validate, **input_dict)
