@@ -1,9 +1,3 @@
-try:
-    from rdkit import rdBase, Chem
-    from rdkit.Chem import AllChem
-except:
-    raise ModuleNotFoundError('Make sure rdkit is properly installed on your system.')
-
 from typing import List, Optional, Any, Dict, Tuple
 
 from mmcomponents.components.blueprints.generic_component import GenericComponent
@@ -30,7 +24,6 @@ class MoleculeReaderComponent(GenericComponent):
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
-        # we need to add: mmelemental.models.molecule.parmed_molecule import ParmedMolecule
         from mmelemental.models.molecule.mm_molecule import Molecule
 
         if isinstance(inputs, dict):
@@ -45,59 +38,23 @@ class MoleculeReaderComponent(GenericComponent):
 
         if inputs.data:
             dtype = inputs.data.obj_type
-
-            if dtype == 'rdkit':
-                rdmol = inputs.data
-            else:
-                # convert inputs.data to Molecule
+            if dtype == 'qcelem':
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
+            elif dtype == 'rdkit':
+                from mmelemental.components.rdkit_component import RDKitToMolecule
+                return True, RDKitToMolecule.compute(inputs)
+            else:
+                raise NotImplementedError(f'Data type {dtype} not yet supported.')
+        # Only RDKit is handling chem codes and file objects for now!
         elif inputs.code:
-            dtype = inputs.code.code_type.lower()
-            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            rdmol = RDKitMolecule.build_mol(inputs, dtype)            
+            from mmelemental.components.rdkit_component import RDKitToMolecule
+            return True, RDKitToMolecule.compute(inputs)
         elif inputs.file:
-            dtype = inputs.file.ext
-            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            rdmol = RDKitMolecule.build_mol(inputs, dtype)
+            from mmelemental.components.rdkit_component import RDKitToMolecule
+            return True, RDKitToMolecule.compute(inputs)
         else:
-            raise NotImplementedError
-        
-        from mmelemental.models.molecule.rdkit_molecule import Bond
-
-        symbs = [atom.GetSymbol() for atom in rdmol.mol.GetAtoms()]
-
-        try:
-            residues = [(atom.GetPDBResidueInfo().GetResidueName(), 
-                        atom.GetPDBResidueInfo().GetResidueNumber()) 
-                        for atom in rdmol.mol.GetAtoms()]
-            names = [atom.GetPDBResidueInfo().GetName() for atom in rdmol.mol.GetAtoms()]
-        except:
-            residues = None
-            names = None
-        
-        connectivity = []
-
-        for bond in rdmol.mol.GetBonds():
-            bondOrder = Bond.orders.index(bond.GetBondType())
-            connectivity.append((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx(), 1)) # replace 1 with bondOrder, 
-            # for now this is a hack for qcelemental does not allow bond orders higher than 5
-
-        geo = rdmol.mol.GetConformer(0).GetPositions()
-
-        input_dict = {'symbols': symbs, 
-                      'geometry': geo, 
-                      'residues': residues, 
-                      'connectivity': connectivity,
-                      'names': names}        
-
-        if kwargs:
-            input_dict.update(kwargs)
-
-        if inputs.code:
-            return True, Molecule(orient=orient, validate=validate, identifiers={dtype: inputs.code}, **input_dict)
-        else:
-            return True, Molecule(orient=orient, validate=validate, **input_dict)
+            raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
 class TkMoleculeReaderComponent(GenericComponent):
 
