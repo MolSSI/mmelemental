@@ -28,12 +28,11 @@ def test_mmelemental_molgro(debug=True):
 
 def test_mmelemental_component():
     smiles = ChemCode(code='CCCC')
-    mol = MolConstructorComponent.compute(MoleculeReaderInput(code=smiles))
-    mol = MoleculeReaderComponent.compute(MoleculeReaderInput(code=smiles))
+    inputs = MoleculeReaderInput(code=smiles)
+    mol = MolConstructorComponent.compute(inputs)
 
 def test_mmelemental_molpdb(debug=True):
     pdbFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.pdb'))
-    smiles = ChemCode(code='CCC')
 
     mol = Molecule.from_file(filename=pdbFile.path)
 
