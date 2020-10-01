@@ -80,7 +80,7 @@ class Molecule(qcelemental.models.Molecule):
         description = "A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
         "of a polymer. Order follows atomic indices from 0 till Natoms-1. "
         "\n"
-        "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1. Residue number >= 1."
+        "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1."
         )
     chains: Optional[Dict[str, List[int]]] = Field(
         None, description = "A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
@@ -134,8 +134,8 @@ class Molecule(qcelemental.models.Molecule):
                 dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
         
-        molinput = MoleculeReaderInput(file=FileInput(path=filename))
-        mol = TkMoleculeReaderComponent.compute(molinput)
+        mol_input = MoleculeReaderInput(file=FileInput(path=filename))
+        mol = TkMoleculeReaderComponent.compute(mol_input)
 
         return cls.from_data(mol, dtype=mol.obj_type)
         
