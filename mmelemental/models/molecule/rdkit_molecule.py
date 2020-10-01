@@ -51,7 +51,8 @@ class RDKitMolecule(ToolkitMolecule):
 
     @classmethod
     def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "RDKitMolecule":
-        """ Creates an instance of rdkit.Chem.Mol by parsing an input file (pdb, etc.) or a chemical code (smiles, etc.)
+        """ Creates an instance of RDKitMolecule object storing rdkit.Chem.Mol. 
+        This is done by parsing an input file (pdb, ...) or a chemical code (smiles, ...).
         """
         if inputs.file:
             filename = inputs.file.path
