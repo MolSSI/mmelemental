@@ -78,7 +78,7 @@ class Molecule(qcelemental.models.Molecule):
     residues: Optional[List[Tuple[str, int]]] = Field(
         None, 
         description = "A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
-        "of a polymer. Order follows atomic indices from 0 till Natoms-1. "
+        "of a polymer. Order follows atomic indices from 0 till Natoms-1. Residue number starts from 1."
         "\n"
         "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1."
         )
@@ -109,13 +109,15 @@ class Molecule(qcelemental.models.Molecule):
 
     # Constructors
     @classmethod
-    def from_file(cls, filename: str, dtype: Optional[str] = None, *, orient: bool = False, **kwargs) -> "Molecule":
+    def from_file(cls, filename: Union[FileInput, str], top: Union[FileInput, str] = None, dtype: Optional[str] = None, *, orient: bool = False, **kwargs) -> "Molecule":
         """
         Constructs a molecule object from a file.
         Parameters
         ----------
         filename : str
-            The filename to build
+            The coords filename to build
+        top: str
+            The topology filename
         dtype : Optional[str], optional
             The type of file to interpret.
         orient : bool, optional
@@ -127,14 +129,22 @@ class Molecule(qcelemental.models.Molecule):
         Molecule
             A constructed molecule class.
         """
-        ext = Path(filename).suffix
+        if not isinstance(filename, FileInput):
+            filename = FileInput(path=filename)
 
+        if top and not isinstance(top, FileInput):
+            top = FileInput(path=top)
+ 
         if not dtype:
-            if ext in TkMoleculeReaderComponent._extension_maps['qcelem']:
-                dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][ext]
-                return qcelemental.models.molecule.Molecule.from_file(filename, dtype, orient=orient, **kwargs)
+            if filename.ext in TkMoleculeReaderComponent._extension_maps['qcelem']:
+                dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][filename.ext]
+                return qcelemental.models.molecule.Molecule.from_file(filename.abs_path, dtype, orient=orient, **kwargs)
         
-        mol_input = MoleculeReaderInput(file=FileInput(path=filename))
+        if top:
+            mol_input = MoleculeReaderInput(file=filename, top_file=top)
+        else:
+            mol_input = MoleculeReaderInput(file=filename)
+
         mol = TkMoleculeReaderComponent.compute(mol_input)
 
         return cls.from_data(mol, dtype=mol.obj_type)
@@ -218,8 +228,10 @@ class Molecule(qcelemental.models.Molecule):
                 raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
             writer.write(rdkmol.mol)
             writer.close()
+        elif toolkit == 'parmed':
+            pass
         else:
-            raise ValueError(f'Data type {dtype} not supported.')
+            raise ValueError(f'Data type not yet supported: {dtype}')
 
     def to_data(self, dtype: str):
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
