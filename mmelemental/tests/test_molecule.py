@@ -18,13 +18,49 @@ def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "mmelemental" in sys.modules
 
-def test_mmelemental_molgro(debug=True):
-    groFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.gro'))
-    topFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.top'))
-    
-    top = parmed.gromacs.GromacsTopologyFile(topFile.path)
+def test_mmelemental_moltop():
+    groFile = FileInput(path='mmelemental/data/molecules/dialanine.gro')
+    topFile = FileInput(path='mmelemental/data/molecules/dialanine.top')
+    #top = parmed.gromacs.GromacsTopologyFile(topFile.path)
+    mol = Molecule.from_file(filename=groFile, top=topFile)
 
-    return Molecule.from_file(filename=groFile.path)
+def test_mmelemental_molgro(debug=True):
+    groFile = FileInput(path='mmelemental/data/molecules/dialanine.gro')
+    mol = Molecule.from_file(filename=groFile)
+
+    if debug:
+        print("Molecule info:")
+        print("===============")
+        print('\n')
+
+        print("Bonds:")
+        print("======")
+        print(mol.connectivity)
+        print('\n')
+
+        print("Residues:")
+        print("==========")
+        print(mol.residues)
+        print('\n')
+
+        print("Positions:")
+        print("==========")
+        print(mol.geometry)
+        print('\n')
+
+        print("Atom Names:")
+        print("==========")
+        print(mol.names)
+        print('\n')
+
+    mol.to_file('parmed.pdb')
+    #mol.to_file('parmed.gro')
+    mol.to_file('parmed.xyz')
+    mol.to_file('parmed.smiles')
+    #os.remove('parmed.pdb')
+    #os.remove('parmed.xyz')
+    #os.remove('parmed.smiles')
+    return mol
 
 def test_mmelemental_component():
     smiles = ChemCode(code='CCCC')
@@ -32,7 +68,7 @@ def test_mmelemental_component():
     mol = MolConstructorComponent.compute(inputs)
 
 def test_mmelemental_molpdb(debug=True):
-    pdbFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.pdb'))
+    pdbFile = FileInput(path='mmelemental/data/molecules/dialanine.pdb')
 
     mol = Molecule.from_file(filename=pdbFile.path)
 
@@ -61,14 +97,16 @@ def test_mmelemental_molpdb(debug=True):
         print(mol.names)
         print('\n')
 
-    mol.to_file('tmp.pdb')
-    mol.to_file('tmp.xyz')
-    mol.to_file('tmp.smiles')
-    os.remove('tmp.pdb')
-    os.remove('tmp.xyz')
-    os.remove('tmp.smiles')
+    mol.to_file('rdkit.pdb')
+    mol.to_file('rdkit.xyz')
+    mol.to_file('rdkit.smiles')
+    #os.remove('rdkit.pdb')
+    #os.remove('rdkit.xyz')
+    #os.remove('rdkit.smiles')
+    return mol
 
-test_mmelemental_imported()
-test_mmelemental_component()
-test_mmelemental_molpdb()
-
+if __name__ == '__main__':
+    test_mmelemental_imported()
+    test_mmelemental_component()
+    test_mmelemental_molpdb()
+    test_mmelemental_molgro()
