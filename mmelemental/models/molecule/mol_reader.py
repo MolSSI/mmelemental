@@ -8,8 +8,12 @@ from pydantic import Field
 class MoleculeReaderInput(Base):
     file: Optional[Union[FileInput, str]] = Field(
         None, 
-        description = 'Input filename object.'
-    )
+        description = 'Input coords file name or object.'
+    ) 
+    top_file: Optional[Union[FileInput, str]] = Field(
+        None, 
+        description = 'Input topology file name or object.'
+    )    
     code: Optional[Union[ChemCode, str]] = Field(
         None, 
         description = 'Chemical code object that stores a smiles, smarts, etc. code. See :class: ``Identifiers``.'
