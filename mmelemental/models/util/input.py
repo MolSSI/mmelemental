@@ -13,15 +13,18 @@ class FileInput(Base):
     def _exists(cls, v):
         if not os.path.isfile(v):
             raise IOError(f'Input file {v} does not eixst.')
-
         return v
 
+    @property
+    def abs_path(self):
+        return os.path.abspath(self.path)
+        
     @property
     def ext(self):
         return Path(self.path).suffix
 
     def read(self) -> str:
-        with open(self.path, 'r') as fp:
+        with open(self.abs_path, 'r') as fp:
             return fp.read()
 
 class CmdInput(Base):
