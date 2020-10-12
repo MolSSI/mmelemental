@@ -58,16 +58,20 @@ class FileOutput(Base):
     def ext(self):
         return Path(self.path).suffix
 
+    @property
+    def abs_path(self):
+        return os.path.abspath(self.path)
+
     def __enter__(self):
         return self
 
     def write(self, contents: str):
-        with open(self.path, self.mode) as fp:
+        with open(self.abs_path, self.mode) as fp:
             fp.write(contents)
 
     def remove(self):
-        if os.path.isfile(self.path):
-            os.remove(self.path)
+        if os.path.isfile(self.abs_path):
+            os.remove(self.abs_path)
 
     def __exit__(self, type, value, tb):
         if not tb:
