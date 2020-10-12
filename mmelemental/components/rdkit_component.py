@@ -39,6 +39,15 @@ class MoleculeToRDKit(GenericComponent):
             atom = Chem.Atom(symb)
             resname, resnum = mmol.residues[index]
             name = mmol.names[index]
+
+            if len(name) != 4: # For writing to PDB files, rdkit needs the len(name) to be exactly 4.
+                if len(name) == 1:
+                    name = ' ' + name + '  '
+                elif len(name) == 2:
+                    name = ' ' + name + ' '
+                elif len(name) == 3:
+                    name = ' ' + name
+
             residue = Chem.AtomPDBResidueInfo()
             residue.SetResidueName(resname)
             residue.SetName(name)
