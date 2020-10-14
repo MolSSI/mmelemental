@@ -56,7 +56,7 @@ class Molecule(qcelemental.models.Molecule):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    coordinates: Array[float] = Field( 
+    coordinates: Array[float] = Field(
         None,
         description = "An ordered (natoms, 3) array-like for XYZ atomic coordinates."
     )
@@ -147,7 +147,7 @@ class Molecule(qcelemental.models.Molecule):
 
         mol = TkMoleculeReaderComponent.compute(mol_input)
 
-        return cls.from_data(mol, dtype=mol.obj_type)
+        return cls.from_data(mol, dtype=mol.dtype)
         
     @classmethod
     def from_data(cls, data: Any, dtype: Optional[str] = None, *,
@@ -210,11 +210,8 @@ class Molecule(qcelemental.models.Molecule):
         if toolkit == 'qcelem': 
             super().to_file(filename, dtype)
         elif toolkit == 'rdkit':
-            try:
-                from rdkit import Chem
-                from mmelemental.components.rdkit_component import MoleculeToRDKit
-            except:
-                raise ModuleNotFoundError('Make sure rdkit is installed.')
+            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            from rdkit import Chem
             
             rdkmol = MoleculeToRDKit.compute(self)
 
@@ -226,10 +223,14 @@ class Molecule(qcelemental.models.Molecule):
                 writer = Chem.SmilesWriter(filename)
             else:
                 raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
+
             writer.write(rdkmol.mol)
             writer.close()
+
         elif toolkit == 'parmed':
-            pass
+            from mmelemental.components.parmed_component import MoleculeToParmed
+            pmol = MoleculeToParmed.compute(self)
+            pmol.mol.save(filename)
         else:
             raise ValueError(f'Data type not yet supported: {dtype}')
 
