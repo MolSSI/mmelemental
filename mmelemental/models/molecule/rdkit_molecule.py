@@ -15,12 +15,10 @@ class Bond:
 
 class RDKitMolecule(ToolkitMolecule):
     mol: Chem.rdchem.Mol = Field(..., description = 'Rdkit molecule object.')
-    dtype: str = Field('rdkit', description = 'Data type of mol.')
 
-    @validator('dtype')
-    def dtype_static(cls, v):
-        assert v == 'rdkit', f'dtype ({v}) for this object must be rdkit.'
-        return v
+    @property
+    def dtype(self):
+        return 'rdkit'
 
     @classmethod
     def gen3D(cls, mol, nConformers=1) -> Chem.rdchem.Mol:
