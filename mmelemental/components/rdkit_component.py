@@ -94,7 +94,7 @@ class RDKitToMolecule(GenericComponent):
             inputs = MoleculeReaderComponent.input()(**inputs)
         
         if inputs.data:
-            dtype = inputs.data.obj_type
+            dtype = inputs.data.dtype
             assert dtype == 'rdkit'
             rdmol = inputs.data
         elif inputs.code:
