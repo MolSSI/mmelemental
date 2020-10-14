@@ -10,12 +10,10 @@ except:
 
 class ParmedMolecule(ToolkitMolecule):
     mol: parmed.structure.Structure = Field(..., description = 'ParmEd molecule object.')
-    dtype: str = Field('parmed', description = 'Data type of mol.')
 
-    @validator('dtype')
-    def dtype_static(cls, v):
-        assert v == 'parmed', 'dtype for this object must be parmed.'
-        return v
+    @property
+    def dtype(self):
+        return 'parmed'   
 
     @classmethod
     def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMolecule":
