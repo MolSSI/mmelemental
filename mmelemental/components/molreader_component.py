@@ -7,7 +7,7 @@ import qcelemental
 
 class MoleculeReaderComponent(GenericComponent):
     """ Factory component that constructs a Molecule object from MoleculeReaderInput.
-    Which toolkit-specific component is called depends on MoleculeReaderInput.data.obj_type."""
+    Which toolkit-specific component is called depends on MoleculeReaderInput.data.dtype."""
 
     @classmethod
     def input(cls):
@@ -39,7 +39,7 @@ class MoleculeReaderComponent(GenericComponent):
             orient, validate, kwargs = False, None, None
 
         if inputs.data:
-            dtype = inputs.data.obj_type
+            dtype = inputs.data.dtype
             if dtype == 'qcelem':
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
