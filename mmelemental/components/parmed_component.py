@@ -36,33 +36,28 @@ class MoleculeToParmed(GenericComponent):
 
             name = mmol.names[index]
             atomic_number = mmol.atomic_numbers[index]
-            charge = mmol.molecular_charge[index]
             mass = mmol.masses[index]
 
             # Will likely lose FF-related info ... but then Molecule is not supposed to store any params specific to FFs
             atom = topologyobjects.Atom(list=None, atomic_number=atomic_number, name=name, type=symb,
-                 charge=charge, mass=mass, nb_idx=0, solvent_radius=0.0,
+                 mass=mass, nb_idx=0, solvent_radius=0.0,
                  screen=0.0, tree='BLA', join=0.0, irotat=0.0, occupancy=1.0,
                  bfactor=0.0, altloc='', number=-1, rmin=None, epsilon=None,
                  rmin14=None, epsilon14=None)
 
             resname, resnum = mmol.residues[index]
+            #classparmed.Residue(name, number=- 1, chain='', insertion_code='', segid='', list=None)[source]
 
-            pmol.add_atom(atom, resname, resnum, chain='', inscode='', segid='')
+            pmol.add_atom(atom, resname, resnum + 1, chain='', inscode='', segid='')
 
         for i, j , btype in mmol.connectivity:
-            atom.bond_to(i, j, Bond.orders[int(btype)])            
+            pmol.atoms[i].bond_to(pmol.atoms[j])
 
-        return pmol
+        pmol.coordinates = mmol.geometry
 
-    def leftover(self):
-        newmmol = erdkmol.GetMol()
-        conf = Chem.Conformer(len(mmol.geometry))
-        for i, coords in enumerate(mmol.geometry):
-            conf.SetAtomPosition(i, coords)
-        newmmol.AddConformer(conf)
+        print("Residues for ParmEd: ", pmol.residues[0].atoms)
 
-        return True, RDKitMolecule(mol=newmmol)
+        return True, ParmedMolecule(mol=pmol)
 
 class ParmedToMolecule(GenericComponent):
     """ A model for converting ParmEd molecule to Molecule object. """
@@ -90,7 +85,7 @@ class ParmedToMolecule(GenericComponent):
             inputs = MoleculeReaderComponent.input()(**inputs)
         
         if inputs.data:
-            dtype = inputs.data.obj_type
+            dtype = inputs.data.dtype
             assert dtype == 'parmed'
             pmol = inputs.data
         elif inputs.code:
@@ -118,10 +113,10 @@ class ParmedToMolecule(GenericComponent):
             masses = None
 
         try:
-            residues = [(atom.residue.name, atom.residue.idx + 1) for atom in pmol.mol.atoms]
+            residues = [(atom.residue.name, atom.residue.idx) for atom in pmol.mol.atoms]
         except:
             residues = None
-        
+            
         connectivity = []
 
         for bond in pmol.mol.bonds:
