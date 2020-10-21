@@ -23,6 +23,10 @@ class FileInput(Base):
     def ext(self):
         return Path(self.path).suffix
 
+    @property
+    def name(self):
+        return os.path.basename(self.path)  
+
     def read(self) -> str:
         with open(self.abs_path, 'r') as fp:
             return fp.read()

@@ -62,6 +62,10 @@ class FileOutput(Base):
     def abs_path(self):
         return os.path.abspath(self.path)
 
+    @property
+    def name(self):
+        return os.path.basename(self.path)
+        
     def __enter__(self):
         return self
 
