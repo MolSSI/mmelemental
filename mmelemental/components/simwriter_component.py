@@ -22,16 +22,19 @@ class SimWriter(GenericComponent):
         timeout: Optional[int] = None,
     ) -> Tuple[bool, FileOutput]:
 
-    	file = FileOutput(path=inputs.filename)
-    	schema = inputs.model
-    	for key, value in schema:
+        file = FileOutput(path=inputs.filename)
+        schema = inputs.model
+        for key, value in schema:
 
-    		if key == 'mol':
-    			value.to_file('coords.pdb')
-    			if inputs.engine == 'NAMD':
-    				file.write('coordinates \t {}\n'.format('coords.pdb'))
+            if key == 'mol':
+                value.to_file(file.name + '.pdb')
+                value.to_file(file.name + '.psf')
 
-    		elif value and key != 'cell' and key != 'forcefield' and key != 'solvent' and key != 'provenance':
-    			file.write('{} \t {}\n'.format(key, value))
+                if 'NAMD' in inputs.engine:
+                    file.write('coordinates \t {}\n'.format(file.name + '.pdb'))
+                    file.write('structure \t {}\n'.format(file.name + '.psf'))
 
-    	return True, file
+            elif value and key != 'cell' and key != 'forcefield' and key != 'solvent' and key != 'provenance':
+                file.write('{} \t {}\n'.format(key, value))
+
+        return True, file
