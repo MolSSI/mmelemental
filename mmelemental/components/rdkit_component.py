@@ -12,7 +12,7 @@ except:
     raise ModuleNotFoundError('Make sure rdkit is installed.')
 
 class MoleculeToRDKit(GenericComponent):
-    """ A model for converting Molecule to RDKIT molecule object. """
+    """ A component for converting Molecule to RDKIT molecule object. """
 
     @classmethod
     def input(cls):
@@ -135,6 +135,7 @@ class RDKitToMolecule(GenericComponent):
             connectivity.append((bond.GetBeginAtomIdx(), bond.GetEndAtomIdx(), 1)) # replace 1 with bondOrder, 
             # for now this is a hack for qcelemental does not allow bond orders higher than 5
 
+        # Get any random conformer?
         geo = rdmol.mol.GetConformer(0).GetPositions()
 
         input_dict = {'symbols': symbs, 
