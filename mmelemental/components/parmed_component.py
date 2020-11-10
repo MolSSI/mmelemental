@@ -11,7 +11,7 @@ except:
     raise ModuleNotFoundError('Make sure parmed is installed.')
 
 class MoleculeToParmed(GenericComponent):
-    """ A model for converting Molecule to ParmEd molecule object. """
+    """ A component for converting Molecule to ParmEd molecule object. """
     @classmethod
     def input(cls):
         return Molecule
@@ -60,7 +60,7 @@ class MoleculeToParmed(GenericComponent):
         return True, ParmedMolecule(mol=pmol)
 
 class ParmedToMolecule(GenericComponent):
-    """ A model for converting ParmEd molecule to Molecule object. """
+    """ A component for converting ParmEd molecule to Molecule object. """
 
     @classmethod
     def input(cls):
@@ -68,7 +68,6 @@ class ParmedToMolecule(GenericComponent):
 
     @classmethod
     def output(cls):
-        from mmelemental.models.molecule.mm_molecule import Molecule
         return Molecule
 
     def execute(
@@ -79,8 +78,6 @@ class ParmedToMolecule(GenericComponent):
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
-        from mmelemental.models.molecule.mm_molecule import Molecule
-
         if isinstance(inputs, dict):
             inputs = MoleculeReaderComponent.input()(**inputs)
         
