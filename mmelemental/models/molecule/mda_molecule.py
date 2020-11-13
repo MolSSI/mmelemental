@@ -5,7 +5,7 @@ from .gen_molecule import ToolkitMolecule
 try:
     import MDAnalysis
 except:
-    raise ModuleNotFoundError('Make sure MDAnalysis is installed for code validation.')
+    raise ModuleNotFoundError('Make sure MDAnalysis is installed.')
 
 class MdaMolecule(ToolkitMolecule):
     mol: MDAnalysis.Universe = Field(..., description = 'MDAnalysis molecule object.')
@@ -37,4 +37,4 @@ class MdaMolecule(ToolkitMolecule):
         elif inputs.code:
             raise NotImplementedError('No support for Chemical codes with MDAnalysis.')
 
-        return MDAnalysis(mol=mmol)
+        return MdaMolecule(mol=mmol)
