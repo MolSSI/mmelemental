@@ -17,15 +17,15 @@ def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "mmelemental" in sys.modules
 
-def test_mmelemental_molpdb():
-    groFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.pdb'))
-    topFile = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.top'))
+def test_mmelemental_molgro():
+    groFile = FileInput(path='mmelemental/data/molecules/dialanine.gro')
+    topFile = FileInput(path='mmelemental/data/molecules/dialanine.top')
 
     # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
 
-    return Molecule.from_file(filename=groFile.path)
+    return Molecule.from_file(filename=groFile.path, top_file=topFile)
 
-mol = test_mmelemental_molpdb()
+mol = test_mmelemental_molgro()
 md = Dynamics(
 		mol   = mol,
 		temp  = 300,
