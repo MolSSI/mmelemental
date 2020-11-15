@@ -54,12 +54,17 @@ def test_mmelemental_molgro(debug=True):
         print('\n')
 
     mol.to_file('parmed.pdb')
+    mol.to_file('parmed.psf')
     #mol.to_file('parmed.gro')
     mol.to_file('parmed.xyz')
     mol.to_file('parmed.smiles')
-    #os.remove('parmed.pdb')
-    #os.remove('parmed.xyz')
-    #os.remove('parmed.smiles')
+
+    if not debug:
+        os.remove('parmed.pdb')
+        os.remove('parmed.gro')
+        os.remove('parmed.xyz')
+        os.remove('parmed.smiles')
+
     return mol
 
 def test_mmelemental_component():
@@ -98,15 +103,20 @@ def test_mmelemental_molpdb(debug=True):
         print('\n')
 
     mol.to_file('rdkit.pdb')
+    mol.to_file('rdkit.gro')
     mol.to_file('rdkit.xyz')
     mol.to_file('rdkit.smiles')
-    #os.remove('rdkit.pdb')
-    #os.remove('rdkit.xyz')
-    #os.remove('rdkit.smiles')
+    
+    if not debug:
+        os.remove('rdkit.pdb')
+        os.remove('rdkit.gro')
+        os.remove('rdkit.xyz')
+        os.remove('rdkit.smiles')
+
     return mol
 
 if __name__ == '__main__':
     test_mmelemental_imported()
     test_mmelemental_component()
-    test_mmelemental_molpdb()
+    #test_mmelemental_molpdb()
     test_mmelemental_molgro()
