@@ -139,43 +139,9 @@ class Trajectory(Base):
         dtype : str, optional
             The type of file to write, attempts to infer dtype from the filename if not provided.
         """
-        if not dtype:
-            ext = Path(filename).suffix
-        else:
-            ext = dtype
-
-        if toolkit == 'qcelem': 
-            super().to_file(filename, dtype)
-        elif toolkit == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
-            from rdkit import Chem
-            
-            rdkmol = MoleculeToRDKit.compute(self)
-
-            if dtype == 'pdb':
-                writer = Chem.PDBWriter(filename)
-            elif dtype == 'sdf':
-                writer = Chem.SDWriter(filename)
-            elif dtype == 'smiles':
-                writer = Chem.SmilesWriter(filename)
-            else:
-                raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
-
-            writer.write(rdkmol.mol)
-            writer.close()
-
-        elif toolkit == 'parmed':
-            from mmelemental.components.parmed_component import MoleculeToParmed
-            pmol = MoleculeToParmed.compute(self)
-            pmol.mol.save(filename)
-        else:
-            raise ValueError(f'Data type not yet supported: {dtype}')
+        raise NotImplementedError(f'Data type {dtype} not available.')
 
     def to_data(self, dtype: str):
         """ Converts Trajectory to toolkit-specific trajectory object. """
 
-        if dtype == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
-            return MoleculeToRDKit.compute(self).mol
-        else:
-            raise NotImplementedError(f'Data type {dtype} not available.')
+       raise NotImplementedError(f'Data type {dtype} not available.')
