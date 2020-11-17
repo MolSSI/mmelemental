@@ -143,5 +143,4 @@ class Trajectory(Base):
 
     def to_data(self, dtype: str):
         """ Converts Trajectory to toolkit-specific trajectory object. """
-
-       raise NotImplementedError(f'Data type {dtype} not available.')
+        raise NotImplementedError(f'Data type {dtype} not available.')
