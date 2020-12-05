@@ -1,4 +1,4 @@
-from mmcomponents.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.sim.sim_writer import SimWriterInput
 from typing import Dict, List, Any, Optional, Tuple
