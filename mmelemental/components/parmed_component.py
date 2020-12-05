@@ -1,4 +1,4 @@
-from mmcomponents.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput

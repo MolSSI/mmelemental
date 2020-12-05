@@ -1,6 +1,5 @@
 from qcelemental import models
 from pydantic import Field
-
 from typing import Dict
 from mmelemental.extras import get_information
 from typing import Optional
