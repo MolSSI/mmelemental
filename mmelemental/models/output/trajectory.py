@@ -29,6 +29,10 @@ class TrajectoryOutput(Base):
         None, 
         description = 'Atomic forces of length natoms.'
     )
+    pot_energy: Optional[Array[float]] = Field(
+        None, 
+        description = 'Total system potential energy.'
+    )
     timestep: Optional[float] = Field(
         None, 
         description = 'Timestep size.'
