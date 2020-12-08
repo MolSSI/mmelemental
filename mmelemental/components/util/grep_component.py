@@ -1,8 +1,8 @@
 from mmelemental.components.util.cmd_component import CmdComponent
 from typing import Any, Dict, List, Optional, Tuple
 import os
-from models.components.utils.input import GrepInput
-from models.components.utils.output import CmdOutput
+from mmelemental.models.util.input import GrepInput
+from mmelemental.models.util.output import CmdOutput
 
 class Grep(CmdComponent):
 

@@ -17,7 +17,6 @@ class OpenBabel(CmdComponent):
     def build_input(
         self, input_model: OpenBabelInput, config: "TaskConfig" = None, template: Optional[str] = None
     ) -> Dict[str, Any]:
-        
         output = 'tmp.' + input_model.outputExt
         cmd = ["obabel", input_model.fileInput.path, "-O" + output]
 
@@ -42,7 +41,6 @@ class OpenBabel(CmdComponent):
         }
 
     def parse_output(self, outfiles: Dict[str, Dict[str, str]], input_model: OpenBabelInput) -> CmdOutput:
-        
         output_file = outfiles['outfiles']['tmp.' + input_model.outputExt]
 
         return CmdOutput(stdout=output_file)

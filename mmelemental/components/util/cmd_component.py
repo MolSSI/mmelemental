@@ -1,19 +1,9 @@
 from qcengine.util import execute
-from qcelemental import models
 from mmelemental.models.util.output import FileOutput
-from mmic.components.base.base_component import ProgramHarness
+from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-class CmdComponent(ProgramHarness):
-
-    @classmethod
-    def input(cls):
-        return models.ProtoModel
-
-    @classmethod
-    def output(cls):
-        return models.ProtoModel
-
+class CmdComponent(GenericComponent):
     def clean(self, files: Union[List[FileOutput], FileOutput]):
         if isinstance(files, list):
             for file in files:
