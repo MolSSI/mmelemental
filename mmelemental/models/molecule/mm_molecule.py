@@ -42,6 +42,45 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
         description="A HELM code (currently only supports peptides)."
     )
 
+
+import unyt
+from typing import Any, Dict
+import numpy as np
+
+class TypedArray(unyt.unyt_array):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        try:
+            v = unyt.unyt_array(v, dtype=cls._dtype)
+        except ValueError:
+            raise ValueError("Could not cast {} to NumPy Array!".format(v))
+
+        return v
+
+    @classmethod
+    def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
+        dt = cls._dtype
+        if dt is int or np.issubdtype(dt, np.integer):
+            items = {"type": "number", "multipleOf": 1.0}
+        elif dt is float or np.issubdtype(dt, np.floating):
+            items = {"type": "number"}
+        elif dt is str or np.issubdtype(dt, np.string_):
+            items = {"type": "string"}
+        elif dt is bool or np.issubdtype(dt, np.bool_):
+            items = {"type": "boolean"}
+        field_schema.update(type="array", items=items)
+
+class ArrayMeta(type):
+    def __getitem__(self, dtype):
+        return type("UnytArray", (TypedArray,), {"_dtype": dtype})
+
+class UnytArray(np.ndarray, metaclass=ArrayMeta):
+    pass
+
 class Molecule(qcelemental.models.Molecule):
     """
     An MMSchema representation of a Molecule based on QCSchema. This model contains data for symbols, geometry, 
@@ -56,7 +95,7 @@ class Molecule(qcelemental.models.Molecule):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    geometry: Optional[Array[float]] = Field(  # type: ignore
+    geometry: Union[Array[float], UnytArray[float]] = Field(
         None,
         description="An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
         "Atom ordering is fixed; that is, a consumer who shuffles atoms must not reattach the input "
