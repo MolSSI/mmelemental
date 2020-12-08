@@ -43,7 +43,8 @@ class CmdOutput(Base):
         return super().dict(*args, **kwargs)
 
 class FileOutput(Base):
-    path: str = Field(..., description='Model for writing data to output file. No file is created if "write" method is not invoked.')
+    """ Model for writing output to files. No file is created if "write" method is not invoked. """
+    path: str = Field(..., description='Output filename path. ')
     clean: bool = Field(False, description='If set to True, the file is removed once object is out of scope.')
     mode: str = Field('a', description='File write mode. Defaults to appending to files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
 
@@ -76,6 +77,11 @@ class FileOutput(Base):
     def remove(self):
         if os.path.isfile(self.abs_path):
             os.remove(self.abs_path)
+
+    @staticmethod
+    def rand_name(N=8):
+        import string, random
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
 
     def __exit__(self, type, value, tb):
         if not tb:
