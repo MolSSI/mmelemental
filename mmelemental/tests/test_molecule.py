@@ -11,8 +11,8 @@ from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 
-from mmelemental.components.molreader_component import MoleculeReaderComponent
-from mmelemental.components.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
+from mmelemental.components.io.molreader_component import MoleculeReaderComponent
+from mmelemental.components.io.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
 
 def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
@@ -61,8 +61,9 @@ def test_mmelemental_molgro(debug=True):
 
     if not debug:
         os.remove('parmed.pdb')
-        os.remove('parmed.gro')
+        #os.remove('parmed.gro')
         os.remove('parmed.xyz')
+        os.remove('parmed.psf')
         os.remove('parmed.smiles')
 
     return mol
