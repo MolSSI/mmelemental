@@ -1,5 +1,5 @@
 from mmelemental.models.base import Base
-from mmcomponents.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.molecule.mm_molecule import Molecule

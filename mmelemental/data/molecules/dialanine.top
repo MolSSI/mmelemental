@@ -2,7 +2,7 @@
 ;	File 'topol.top' was generated
 ;	By user: unknown (1000)
 ;	On host: DESKTOP-SUQI6NO
-;	At date: Thu Oct  1 16:40:29 2020
+;	At date: Fri Dec  4 15:32:54 2020
 ;
 ;	This is a standalone topology file
 ;
@@ -18,7 +18,7 @@
 ;
 
 ; Include forcefield parameters
-#include "amber99.ff/forcefield.itp"
+#include "amber99sb-ildn.ff/forcefield.itp"
 
 [ moleculetype ]
 ; Name            nrexcl

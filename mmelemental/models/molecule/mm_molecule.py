@@ -6,7 +6,7 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
+from mmelemental.components.io.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
@@ -42,6 +42,45 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
         description="A HELM code (currently only supports peptides)."
     )
 
+
+import unyt
+from typing import Any, Dict
+import numpy as np
+
+class TypedArray(unyt.unyt_array):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        try:
+            v = unyt.unyt_array(v, dtype=cls._dtype)
+        except ValueError:
+            raise ValueError("Could not cast {} to NumPy Array!".format(v))
+
+        return v
+
+    @classmethod
+    def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
+        dt = cls._dtype
+        if dt is int or np.issubdtype(dt, np.integer):
+            items = {"type": "number", "multipleOf": 1.0}
+        elif dt is float or np.issubdtype(dt, np.floating):
+            items = {"type": "number"}
+        elif dt is str or np.issubdtype(dt, np.string_):
+            items = {"type": "string"}
+        elif dt is bool or np.issubdtype(dt, np.bool_):
+            items = {"type": "boolean"}
+        field_schema.update(type="array", items=items)
+
+class ArrayMeta(type):
+    def __getitem__(self, dtype):
+        return type("UnytArray", (TypedArray,), {"_dtype": dtype})
+
+class UnytArray(np.ndarray, metaclass=ArrayMeta):
+    pass
+
 class Molecule(qcelemental.models.Molecule):
     """
     An MMSchema representation of a Molecule based on QCSchema. This model contains data for symbols, geometry, 
@@ -49,24 +88,24 @@ class Molecule(qcelemental.models.Molecule):
     Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively 
     to assist with duplicate detection.
     """
-    symbols: Array[str] = Field(
+    symbols: Optional[Array[str]] = Field(
         None,
         description = "An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    coordinates: Array[float] = Field(
+    geometry: Union[Array[float], UnytArray[float]] = Field(
         None,
-        description = "An ordered (natoms, 3) array-like for XYZ atomic coordinates."
-    )
-    velocities: Array[float] = Field(
-        None,
-        description = "An ordered (natoms, 3) array-like for XYZ atomic velocities",
-    )
-    forces: Array[float] = Field(
-        None,
-        description = "An ordered (natoms, 3) array-like for XYZ atomic forces",
+        description="An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
+        "Atom ordering is fixed; that is, a consumer who shuffles atoms must not reattach the input "
+        "(pre-shuffling) molecule schema instance to any output (post-shuffling) per-atom results "
+        "(e.g., gradient). Index of the first dimension matches the 0-indexed indices of all other "
+        "per-atom settings like ``symbols`` and ``real``."
+        "\n"
+        "Can also accept array-likes which can be mapped to (nat,3) such as a 1-D list of length 3*nat, "
+        "or the serialized version of the array in (3*nat,) shape; all forms will be reshaped to "
+        "(nat,3) for this attribute.",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
         None,
@@ -90,14 +129,14 @@ class Molecule(qcelemental.models.Molecule):
         None, 
         description = "..."
     )
-    identifiers: Optional[Identifiers] = Field(
-        None, 
-        description = "An optional dictionary of additional identifiers by which this Molecule can be referenced, "
-        "such as INCHI, SMILES, SMARTs, etc. See the :class:``Identifiers`` model for more details."
-    )
     names: Optional[List[str]] = Field(
         None, 
         description = "A list of atomic label names."
+    )
+    identifiers: Optional[Identifiers] = Field(
+        None, 
+        description = "An optional dictionary of additional identifiers by which this Molecule can be referenced, "
+        "such as INCHI, SMILES, SMARTS, etc. See the :class:``Identifiers`` model for more details."
     )
     rotateBonds: Optional[List[Tuple[int, int]]] = Field(
         None, 
@@ -109,17 +148,18 @@ class Molecule(qcelemental.models.Molecule):
 
     # Constructors
     @classmethod
-    def from_file(cls, filename: Union[FileInput, str], top: Union[FileInput, str] = None, dtype: Optional[str] = None, *, orient: bool = False, **kwargs) -> "Molecule":
+    def from_file(cls, filename: Union[FileInput, str], top: Union[FileInput, str] = None, dtype: Optional[str] = None, 
+        *, orient: bool = False, **kwargs) -> "Molecule":
         """
-        Constructs a molecule object from a file.
+        Constructs a Molecule object from a file.
         Parameters
         ----------
         filename : str
             The coords filename to build
         top: str
             The topology filename
-        dtype : Optional[str], optional
-            The type of file to interpret.
+        dtype : str, optional
+            The type of file to interpret. If not set, mmelemental attempts to discover the file type.
         orient : bool, optional
             Orientates the molecule to a standard frame or not.
         **kwargs
@@ -127,7 +167,7 @@ class Molecule(qcelemental.models.Molecule):
         Returns
         -------
         Molecule
-            A constructed molecule class.
+            A constructed Molecule class.
         """
         if not isinstance(filename, FileInput):
             filename = FileInput(path=filename)
@@ -153,23 +193,23 @@ class Molecule(qcelemental.models.Molecule):
     def from_data(cls, data: Any, dtype: Optional[str] = None, *,
         orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "Molecule":
         """
-        Constructs a molecule object from a data structure.
+        Constructs a Molecule object from a data object.
         Parameters
         ----------
         data: Any
             Data to construct Molecule from
-        dtype: Optional[str], optional
+        dtype: str, optional
             How to interpret the data, if not passed attempts to discover this based on input type.
         orient: bool, optional
             Orientates the molecule to a standard frame or not.
         validate: bool, optional
             Validates the molecule or not.
-        **kwargs: Dict[str, Any]
+        **kwargs
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
         Returns
         -------
         Molecule
-            A constructed molecule class.
+            A constructed Molecule class.
         """
         if isinstance(data, str):
             try:
@@ -186,7 +226,7 @@ class Molecule(qcelemental.models.Molecule):
         return MoleculeReaderComponent.compute(mol_input)
 
     def to_file(self, filename: str, dtype: Optional[str] = None) -> None:
-        """Writes the Molecule to a file.
+        """ Writes the Molecule to a file.
         Parameters
         ----------
         filename : str
@@ -210,7 +250,7 @@ class Molecule(qcelemental.models.Molecule):
         if toolkit == 'qcelem': 
             super().to_file(filename, dtype)
         elif toolkit == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
             from rdkit import Chem
             
             rdkmol = MoleculeToRDKit.compute(self)
@@ -228,7 +268,7 @@ class Molecule(qcelemental.models.Molecule):
             writer.close()
 
         elif toolkit == 'parmed':
-            from mmelemental.components.parmed_component import MoleculeToParmed
+            from mmelemental.components.trans.parmed_component import MoleculeToParmed
             pmol = MoleculeToParmed.compute(self)
             pmol.mol.save(filename)
         else:
@@ -238,7 +278,39 @@ class Molecule(qcelemental.models.Molecule):
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
             return MoleculeToRDKit.compute(self).mol
         else:
             raise NotImplementedError(f'Data type {dtype} not available.')
+
+    def get_molecular_formula(self, order: str = "alphabetical") -> str:
+        """
+        Returns the molecular formula for a molecule.
+        Parameters
+        ----------
+        order: str, optional
+            Sorting order of the formula. Valid choices are "alphabetical" and "hill".
+        Returns
+        -------
+        str
+            The molecular formula.
+        Examples
+        --------
+        >>> methane = qcelemental.models.Molecule('''
+        ... H      0.5288      0.1610      0.9359
+        ... C      0.0000      0.0000      0.0000
+        ... H      0.2051      0.8240     -0.6786
+        ... H      0.3345     -0.9314     -0.4496
+        ... H     -1.0685     -0.0537      0.1921
+        ... ''')
+        >>> methane.get_molecular_formula()
+        CH4
+        >>> hcl = qcelemental.models.Molecule('''
+        ... H      0.0000      0.0000      0.0000
+        ... Cl     0.0000      0.0000      1.2000
+        ... ''')
+        >>> hcl.get_molecular_formula()
+        ClH
+        """
+
+        return super().get_molecular_formula(order)

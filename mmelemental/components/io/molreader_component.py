@@ -1,6 +1,6 @@
 from typing import List, Optional, Any, Dict, Tuple
 
-from mmcomponents.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
@@ -44,19 +44,19 @@ class MoleculeReaderComponent(GenericComponent):
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
             elif dtype == 'rdkit':
-                from mmelemental.components.rdkit_component import RDKitToMolecule
+                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
                 return True, RDKitToMolecule.compute(inputs)
             elif dtype == 'parmed':
-                from mmelemental.components.parmed_component import ParmedToMolecule
+                from mmelemental.components.trans.parmed_component import ParmedToMolecule
                 return True, ParmedToMolecule.compute(inputs)               
             else:
                 raise NotImplementedError(f'Data type not yet supported: {dtype}.')
         # Only RDKit is handling chem codes and file objects for now!
         elif inputs.code:
-            from mmelemental.components.rdkit_component import RDKitToMolecule
+            from mmelemental.components.trans.rdkit_component import RDKitToMolecule
             return True, RDKitToMolecule.compute(inputs)
         elif inputs.file:
-            from mmelemental.components.rdkit_component import RDKitToMolecule
+            from mmelemental.components.trans.rdkit_component import RDKitToMolecule
             return True, RDKitToMolecule.compute(inputs)
         else:
             raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')

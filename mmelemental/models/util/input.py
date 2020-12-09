@@ -27,9 +27,22 @@ class FileInput(Base):
     def name(self):
         return os.path.basename(self.path)  
 
+    def __enter__(self):
+        return self
+
     def read(self) -> str:
         with open(self.abs_path, 'r') as fp:
             return fp.read()
+
+    def remove(self):
+        if os.path.isfile(self.abs_path):
+            os.remove(self.abs_path)
+   
+    def __exit__(self, type, value, tb):
+        if not tb:
+            self.remove()
+        else:
+            raise Exception
 
 class CmdInput(Base):
     fileInput: Union[FileInput, List[FileInput]] = Field(
