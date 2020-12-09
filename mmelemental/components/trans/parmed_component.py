@@ -1,5 +1,4 @@
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.util.output import FileOutput
 from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.mm_molecule import Molecule
@@ -104,16 +103,12 @@ class ParmedToMolecule(GenericComponent):
         symbs = [atom.element_name for atom in pmol.mol.atoms]
         names = [atom.name for atom in pmol.mol.atoms]
 
-        try:
+        if hasattr(pmol.mol.atoms[0], 'mass'):
             masses = [atom.mass for atom in pmol.mol.atoms]
-        except:
-            masses = None
 
-        try:
+        if hasattr(pmol.mol.atoms[0], 'residue'):
             residues = [(atom.residue.name, atom.residue.idx) for atom in pmol.mol.atoms]
-        except:
-            residues = None
-            
+
         connectivity = []
 
         for bond in pmol.mol.bonds:
