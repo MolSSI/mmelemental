@@ -6,7 +6,7 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
+from mmelemental.components.io.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
@@ -250,7 +250,7 @@ class Molecule(qcelemental.models.Molecule):
         if toolkit == 'qcelem': 
             super().to_file(filename, dtype)
         elif toolkit == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
             from rdkit import Chem
             
             rdkmol = MoleculeToRDKit.compute(self)
@@ -268,7 +268,7 @@ class Molecule(qcelemental.models.Molecule):
             writer.close()
 
         elif toolkit == 'parmed':
-            from mmelemental.components.parmed_component import MoleculeToParmed
+            from mmelemental.components.trans.parmed_component import MoleculeToParmed
             pmol = MoleculeToParmed.compute(self)
             pmol.mol.save(filename)
         else:
@@ -278,7 +278,7 @@ class Molecule(qcelemental.models.Molecule):
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
-            from mmelemental.components.rdkit_component import MoleculeToRDKit
+            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
             return MoleculeToRDKit.compute(self).mol
         else:
             raise NotImplementedError(f'Data type {dtype} not available.')
