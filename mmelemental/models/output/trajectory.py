@@ -1,4 +1,4 @@
-from pydantic import Field, validator
+from pydantic import Field
 from typing import Union, Optional, Tuple, Dict, Any
 from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
