@@ -1,4 +1,3 @@
-from mmelemental.models.base import Base
 from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
