@@ -5,7 +5,7 @@ from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
 
-class MoleculeReaderComponent(GenericComponent):
+class MolReaderComponent(GenericComponent):
     """ Factory component that constructs a Molecule object from MoleculeReaderInput.
     Which toolkit-specific component is called depends on MoleculeReaderInput.data.dtype."""
 
@@ -29,7 +29,7 @@ class MoleculeReaderComponent(GenericComponent):
         from mmelemental.models.molecule.mm_molecule import Molecule
 
         if isinstance(inputs, dict):
-            inputs = MoleculeReaderComponent.input()(**inputs)
+            inputs = MolReaderComponent.input()(**inputs)
 
         if inputs.args:
             orient = inputs.args.get('orient')
@@ -61,7 +61,7 @@ class MoleculeReaderComponent(GenericComponent):
         else:
             raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
-class TkMoleculeReaderComponent(GenericComponent):
+class TkMolReaderComponent(GenericComponent):
 
     _extension_maps = {
         'qcelem':
@@ -108,11 +108,11 @@ class TkMoleculeReaderComponent(GenericComponent):
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
         if isinstance(inputs, dict):
-            inputs = TkMoleculeReaderComponent.input()(**inputs)
+            inputs = TkMolReaderComponent.input()(**inputs)
 
         if inputs.file:
-            for ext_map_key in TkMoleculeReaderComponent._extension_maps:
-                dtype = TkMoleculeReaderComponent._extension_maps[ext_map_key].get(inputs.file.ext)
+            for ext_map_key in TkMolReaderComponent._extension_maps:
+                dtype = TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.file.ext)
                 if dtype:
                     break
 
@@ -122,10 +122,10 @@ class TkMoleculeReaderComponent(GenericComponent):
             # need to support TkMolecule conversion from e.g. rdkit to parmed, etc.
             raise ValueError('Data type not understood. Supply a file or a chemical code.')
 
-        if '.' + dtype in TkMoleculeReaderComponent._extension_maps['rdkit']:
+        if '.' + dtype in TkMolReaderComponent._extension_maps['rdkit']:
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             return True, RDKitMolecule.build_mol(inputs, dtype)
-        elif '.' + dtype in TkMoleculeReaderComponent._extension_maps['parmed']:
+        elif '.' + dtype in TkMolReaderComponent._extension_maps['parmed']:
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
             return True, ParmedMolecule.build_mol(inputs, dtype)
         else:

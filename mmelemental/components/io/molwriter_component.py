@@ -1,7 +1,7 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
 
-class MoleculeWriter(GenericComponent):
+class MolWriterComponent(GenericComponent):
 
     @classmethod
     def input(cls):
