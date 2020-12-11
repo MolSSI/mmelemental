@@ -78,7 +78,7 @@ class ParmedToMolecule(GenericComponent):
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
         if isinstance(inputs, dict):
-            inputs = MoleculeReaderComponent.input()(**inputs)
+            inputs = MolReaderComponent.input()(**inputs)
         
         if inputs.data:
             dtype = inputs.data.dtype

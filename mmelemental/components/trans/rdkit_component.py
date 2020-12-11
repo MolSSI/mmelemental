@@ -91,7 +91,7 @@ class RDKitToMolecule(GenericComponent):
         from mmelemental.models.molecule.mm_molecule import Molecule
 
         if isinstance(inputs, dict):
-            inputs = MoleculeReaderComponent.input()(**inputs)
+            inputs = MolReaderComponent.input()(**inputs)
         
         if inputs.data:
             dtype = inputs.data.dtype

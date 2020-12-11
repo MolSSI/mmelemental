@@ -1,7 +1,7 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.molecule.mda_molecule import MdaMolecule
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MolReaderInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from typing import Dict, Any, List, Tuple, Optional
 
@@ -38,7 +38,7 @@ class MdaToMolecule(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MoleculeReaderInput
+        return MolReaderInput
 
     @classmethod
     def output(cls):
@@ -53,7 +53,7 @@ class MdaToMolecule(GenericComponent):
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
         if isinstance(inputs, dict):
-            inputs = MoleculeReaderComponent.input()(**inputs)
+            inputs = MolReaderComponent.input()(**inputs)
         
         if inputs.data:
             dtype = inputs.data.dtype
