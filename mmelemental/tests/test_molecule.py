@@ -11,7 +11,7 @@ from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 
-from mmelemental.components.io.molreader_component import MoleculeReaderComponent
+from mmelemental.components.io.molreader_component import MolReaderComponent
 from mmelemental.components.io.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
 
 def test_mmelemental_imported():
