@@ -9,7 +9,7 @@ import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MolReaderInput
 
 from mmelemental.components.io.molreader_component import MolReaderComponent
 from mmelemental.components.io.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
@@ -70,7 +70,7 @@ def test_mmelemental_molgro(debug=True):
 
 def test_mmelemental_component():
     smiles = ChemCode(code='CCCC')
-    inputs = MoleculeReaderInput(code=smiles)
+    inputs = MolReaderInput(code=smiles)
     mol = MolConstructorComponent.compute(inputs)
 
 def test_mmelemental_molpdb(debug=True):
