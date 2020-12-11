@@ -7,6 +7,8 @@ MMElemental
 
 A python package which provides basic models and components for molecular mechanics applications.
 
+![image](mmelemental/data/imgs/mmelemental.png)
+
 ### Copyright
 
 Copyright (c) 2020, MolSSI
