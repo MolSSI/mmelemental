@@ -1,6 +1,6 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MolReaderInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from typing import Dict, Any, List, Tuple, Optional
 
@@ -63,7 +63,7 @@ class ParmedToMolecule(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MoleculeReaderInput
+        return MolReaderInput
 
     @classmethod
     def output(cls):

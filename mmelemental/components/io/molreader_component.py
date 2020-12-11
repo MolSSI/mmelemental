@@ -1,17 +1,17 @@
 from typing import List, Optional, Any, Dict, Tuple
 
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
+from mmelemental.models.molecule.mol_reader import MolReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
 
 class MolReaderComponent(GenericComponent):
-    """ Factory component that constructs a Molecule object from MoleculeReaderInput.
-    Which toolkit-specific component is called depends on MoleculeReaderInput.data.dtype."""
+    """ Factory component that constructs a Molecule object from MolReaderInput.
+    Which toolkit-specific component is called depends on MolReaderInput.data.dtype."""
 
     @classmethod
     def input(cls):
-        return MoleculeReaderInput
+        return MolReaderInput
 
     @classmethod
     def output(cls):
@@ -93,7 +93,7 @@ class TkMolReaderComponent(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MoleculeReaderInput
+        return MolReaderInput
 
     @classmethod
     def output(cls):
@@ -114,7 +114,11 @@ class TkMolReaderComponent(GenericComponent):
             for ext_map_key in TkMolReaderComponent._extension_maps:
                 dtype = TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.file.ext)
                 if dtype:
-                    break
+                    if inputs.top_file:
+                        if TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.top_file.ext):
+                            break
+                    else:
+                        break
 
         elif inputs.code:
             dtype = inputs.code.code_type.lower()
