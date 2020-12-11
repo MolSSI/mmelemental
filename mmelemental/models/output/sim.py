@@ -4,7 +4,6 @@ from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.base import Base
-from mmelemental.components.trajreader_component import SingleFrameComponent, MultiFrameComponent
 
 class TrajectoryReaderInput(Base):
     traj: Union[FileInput, str] = Field(
@@ -16,7 +15,7 @@ class TrajectoryReaderInput(Base):
         description = 'Topology input filename.'
     )
 
-class TrajectoryOutput(Base):
+class Frame(Base):
     coordinates: Array[float] = Field(
         ..., 
         description = 'Atomic coordinates of length natoms.'
@@ -42,14 +41,14 @@ class TrajectoryOutput(Base):
         description = 'Ligand score used in docking simulations.'
     )
 
-class Trajectory(Base):
-    topology: Optional[Array[Molecule]] = Field(
+class SimOutput(Base):
+    top: Optional[Array[Molecule]] = Field(
         None, 
-        description = 'One or more Molecule object(s).'
+        description = 'Single :class:``Molecule`` object representing the molecular topology, or multiple objects for time-dependent topologies.'
     )
-    result: Array[TrajectoryOutput] = Field(
+    traj: Array[Frame] = Field(
         None,
-        description = 'An Array of TrajectoryOutput objects of length nframes.'
+        description = 'An Array of :class:``Frame`` objects of length nframes.'
     )
     _formats: Dict[str, Tuple[str]] =  {
             'dcd': ('mdanalysis', 'mdtraj', 'pytraj', 'loos'),
@@ -96,8 +95,10 @@ class Trajectory(Base):
         traj_input = TrajectoryReaderInput(traj=traj, top=top)
 
         if all_frames:
+            from mmelemental.components.io.trajectory_component import MultiFrameComponent
             return MultiFrameComponent.compute(traj_input)
         else:
+            from mmelemental.components.io.trajectory_component import SingleFrameComponent
             return SingleFrameComponent.compute(traj_input)
 
     @classmethod
