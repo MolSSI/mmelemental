@@ -1,7 +1,7 @@
 from qcengine.util import execute
 from mmelemental.models.util.output import FileOutput
 from mmic.components.blueprints.generic_component import GenericComponent
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Tuple, Optional, Union
 
 class CmdComponent(GenericComponent):
     def clean(self, files: Union[List[FileOutput], FileOutput]):
