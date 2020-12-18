@@ -6,8 +6,8 @@ import random
 import string
 import numpy
 from pydantic import validator, Field, ValidationError
-from mmelemental.components.io.molreader_component import TkMoleculeReaderComponent, MoleculeReaderComponent
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
+from mmelemental.components.io.molreader_component import TkMolReaderComponent, MolReaderComponent
+from mmelemental.models.molecule.mol_reader import MolReaderInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from pathlib import Path
@@ -176,16 +176,15 @@ class Molecule(qcelemental.models.Molecule):
             top = FileInput(path=top)
  
         if not dtype:
-            if filename.ext in TkMoleculeReaderComponent._extension_maps['qcelem']:
-                dtype = TkMoleculeReaderComponent._extension_maps['qcelem'][filename.ext]
+            if filename.ext in TkMolReaderComponent._extension_maps['qcelem']:
+                dtype = TkMolReaderComponent._extension_maps['qcelem'][filename.ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename.abs_path, dtype, orient=orient, **kwargs)
-        
         if top:
-            mol_input = MoleculeReaderInput(file=filename, top_file=top)
+            mol_input = MolReaderInput(file=filename, top_file=top)
         else:
-            mol_input = MoleculeReaderInput(file=filename)
+            mol_input = MolReaderInput(file=filename)
 
-        mol = TkMoleculeReaderComponent.compute(mol_input)
+        mol = TkMolReaderComponent.compute(mol_input)
 
         return cls.from_data(mol, dtype=mol.dtype)
         
@@ -214,16 +213,16 @@ class Molecule(qcelemental.models.Molecule):
         if isinstance(data, str):
             try:
                 code = ChemCode(code=data)
-                mol_input = MoleculeReaderInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+                mol_input = MolReaderInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
             except:
                 raise ValueError
         elif isinstance(data, ChemCode):
-            mol_input = MoleculeReaderInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+            mol_input = MolReaderInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
         else:
             # Let's hope this is a toolkit-specific molecule and pass it as data
-            mol_input = MoleculeReaderInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+            mol_input = MolReaderInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
         
-        return MoleculeReaderComponent.compute(mol_input)
+        return MolReaderComponent.compute(mol_input)
 
     def to_file(self, filename: str, dtype: Optional[str] = None) -> None:
         """ Writes the Molecule to a file.
@@ -236,14 +235,14 @@ class Molecule(qcelemental.models.Molecule):
         """
         if not dtype:
             ext = Path(filename).suffix
-            for map_name in TkMoleculeReaderComponent._extension_maps:
-                if ext in TkMoleculeReaderComponent._extension_maps[map_name]:
+            for map_name in TkMolReaderComponent._extension_maps:
+                if ext in TkMolReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
-                    dtype = TkMoleculeReaderComponent._extension_maps[map_name][ext]
+                    dtype = TkMolReaderComponent._extension_maps[map_name][ext]
                     break
         else:
-            for map_name in TkMoleculeReaderComponent._extension_maps:
-                if dtype in TkMoleculeReaderComponent._extension_maps[map_name]:
+            for map_name in TkMolReaderComponent._extension_maps:
+                if dtype in TkMolReaderComponent._extension_maps[map_name]:
                     toolkit = map_name
                     break
 
