@@ -29,7 +29,7 @@ class ForceField(Base):
     	With 1-4, any atoms that are connected by a linear bond, or a sequence of two bonds, or a sequence of three bonds, are excluded. \
     	With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of \
     	3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.')
-    inclusions: Optional[str] = Field(None, description = 'Which pairs of 1-4 bonded atoms to include in non-bonded calculations.')
+    inclusions: Optional[str] = Field(None, description = 'Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.')
 
     name: Optional[str] = Field(None, description = 'Forcefield name e.g. charmm27, amber99, etc.')
     types: Dict[str, str] = Field(None, description = "Atom types specified by the dictionary {'atom': 'type'}.")
