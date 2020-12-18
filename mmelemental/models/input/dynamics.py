@@ -1,10 +1,10 @@
-from .base import SimBase
+from .base import SimInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from pydantic import Field
 from typing import Any, Tuple, Union, Optional
 from qcelemental.models.types import Array
 
-class DynamicsInput(SimBase):
+class DynamicsInput(SimInput):
     """ Molecular dynamics parameter input schema."""
 
     # System fields

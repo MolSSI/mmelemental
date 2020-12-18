@@ -5,7 +5,7 @@ from mmelemental.models.forcefield import ForceField
 from pydantic import Field
 from typing import Any, Tuple, Union
 
-class SimBase(Base):
+class SimInput(Base):
     """ Basic model for molecular simulation input parameters."""
 
     # System fields

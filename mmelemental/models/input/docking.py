@@ -1,9 +1,9 @@
-from .base import SimBase
+from .base import SimInput
 from typing import List, Optional, Tuple, Union
 from mmelemental.models.molecule.mm_molecule import Molecule
 from pydantic import Field
 
-class DockingInput(SimBase):
+class DockingInput(SimInput):
     ligand: Molecule = Field(
         ..., description="Molecule model for a candidate ligand (e.g. drug)."
     )
