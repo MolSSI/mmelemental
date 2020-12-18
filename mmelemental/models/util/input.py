@@ -7,13 +7,17 @@ from .output import FileOutput
 from pathlib import Path
 
 class FileInput(Base):
-    path: str
+    path: str = Field(
+        ...,
+        description = "File path, relative or absolute."
+    )
+    _content: List = [] # this is a hack a round Pydantic's immutable objects. Meant only for internal use~!
 
     @validator('path')
-    def _exists(cls, v):
-        if not os.path.isfile(v):
-            raise IOError(f'Input file {v} does not eixst.')
-        return v
+    def _exists(cls, path):
+        if not os.path.isfile(path):
+            raise IOError(f'Input file {path} does not eixst.')
+        return path
 
     @property
     def abs_path(self):
@@ -32,7 +36,8 @@ class FileInput(Base):
 
     def read(self) -> str:
         with open(self.abs_path, 'r') as fp:
-            return fp.read()
+            self._content.append(fp.read())
+            return self._content[0]
 
     def remove(self):
         if os.path.isfile(self.abs_path):
