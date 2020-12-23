@@ -4,6 +4,7 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 class CmdComponent(GenericComponent):
+    """ Cmd process: build_input() -> run() -> parse_output() """
     def clean(self, files: Union[List[FileOutput], FileOutput]):
         if isinstance(files, list):
             for file in files:
@@ -38,8 +39,8 @@ class CmdComponent(GenericComponent):
     ) -> Tuple[bool, Dict[str, Any]]:
 
         infiles = inputs["infiles"]
-
         outfiles = inputs["outfiles"]
+
         if extra_outfiles is not None:
             outfiles.extend(extra_outfiles)
 
@@ -61,3 +62,12 @@ class CmdComponent(GenericComponent):
             self.clean(clean_files)
         
         return exe_success, proc
+
+    def build_input(
+        self,
+        input_model: Dict[str, Any],
+        config: Optional["TaskConfig"] = None,
+        template: Optional[str] = None,
+    ) -> Dict[str, Any]:
+
+        raise NotImplementedError
