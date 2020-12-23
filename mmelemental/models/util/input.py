@@ -7,16 +7,16 @@ from .output import FileOutput
 from pathlib import Path
 
 class FileInput(Base):
+    """ A model that represents system files that may or may not exist at the time of object insantiation. """
     path: str = Field(
         ...,
         description = "File path, relative or absolute."
     )
-    _content: List = [] # this is a hack a round Pydantic's immutable objects. Meant only for internal use~!
 
     @validator('path')
     def _exists(cls, path):
         if not os.path.isfile(path):
-            raise IOError(f'Input file {path} does not eixst.')
+           raise IOError(f'Input file {path} does not eixst.')
         return path
 
     @property
@@ -36,8 +36,7 @@ class FileInput(Base):
 
     def read(self) -> str:
         with open(self.abs_path, 'r') as fp:
-            self._content.append(fp.read())
-            return self._content[0]
+            return fp.read()
 
     def remove(self):
         if os.path.isfile(self.abs_path):
