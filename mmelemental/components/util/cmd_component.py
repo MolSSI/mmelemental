@@ -2,9 +2,20 @@ from qcengine.util import execute
 from mmelemental.models.util.output import FileOutput
 from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Tuple, Optional, Union
+from mmelemental.models.util.output import CmdOutput
+from mmelemental.models.util.input import CmdInput
 
 class CmdComponent(GenericComponent):
     """ Cmd process: build_input() -> run() -> parse_output() """
+
+    @classmethod
+    def input(cls):
+        return CmdInput
+
+    @classmethod
+    def output(cls):
+        return CmdOutput
+
     def clean(self, files: Union[List[FileOutput], FileOutput]):
         if isinstance(files, list):
             for file in files:
@@ -22,7 +33,7 @@ class CmdComponent(GenericComponent):
 
         execute_input = self.build_input(inputs)
         exe_success, proc = self.run(execute_input, clean_files=execute_input.get('clean_files'))
-
+        
         if exe_success:
             return True, self.parse_output(proc, inputs)
         else:
@@ -70,4 +81,11 @@ class CmdComponent(GenericComponent):
         template: Optional[str] = None,
     ) -> Dict[str, Any]:
 
+        raise NotImplementedError
+
+    def parse_output(
+        self, 
+        output: Dict[str, str], 
+        inputs: Dict[str, Any]
+    ) -> Dict[str, Any]:
         raise NotImplementedError
