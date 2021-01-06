@@ -2,7 +2,7 @@ from mmelemental.models.base import Base
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
-from typing import List, Optional, Union, Dict
+from typing import Optional, Union, Dict
 from pydantic import Field
 
 class MolReaderInput(Base):
