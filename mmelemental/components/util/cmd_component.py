@@ -6,7 +6,7 @@ from mmelemental.models.util.output import CmdOutput
 from mmelemental.models.util.input import CmdInput
 
 class CmdComponent(GenericComponent):
-    """ Cmd process: build_input() -> run() -> parse_output() """
+    """ Cmd process: build_input() -> run() -> parse_output() -> [clean()] """
 
     @classmethod
     def input(cls):
@@ -32,10 +32,13 @@ class CmdComponent(GenericComponent):
     ) -> Tuple[bool, Dict[str, Any]]:
 
         execute_input = self.build_input(inputs)
-        exe_success, proc = self.run(execute_input, clean_files=execute_input.get('clean_files'))
+        exe_success, proc = self.run(execute_input)
         
         if exe_success:
-            return True, self.parse_output(proc, inputs)
+            out = True, self.parse_output(proc, inputs)
+            if execute_input.get('clean_files'):
+                self.clean(execute_input.get('clean_files'))
+            return out
         else:
             raise ValueError(proc["stderr"])
 
@@ -46,7 +49,6 @@ class CmdComponent(GenericComponent):
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None,
-        clean_files: Optional[Union[List[FileOutput], FileOutput]] = None
     ) -> Tuple[bool, Dict[str, Any]]:
 
         infiles = inputs["infiles"]
@@ -68,9 +70,6 @@ class CmdComponent(GenericComponent):
             timeout=timeout,
             environment=inputs.get("environment", None)
         )
-
-        if clean_files:
-            self.clean(clean_files)
         
         return exe_success, proc
 
@@ -80,7 +79,6 @@ class CmdComponent(GenericComponent):
         config: Optional["TaskConfig"] = None,
         template: Optional[str] = None,
     ) -> Dict[str, Any]:
-
         raise NotImplementedError
 
     def parse_output(
