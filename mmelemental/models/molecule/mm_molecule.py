@@ -155,9 +155,9 @@ class Molecule(qcelemental.models.Molecule):
         Parameters
         ----------
         filename : str
-            The coords filename to build
+            The coords filename to read
         top: str
-            The topology filename
+            The topology i.e. connectivity filename to read
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
         orient : bool, optional
