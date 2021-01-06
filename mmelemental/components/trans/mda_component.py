@@ -63,7 +63,7 @@ class MdaToMolecule(GenericComponent):
             raise NotImplementedError('MDAnalysis does not support instantiating molecule objects from chemical codes.')          
         elif inputs.file:
             dtype = inputs.file.ext
-            mmol = MdaMolecule.build_mol(inputs, dtype)
+            mmol = MdaMolecule.build(inputs, dtype)
         else:
             raise NotImplementedError(f'Data type {dtype} not yet supported.')
         

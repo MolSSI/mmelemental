@@ -15,7 +15,7 @@ class MdaMolecule(ToolkitMolecule):
         return 'mdanalysis'   
 
     @classmethod
-    def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "MdaMolecule":
+    def build(cls, inputs: Dict[str, Any], dtype: str) -> "MdaMolecule":
         """
         Creates an instance of MdaMolecule object storing MDAnalysis.Universe. 
         This is done by parsing an input file (pdb, gro, ...).
@@ -37,4 +37,4 @@ class MdaMolecule(ToolkitMolecule):
         elif inputs.code:
             raise NotImplementedError('No support for Chemical codes with MDAnalysis.')
 
-        return MdaMolecule(mol=mmol)
+        return cls(mol=mmol)

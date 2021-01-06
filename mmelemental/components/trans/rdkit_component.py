@@ -100,11 +100,11 @@ class RDKitToMolecule(GenericComponent):
         elif inputs.code:
             dtype = inputs.code.code_type.lower()
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            rdmol = RDKitMolecule.build_mol(inputs, dtype)            
+            rdmol = RDKitMolecule.build(inputs, dtype)            
         elif inputs.file:
             dtype = inputs.file.ext
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            rdmol = RDKitMolecule.build_mol(inputs, dtype)
+            rdmol = RDKitMolecule.build(inputs, dtype)
         else:
             raise NotImplementedError
         

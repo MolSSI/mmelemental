@@ -15,7 +15,7 @@ class ParmedMolecule(ToolkitMolecule):
         return 'parmed'   
 
     @classmethod
-    def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMolecule":
+    def build(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMolecule":
         """
         Creates an instance of ParmedMolecule object storing parmed.structure.Structure. 
         This is done by parsing an input file (pdb, gro, ...).
@@ -37,4 +37,4 @@ class ParmedMolecule(ToolkitMolecule):
         elif inputs.code:
             raise NotImplementedError('No support for Chemical codes with ParmEd.')
 
-        return ParmedMolecule(mol=pmol)
+        return cls(mol=pmol)

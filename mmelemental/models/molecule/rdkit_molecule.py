@@ -48,7 +48,7 @@ class RDKitMolecule(ToolkitMolecule):
         return Chem.Mol(RWmol)
 
     @classmethod
-    def build_mol(cls, inputs: Dict[str, Any], dtype: str) -> "RDKitMolecule":
+    def build(cls, inputs: Dict[str, Any], dtype: str) -> "RDKitMolecule":
         """ Creates an instance of RDKitMolecule object storing rdkit.Chem.Mol. 
         This is done by parsing an input file (pdb, ...) or a chemical code (smiles, ...).
         """
@@ -84,4 +84,4 @@ class RDKitMolecule(ToolkitMolecule):
         if inputs.code:
             rdkmol = cls.gen3D(rdkmol)
 
-        return RDKitMolecule(mol=rdkmol)
+        return cls(mol=rdkmol)

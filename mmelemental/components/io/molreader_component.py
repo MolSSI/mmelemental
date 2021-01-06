@@ -128,9 +128,9 @@ class TkMolReaderComponent(GenericComponent):
 
         if '.' + dtype in TkMolReaderComponent._extension_maps['rdkit']:
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            return True, RDKitMolecule.build_mol(inputs, dtype)
+            return True, RDKitMolecule.build(inputs, dtype)
         elif '.' + dtype in TkMolReaderComponent._extension_maps['parmed']:
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-            return True, ParmedMolecule.build_mol(inputs, dtype)
+            return True, ParmedMolecule.build(inputs, dtype)
         else:
             raise ValueError(f'Data type {dtype} not supported by {self.__class__}.')
