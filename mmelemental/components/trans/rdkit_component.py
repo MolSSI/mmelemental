@@ -1,6 +1,6 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.molecule.mol_reader import MolReaderInput
+from mmelemental.models.molecule.mol_reader import MolInput
 from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.rdkit_molecule import Bond
@@ -73,7 +73,7 @@ class RDKitToMolecule(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MolReaderInput
+        return MolInput
 
     @classmethod
     def output(cls):

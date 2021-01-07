@@ -3,7 +3,7 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.molecule.mm_molecule import Molecule
-from mmelemental.models.molecule.mol_reader import MolReaderInput
+from mmelemental.models.molecule.mol_reader import MolInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
@@ -12,7 +12,7 @@ class MolConstructorComponent(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MolReaderInput
+        return MolInput
 
     @classmethod
     def output(cls):
@@ -37,7 +37,7 @@ class MolConstructorComponent(GenericComponent):
             return Molecule.from_file(model.path)
         elif isinstance(model, Molecule):
             return model
-        elif isinstance(model, MolReaderInput):
+        elif isinstance(model, MolInput):
             if model.code:
                 return self.constructor(model.code)
             elif model.file:

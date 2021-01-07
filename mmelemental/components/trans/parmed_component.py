@@ -1,6 +1,6 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-from mmelemental.models.molecule.mol_reader import MolReaderInput
+from mmelemental.models.molecule.mol_reader import MolInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.forcefield.base import ForceField
 from mmelemental.models.forcefield.ff_reader import FFReaderInput
@@ -56,8 +56,6 @@ class MoleculeToParmed(GenericComponent):
 
         pmol.coordinates = mmol.geometry
 
-        print("Residues for ParmEd: ", pmol.residues[0].atoms)
-
         return True, ParmedMolecule(mol=pmol)
 
 class ParmedToMolecule(GenericComponent):
@@ -65,7 +63,7 @@ class ParmedToMolecule(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MolReaderInput
+        return MolInput
 
     @classmethod
     def output(cls):
