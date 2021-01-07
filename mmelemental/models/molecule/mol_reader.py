@@ -5,7 +5,7 @@ from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from typing import Optional, Union, Dict
 from pydantic import Field
 
-class MolReaderInput(Base):
+class MolInput(Base):
     file: Optional[Union[FileInput, str]] = Field(
         None, 
         description = 'Input coords file name or object.'
@@ -28,12 +28,17 @@ class MolReaderInput(Base):
     )
 
     def __init__(self, **args):
-        if (args.get('file') and args.get('code')) or (args.get('file') and args.get('data')) or (args.get('data') and args.get('code')):
-            raise ValueError('Only 1 input Field (code, file, or data) is allowed.')
+        file_exists = args.get('file') or args.get('top_file')
+        if (file_exists and args.get('code')) or (file_exists and args.get('data')) or (args.get('data') and args.get('code')):
+            raise ValueError('Only 1 input type Field (code, file(s), or data) is allowed.')
 
         if args.get('file'):
             if isinstance(args['file'], str):
                 args['file'] = FileInput(path=args['file'])
+
+        if args.get('top_file'):
+            if isinstance(args['top_file'], str):
+                args['top_file'] = FileInput(path=args['top_file'])
 
         if args.get('code'):
             if isinstance(args['code'], str):
