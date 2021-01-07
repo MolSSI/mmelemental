@@ -56,8 +56,15 @@ class MolReaderComponent(GenericComponent):
             from mmelemental.components.trans.rdkit_component import RDKitToMolecule
             return True, RDKitToMolecule.compute(inputs)
         elif inputs.file:
-            from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-            return True, RDKitToMolecule.compute(inputs)
+            try:
+                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
+                return True, RDKitToMolecule.compute(inputs)
+            except:
+                try:
+                    from mmelemental.components.trans.parmed_component import ParmedToMolecule
+                    return True, ParmedToMolecule.compute(inputs)
+                except ImportError as error:
+                    print('Neither parmed nor rdkit found.', error)           
         else:
             raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
