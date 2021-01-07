@@ -25,7 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        sudo apt-get install openbabel
+        sudo apt-get install openbabel python-rdkit librdkit1
         python -m pip install --upgrade pip
         pip install pydantic qcelemental pytest unyt parmed qcengine
         git clone https://github.com/MolSSI/mmic
