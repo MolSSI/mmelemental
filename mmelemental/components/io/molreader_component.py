@@ -1,9 +1,9 @@
 from typing import List, Optional, Any, Dict, Tuple
-
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.mol_reader import MolReaderInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
+import importlib
 
 class MolReaderComponent(GenericComponent):
     """ Factory component that constructs a Molecule object from MolReaderInput.
@@ -40,7 +40,7 @@ class MolReaderComponent(GenericComponent):
 
         if inputs.data:
             dtype = inputs.data.dtype
-            if dtype == 'qcelem':
+            if dtype == 'qcelement':
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
             elif dtype == 'rdkit':
@@ -71,7 +71,7 @@ class MolReaderComponent(GenericComponent):
 class TkMolReaderComponent(GenericComponent):
 
     _extension_maps = {
-        'qcelem':
+        'qcelement':
         {
             ".npy": "numpy",
             ".json": "json",
@@ -123,9 +123,15 @@ class TkMolReaderComponent(GenericComponent):
                 if dtype:
                     if inputs.top_file:
                         if TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.top_file.ext):
-                            break
+                            if importlib.util.find_spec(ext_map_key): 
+                                break # module exists, hurray~!
                     else:
-                        break
+                        if importlib.util.find_spec(ext_map_key): 
+                            break # module exists, hurray~!
+                dtype = None # If no compatible tk is found, dtype is None. Exit now!
+            
+            if not dtype:
+                raise ValueError(f'Data type not understood for file ext {inputs.file.ext}.')
 
         elif inputs.code:
             dtype = inputs.code.code_type.lower()
