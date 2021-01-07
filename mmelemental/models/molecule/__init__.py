@@ -1,1 +1,1 @@
-from . import mm_molecule, rdkit_molecule
+from . import mm_molecule
