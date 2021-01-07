@@ -1,17 +1,17 @@
 from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.mol_reader import MolReaderInput
+from mmelemental.models.molecule.mol_reader import MolInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
 import importlib
 
 class MolReaderComponent(GenericComponent):
-    """ Factory component that constructs a Molecule object from MolReaderInput.
-    Which toolkit-specific component is called depends on MolReaderInput.data.dtype."""
+    """ Factory component that constructs a Molecule object from MolInput.
+    Which toolkit-specific component is called depends on MolInput.data.dtype."""
 
     @classmethod
     def input(cls):
-        return MolReaderInput
+        return MolInput
 
     @classmethod
     def output(cls):
@@ -40,7 +40,7 @@ class MolReaderComponent(GenericComponent):
 
         if inputs.data:
             dtype = inputs.data.dtype
-            if dtype == 'qcelement':
+            if dtype == 'qcelemental':
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
             elif dtype == 'rdkit':
@@ -71,7 +71,7 @@ class MolReaderComponent(GenericComponent):
 class TkMolReaderComponent(GenericComponent):
 
     _extension_maps = {
-        'qcelement':
+        'qcelemental':
         {
             ".npy": "numpy",
             ".json": "json",
@@ -100,7 +100,7 @@ class TkMolReaderComponent(GenericComponent):
 
     @classmethod
     def input(cls):
-        return MolReaderInput
+        return MolInput
 
     @classmethod
     def output(cls):
@@ -118,31 +118,32 @@ class TkMolReaderComponent(GenericComponent):
             inputs = TkMolReaderComponent.input()(**inputs)
 
         if inputs.file:
-            for ext_map_key in TkMolReaderComponent._extension_maps:
-                dtype = TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.file.ext)
+            for toolkit in TkMolReaderComponent._extension_maps:
+                dtype = TkMolReaderComponent._extension_maps[toolkit].get(inputs.file.ext)
                 if dtype:
                     if inputs.top_file:
-                        if TkMolReaderComponent._extension_maps[ext_map_key].get(inputs.top_file.ext):
-                            if importlib.util.find_spec(ext_map_key): 
+                        if TkMolReaderComponent._extension_maps[toolkit].get(inputs.top_file.ext):
+                            if importlib.util.find_spec(toolkit): 
                                 break # module exists, hurray~!
                     else:
-                        if importlib.util.find_spec(ext_map_key): 
+                        if importlib.util.find_spec(toolkit):
                             break # module exists, hurray~!
-                dtype = None # If no compatible tk is found, dtype is None. Exit now!
+                toolkit = None # If no compatible tk is found, dtype is None. Exit now!
             
-            if not dtype:
+            if not toolkit:
                 raise ValueError(f'Data type not understood for file ext {inputs.file.ext}.')
 
         elif inputs.code:
             dtype = inputs.code.code_type.lower()
+            toolkit = 'rdkit' # need to support more toolkits for handling chem codes
         else:
             # need to support TkMolecule conversion from e.g. rdkit to parmed, etc.
             raise ValueError('Data type not understood. Supply a file or a chemical code.')
 
-        if '.' + dtype in TkMolReaderComponent._extension_maps['rdkit']:
+        if toolkit == 'rdkit':
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             return True, RDKitMolecule.build(inputs, dtype)
-        elif '.' + dtype in TkMolReaderComponent._extension_maps['parmed']:
+        elif toolkit == 'parmed':
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
             return True, ParmedMolecule.build(inputs, dtype)
         else:
