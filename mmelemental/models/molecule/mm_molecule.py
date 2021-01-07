@@ -176,8 +176,8 @@ class Molecule(qcelemental.models.Molecule):
             top = FileInput(path=top)
  
         if not dtype:
-            if filename.ext in TkMolReaderComponent._extension_maps['qcelem']:
-                dtype = TkMolReaderComponent._extension_maps['qcelem'][filename.ext]
+            if filename.ext in TkMolReaderComponent._extension_maps['qcelement']:
+                dtype = TkMolReaderComponent._extension_maps['qcelement'][filename.ext]
                 return qcelemental.models.molecule.Molecule.from_file(filename.abs_path, dtype, orient=orient, **kwargs)
         if top:
             mol_input = MolReaderInput(file=filename, top_file=top)
@@ -246,7 +246,7 @@ class Molecule(qcelemental.models.Molecule):
                     toolkit = map_name
                     break
 
-        if toolkit == 'qcelem': 
+        if toolkit == 'qcelement': 
             super().to_file(filename, dtype)
         elif toolkit == 'rdkit':
             from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
