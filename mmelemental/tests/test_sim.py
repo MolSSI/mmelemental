@@ -8,7 +8,6 @@ import parmed
 import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_molecule import Molecule
-from mmelemental.models.molecule.mol_reader import MoleculeReaderInput
 from mmelemental.models.input.dynamics import DynamicsInput
 from mmelemental.components.io.simwriter_component import SimWriterComponent
 from mmelemental.models.input.sim_writer import SimWriterInput
@@ -29,7 +28,8 @@ mol = test_mmelemental_molgro()
 md = DynamicsInput(
 		mol   = mol,
 		temp  = 300,
-		press = 1.1
+		press = 1.1,
+                temp_method = 'berendsen'
 	)
 
 print(md) 
