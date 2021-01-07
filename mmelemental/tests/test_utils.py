@@ -8,8 +8,6 @@ from mmelemental.models.chem.codes import ChemCode
 
 # Test input file
 receptor = FileInput(path=os.path.abspath('mmelemental/data/molecules/dialanine.pdb'))
-ligand = ChemCode(code='CCC')
-
 
 # Import components
 from mmelemental.components.util.openbabel_component import OpenBabel
