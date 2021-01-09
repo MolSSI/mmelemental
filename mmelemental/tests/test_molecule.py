@@ -7,11 +7,9 @@ import os
 import parmed
 import mmelemental
 from mmelemental.models.util.input import FileInput
-from mmelemental.models.molecule.mm_molecule import Molecule
+from mmelemental.models.molecule.mm_molecule import Molecule, MolReaderComponent, MolWriterComponent
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.molecule.mol_reader import MolInput
-
-from mmelemental.components.io.molreader_component import MolReaderComponent
+from mmelemental.models.molecule.io_molecule import MolInput, MolOutput
 from mmelemental.components.io.constructor_component import MolConstructorComponent, ForceFieldConstructorComponent
 
 def test_mmelemental_imported():
@@ -30,13 +28,13 @@ def test_mmelemental_codes():
     inputs = MolInput(code=smiles)
     mol = MolConstructorComponent.compute(inputs)
 
-def test_mmelemental_molfiles(debug=False):
-    for ext in ['pdb']:
+def test_mmelemental_molfiles(debug=True):
+    for ext in ['pdb','gro']:
         pdbFile = FileInput(path=f'mmelemental/data/molecules/dialanine.{ext}')
 
         mol = Molecule.from_file(filename=pdbFile.path)
 
-        if debug:
+        if False:
             print("Molecule info:")
             print("===============")
             print('\n')
@@ -64,12 +62,20 @@ def test_mmelemental_molfiles(debug=False):
         mol.to_file('rdkit.pdb')
         #mol.to_file('rdkit.gro')
         mol.to_file('rdkit.xyz')
-        mol.to_file('rdkit.smiles')
+        #mol.to_file('rdkit.smiles')
         
         if not debug:
             os.remove('rdkit.pdb')
             #os.remove('rdkit.gro')
             os.remove('rdkit.xyz')
-            os.remove('rdkit.smiles')
+            #os.remove('rdkit.smiles')
 
     return mol
+
+def test_mmelemental_molio():
+    inp = MolInput(file='mmelemental/data/molecules/dialanine.pdb')
+    mol = MolReaderComponent.compute(inp)
+    out = MolOutput(file='dialanine.pdb', mol=mol)
+    fo = MolWriterComponent.compute(out)
+
+    return fo
