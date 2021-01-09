@@ -1,7 +1,8 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.molecule.mol_reader import MolInput
+from mmelemental.models.molecule.io_molecule import MolInput
 from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
+from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.rdkit_molecule import Bond
 from typing import Dict, Any, List, Tuple, Optional
@@ -40,13 +41,7 @@ class MoleculeToRDKit(GenericComponent):
             resname, resnum = mmol.residues[index]
             name = mmol.names[index]
 
-            if len(name) != 4: # For writing to PDB files, rdkit needs the len(name) to be exactly 4.
-                if len(name) == 1:
-                    name = ' ' + name + '  '
-                elif len(name) == 2:
-                    name = ' ' + name + ' '
-                elif len(name) == 3:
-                    name = ' ' + name
+            name = ToolkitMolecule.check_name(name)
 
             residue = Chem.AtomPDBResidueInfo()
             residue.SetResidueName(resname)
@@ -77,7 +72,6 @@ class RDKitToMolecule(GenericComponent):
 
     @classmethod
     def output(cls):
-        from mmelemental.models.molecule.mm_molecule import Molecule
         return Molecule
 
     def execute(
@@ -88,8 +82,6 @@ class RDKitToMolecule(GenericComponent):
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
-        from mmelemental.models.molecule.mm_molecule import Molecule
-
         if isinstance(inputs, dict):
             inputs = MolReaderComponent.input()(**inputs)
         
@@ -102,7 +94,7 @@ class RDKitToMolecule(GenericComponent):
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             rdmol = RDKitMolecule.build(inputs, dtype)            
         elif inputs.file:
-            dtype = inputs.file.ext
+            dtype = '.' + inputs.file.ext
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             rdmol = RDKitMolecule.build(inputs, dtype)
         else:

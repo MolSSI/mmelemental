@@ -1,7 +1,7 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.molecule.mda_molecule import MdaMolecule
-from mmelemental.models.molecule.mol_reader import MolInput
+from mmelemental.models.molecule.io_molecule import MolInput
 from mmelemental.models.molecule.mm_molecule import Molecule
 from typing import Dict, Any, List, Tuple, Optional
 
@@ -62,7 +62,7 @@ class MdaToMolecule(GenericComponent):
         elif inputs.code:
             raise NotImplementedError('MDAnalysis does not support instantiating molecule objects from chemical codes.')          
         elif inputs.file:
-            dtype = inputs.file.ext
+            dtype = '.' + inputs.file.ext
             mmol = MdaMolecule.build(inputs, dtype)
         else:
             raise NotImplementedError(f'Data type {dtype} not yet supported.')
