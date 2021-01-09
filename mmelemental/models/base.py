@@ -34,3 +34,6 @@ class Base(models.ProtoModel):
     class Config(models.ProtoModel.Config):
         canonical_repr = True
         extra = "allow"
+
+class Nothing(Base):
+    ...
