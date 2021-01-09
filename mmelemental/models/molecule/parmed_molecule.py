@@ -19,6 +19,8 @@ class ParmedMolecule(ToolkitMolecule):
         """
         Creates an instance of ParmedMolecule object storing parmed.structure.Structure. 
         This is done by parsing an input file (pdb, gro, ...).
+
+        .. todo:: use dtype somewhere? Do need it?
         """
         if inputs.file:
             coords_fname = inputs.file.path

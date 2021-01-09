@@ -54,24 +54,23 @@ class RDKitMolecule(ToolkitMolecule):
         """
         if inputs.file:
             filename = inputs.file.path
-            if dtype == 'pdb':
+            if dtype == '.pdb':
                 rdkmol = Chem.MolFromPDBFile(filename, sanitize=False, removeHs=False)
-            elif dtype == 'mol':
+            elif dtype == '.mol':
                 rdkmol = Chem.MolFromMolFile(filename, sanitize=False, removeHs=False)
-            elif dtype == 'mol2':
+            elif dtype == '.mol2':
                 rdkmol = Chem.MolFromMol2File(filename, sanitize=False, removeHs=False)
-            elif dtype == 'tpl':
+            elif dtype == '.tpl':
                 rdkmol = Chem.MolFromTPLFile(filename, sanitize=False, removeHs=False)
-            elif dtype == 'sdf':
+            elif dtype == '.sdf':
                 rdkmols = Chem.SDMolSupplier(filename, sanitize=False, removeHs=False)
 
                 if len(rdkmols) > 1:
                     raise ValueError("SDF file should contain a single molecule")
                 else:
                     rdkmol = rdkmols[0] # should we support multiple molecules?
-
             else:
-                raise ValueError(f"Unrecognized file type: {ext}")
+                raise ValueError(f"Unrecognized file type: {inputs.file.ext}")
 
         # construct RDKit molecule from identifiers
         elif inputs.code:
