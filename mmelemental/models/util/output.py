@@ -46,7 +46,8 @@ class FileOutput(Base):
     """ Model for writing output to files. No file is created if "write" method is not invoked. """
     path: str = Field(..., description='Output filename path. ')
     clean: bool = Field(False, description='If set to True, the file is removed once object is out of scope.')
-    mode: str = Field('a', description='File write mode. Defaults to appending to files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
+    mode: str = Field('w', description='File write mode. Defaults to overwriting files. See https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files.')
+    dtype: Optional[str] = Field(None, description='Object data type e.g. PDB, TRR, etc. May not be consistent with the file extension.')
 
     @validator('path')
     def _exists(cls, v):

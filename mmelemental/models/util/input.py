@@ -12,11 +12,15 @@ class FileInput(Base):
         ...,
         description = "File path, relative or absolute."
     )
+    dtype: Optional[str] = Field(
+        None, 
+        description='Object data type e.g. PDB, TRR, etc. May not be consistent with the file extension.'
+    )
 
     @validator('path')
     def _exists(cls, path):
         if not os.path.isfile(path):
-           raise IOError(f'Input file {path} does not eixst.')
+           raise IOError(f'Input file {path} does not exist.')
         return path
 
     @property
