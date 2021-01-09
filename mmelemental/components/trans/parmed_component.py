@@ -1,9 +1,10 @@
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-from mmelemental.models.molecule.mol_reader import MolInput
+from mmelemental.models.molecule.io_molecule import MolInput
 from mmelemental.models.molecule.mm_molecule import Molecule
+from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from mmelemental.models.forcefield.base import ForceField
-from mmelemental.models.forcefield.ff_reader import FFReaderInput
+from mmelemental.models.forcefield.io_ff import FFInput
 from typing import Dict, Any, List, Tuple, Optional
 
 try:
@@ -36,6 +37,8 @@ class MoleculeToParmed(GenericComponent):
         for index, symb in enumerate(mmol.symbols):
 
             name = mmol.names[index]
+            #name = ToolkitMolecule.check_name(name)
+
             atomic_number = mmol.atomic_numbers[index]
             mass = mmol.masses[index]
 
@@ -87,7 +90,7 @@ class ParmedToMolecule(GenericComponent):
         elif inputs.code:
             raise NotImplementedError('ParmEd does not support instantiating molecule objects from chemical codes.')          
         elif inputs.file:
-            dtype = inputs.file.ext
+            dtype = '.' + inputs.file.ext
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
             pmol = ParmedMolecule.build(inputs, dtype)
         else:
@@ -160,7 +163,7 @@ class ParmedToFF(GenericComponent):
         elif inputs.code:
             raise NotImplementedError('ParmEd does not support instantiating molecule objects from chemical codes.')          
         elif inputs.file:
-            dtype = inputs.file.ext
+            dtype = '.' + inputs.file.ext
             from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
             pmol = ParmedMolecule.build(inputs, dtype)
         else:
