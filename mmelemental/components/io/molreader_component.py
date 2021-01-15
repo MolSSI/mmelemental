@@ -1,72 +1,9 @@
 from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.mol_reader import MolInput
+from mmelemental.models.molecule.io_molecule import MolInput
 from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 import qcelemental
 import importlib
-
-class MolReaderComponent(GenericComponent):
-    """ Factory component that constructs a Molecule object from MolInput.
-    Which toolkit-specific component is called depends on MolInput.data.dtype."""
-
-    @classmethod
-    def input(cls):
-        return MolInput
-
-    @classmethod
-    def output(cls):
-        from mmelemental.models.molecule.mm_molecule import Molecule
-        return Molecule
-
-    def execute(
-        self,
-        inputs: Dict[str, Any],
-        extra_outfiles: Optional[List[str]] = None,
-        extra_commands: Optional[List[str]] = None,
-        scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
-        
-        from mmelemental.models.molecule.mm_molecule import Molecule
-
-        if isinstance(inputs, dict):
-            inputs = MolReaderComponent.input()(**inputs)
-
-        if inputs.args:
-            orient = inputs.args.get('orient')
-            validate = inputs.args.get('validate')
-            kwargs = inputs.args.get('kwargs')
-        else:
-            orient, validate, kwargs = False, None, None
-
-        if inputs.data:
-            dtype = inputs.data.dtype
-            if dtype == 'qcelemental':
-                qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
-                return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
-            elif dtype == 'rdkit':
-                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-                return True, RDKitToMolecule.compute(inputs)
-            elif dtype == 'parmed':
-                from mmelemental.components.trans.parmed_component import ParmedToMolecule
-                return True, ParmedToMolecule.compute(inputs)               
-            else:
-                raise NotImplementedError(f'Data type not yet supported: {dtype}.')
-        # Only RDKit is handling chem codes and file objects for now!
-        elif inputs.code:
-            from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-            return True, RDKitToMolecule.compute(inputs)
-        elif inputs.file:
-            try:
-                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-                return True, RDKitToMolecule.compute(inputs)
-            except:
-                try:
-                    from mmelemental.components.trans.parmed_component import ParmedToMolecule
-                    return True, ParmedToMolecule.compute(inputs)
-                except ImportError as error:
-                    print('Neither parmed nor rdkit found.', error)           
-        else:
-            raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
 class TkMolReaderComponent(GenericComponent):
 
