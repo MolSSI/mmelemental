@@ -52,9 +52,6 @@ class MdaToMolecule(GenericComponent):
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
         
-        if isinstance(inputs, dict):
-            inputs = MolReaderComponent.input()(**inputs)
-        
         if inputs.data:
             dtype = inputs.data.dtype
             assert dtype == 'mdanalysis'
