@@ -12,7 +12,7 @@ try:
 except:
     raise ModuleNotFoundError('Make sure rdkit is installed.')
 
-class MoleculeToRDKit(GenericComponent):
+class MolToRDKitComponent(GenericComponent):
     """ A component for converting Molecule to RDKIT molecule object. """
 
     @classmethod
@@ -63,7 +63,7 @@ class MoleculeToRDKit(GenericComponent):
 
         return True, RDKitMolecule(mol=newmmol)
 
-class RDKitToMolecule(GenericComponent):
+class RDKitToMolComponent(GenericComponent):
     """ A model for converting RDKIT molecule to Molecule object. """
 
     @classmethod

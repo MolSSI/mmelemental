@@ -10,7 +10,7 @@ try:
 except:
     raise ModuleNotFoundError('Make sure MDAnalysis is installed.')
 
-class MoleculeToMda(GenericComponent):
+class MolToMdaComponent(GenericComponent):
     """ A component for converting Molecule to MDAnalysis molecule object. """
     @classmethod
     def input(cls):
@@ -33,7 +33,7 @@ class MoleculeToMda(GenericComponent):
 
         return True, MdaMolecule(mol=mmol)
 
-class MdaToMolecule(GenericComponent):
+class MdaToMolComponent(GenericComponent):
     """ A component for converting MDAnalysis molecule to Molecule object. """
 
     @classmethod
