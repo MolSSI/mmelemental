@@ -4,7 +4,7 @@ import os
 from mmelemental.models.util.input import OpenBabelInput
 from mmelemental.models.util.output import CmdOutput
 
-class OpenBabel(CmdComponent):
+class OpenBabelComponent(CmdComponent):
 
     @classmethod
     def input(cls):
@@ -18,7 +18,7 @@ class OpenBabel(CmdComponent):
         self, input_model: OpenBabelInput, config: "TaskConfig" = None, template: Optional[str] = None
     ) -> Dict[str, Any]:
         output = 'tmp.' + input_model.outputExt
-        cmd = ["obabel", input_model.fileInput.path, "-O" + output]
+        cmd = ["obabel", input_model.fileInput.abs_path, "-O" + output]
 
         if input_model.args:
             for arg in input_model.args:
