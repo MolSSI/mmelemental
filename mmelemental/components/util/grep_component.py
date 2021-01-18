@@ -4,7 +4,7 @@ import os
 from mmelemental.models.util.input import GrepInput
 from mmelemental.models.util.output import CmdOutput
 
-class Grep(CmdComponent):
+class GrepComponent(CmdComponent):
 
     @classmethod
     def input(cls):
@@ -21,7 +21,7 @@ class Grep(CmdComponent):
         cmd = ["grep"]
 
         args = inputs.args
-        input_model = {'input': inputs.fileInput.path, 'pattern': inputs.pattern, 'args': args}
+        input_model = {'input': inputs.fileInput.abs_path, 'pattern': inputs.pattern, 'args': args}
 
         if input_model['args']:
             for arg in input_model['args']:
