@@ -40,45 +40,6 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
         description="A HELM code (currently only supports peptides)."
     )
 
-
-import unyt
-from typing import Any, Dict
-import numpy as np
-
-class TypedArray(unyt.unyt_array):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, v):
-        try:
-            v = unyt.unyt_array(v, dtype=cls._dtype)
-        except ValueError:
-            raise ValueError("Could not cast {} to NumPy Array!".format(v))
-
-        return v
-
-    @classmethod
-    def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-        dt = cls._dtype
-        if dt is int or np.issubdtype(dt, np.integer):
-            items = {"type": "number", "multipleOf": 1.0}
-        elif dt is float or np.issubdtype(dt, np.floating):
-            items = {"type": "number"}
-        elif dt is str or np.issubdtype(dt, np.string_):
-            items = {"type": "string"}
-        elif dt is bool or np.issubdtype(dt, np.bool_):
-            items = {"type": "boolean"}
-        field_schema.update(type="array", items=items)
-
-class ArrayMeta(type):
-    def __getitem__(self, dtype):
-        return type("UnytArray", (TypedArray,), {"_dtype": dtype})
-
-class UnytArray(np.ndarray, metaclass=ArrayMeta):
-    pass
-
 class Molecule(qcelemental.models.Molecule):
     """
     An MMSchema representation of a Molecule based on QCSchema. This model contains data for symbols, geometry, 
@@ -86,32 +47,44 @@ class Molecule(qcelemental.models.Molecule):
     Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively 
     to assist with duplicate detection.
     """
-    symbols: Optional[Array[str]] = Field(
+    symbols: Array[str] = Field(
         None,
         description = "An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    geometry: Union[Array[float], UnytArray[float]] = Field(
+    geometry: Optional[Array[float]] = Field(
         None,
-        description="An ordered (nat,3) array-like for XYZ atomic coordinates [a0]. "
-        "Atom ordering is fixed; that is, a consumer who shuffles atoms must not reattach the input "
-        "(pre-shuffling) molecule schema instance to any output (post-shuffling) per-atom results "
-        "(e.g., gradient). Index of the first dimension matches the 0-indexed indices of all other "
-        "per-atom settings like ``symbols`` and ``real``."
-        "\n"
-        "Can also accept array-likes which can be mapped to (nat,3) such as a 1-D list of length 3*nat, "
-        "or the serialized version of the array in (3*nat,) shape; all forms will be reshaped to "
-        "(nat,3) for this attribute.",
+        description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. \n
+        "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
+        "or the serialized version of the array in (3*natom,) shape; all forms will be reshaped to "
+        "(natom,3) for this attribute.",
+    )
+    velocities: Optional[Array[float]] = Field(
+        None,
+        description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. \n
+        "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
+        "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
+        "(natoms,3) for this attribute.",
+    )
+    forces: Optional[Array[float]] = Field(
+        None,
+        description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. \n
+        "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
+        "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
+        "(natoms,3) for this attribute.",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
         None,
-        description = "Bond angles of three connected atoms."
+        description = "Bond angles in degrees for three connected atoms."
     )
     dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
         None,
-        description = 'Dihedral/torsion angles between planes through two sets of three atoms, having two atoms in common.')
+        description = 'Dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.')
+    improper_dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
+        None,
+        description = 'Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.')
     residues: Optional[List[Tuple[str, int]]] = Field(
         None, 
         description = "A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
@@ -246,8 +219,8 @@ class Molecule(qcelemental.models.Molecule):
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
-            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
-            return MoleculeToRDKit.compute(self).mol
+            from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
+            return MolToRDKitComponent.compute(self).mol
         else:
             raise NotImplementedError(f'Data type {dtype} not available.')
 
@@ -272,11 +245,6 @@ class MolReaderComponent(GenericComponent):
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
-        
-        from mmelemental.models.molecule.mm_molecule import Molecule
-
-        if isinstance(inputs, dict):
-            inputs = MolReaderComponent.input()(**inputs)
 
         if inputs.args:
             orient = inputs.args.get('orient')
@@ -291,25 +259,25 @@ class MolReaderComponent(GenericComponent):
                 qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
                 return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
             elif dtype == 'rdkit':
-                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-                return True, RDKitToMolecule.compute(inputs)
+                from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+                return True, RDKitToMolComponent.compute(inputs)
             elif dtype == 'parmed':
-                from mmelemental.components.trans.parmed_component import ParmedToMolecule
-                return True, ParmedToMolecule.compute(inputs)               
+                from mmelemental.components.trans.parmed_component import ParmedToMolComponent
+                return True, ParmedToMolComponent.compute(inputs)               
             else:
                 raise NotImplementedError(f'Data type not yet supported: {dtype}.')
         # Only RDKit is handling chem codes and file objects for now!
         elif inputs.code:
-            from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-            return True, RDKitToMolecule.compute(inputs)
+            from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+            return True, RDKitToMolComponent.compute(inputs)
         elif inputs.file:
             toolkit = inputs.files_toolkit()
             if toolkit == 'rdkit':
-                from mmelemental.components.trans.rdkit_component import RDKitToMolecule
-                return True, RDKitToMolecule.compute(inputs)
+                from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+                return True, RDKitToMolComponent.compute(inputs)
             elif toolkit == 'parmed':
-                from mmelemental.components.trans.parmed_component import ParmedToMolecule
-                return True, ParmedToMolecule.compute(inputs)
+                from mmelemental.components.trans.parmed_component import ParmedToMolComponent
+                return True, ParmedToMolComponent.compute(inputs)
         else:
             raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
@@ -349,10 +317,10 @@ class MolWriterComponent(GenericComponent):
         mode = inputs.file.mode
 
         if toolkit == 'rdkit':
-            from mmelemental.components.trans.rdkit_component import MoleculeToRDKit
+            from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
             from rdkit import Chem
             
-            rdkmol = MoleculeToRDKit.compute(inputs.mol)
+            rdkmol = MolToRDKitComponent.compute(inputs.mol)
             if mode != 'w':
                 raise NotImplementedError('rdkit supports only write mode for file output. Ouch!')
 
@@ -370,8 +338,8 @@ class MolWriterComponent(GenericComponent):
 
         elif toolkit == 'parmed':
             overwrite = True if inputs.file.mode == 'w' else False
-            from mmelemental.components.trans.parmed_component import MoleculeToParmed
-            pmol = MoleculeToParmed.compute(inputs.mol)
+            from mmelemental.components.trans.parmed_component import MolToParmedComponent
+            pmol = MolToParmedComponent.compute(inputs.mol)
             #print([atom.name for atom in pmol.mol.atoms])
             #print([(residue.name, residue.atoms) for residue in pmol.mol.residues])
             pmol.mol.save(filename, overwrite=overwrite)
