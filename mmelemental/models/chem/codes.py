@@ -1,5 +1,6 @@
 from mmelemental.models.base import Base
 from pydantic import validator, Field, ValidationError
+from mmelemental.util.decorators import req_rdkit
 import os
 
 try:
@@ -7,9 +8,8 @@ try:
     from rdkit.Chem import AllChem
     if not os.environ.get('debugMMC'):
         rdBase.DisableLog('rdApp.error')
-    rdkAvail = True
-except Exception:
-    rdkAvail = False
+except ImportError:
+    Chem = AllChem = None
         
 class ChemCode(Base):
     code: str = Field(
@@ -21,22 +21,23 @@ class ChemCode(Base):
     class _CodesSupported:
         codes = ('Smiles', 'Smarts', 'Inchi', 'FASTA', 'HELM', 'Sequence')
 
+    @req_rdkit
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    @req_rdkit
     @validator('code')
     def valid_code(cls, code):
-        if rdkAvail:
-            for ccode in ChemCode._CodesSupported.codes:
-                function = getattr(Chem, f"MolFrom{ccode}")
-                if function(code):
-                    return code
-            raise ValidationError
+        for ccode in ChemCode._CodesSupported.codes:
+            function = getattr(Chem, f"MolFrom{ccode}")
+            if function(code):
+                return code
+        raise ValidationError
 
     @property
     def code_type(self):
-        if rdkAvail:
-            for ccode in ChemCode._CodesSupported.codes:
-                function = getattr(Chem, f"MolFrom{ccode}")
-                if function(self.code):
-                    return ccode
-            raise ValidationError
-        else:
-            raise ModuleNotFoundError('This feature requires rdkit.')
+        for ccode in ChemCode._CodesSupported.codes:
+            function = getattr(Chem, f"MolFrom{ccode}")
+            if function(self.code):
+                return ccode
+        raise ValidationError

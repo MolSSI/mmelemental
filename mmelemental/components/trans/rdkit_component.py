@@ -6,14 +6,19 @@ from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
 from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.molecule.rdkit_molecule import Bond
 from typing import Dict, Any, List, Tuple, Optional
+from mmelemental.util.decorators import req_rdkit
 
 try:
     from rdkit import Chem
-except:
-    raise ModuleNotFoundError('Make sure rdkit is installed.')
+except ImportError:  # pragma: no cover
+    Chem = None  # pragma: no cover
 
 class MolToRDKitComponent(GenericComponent):
     """ A component for converting Molecule to RDKIT molecule object. """
+
+    @req_rdkit
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     @classmethod
     def input(cls):
@@ -66,6 +71,10 @@ class MolToRDKitComponent(GenericComponent):
 class RDKitToMolComponent(GenericComponent):
     """ A model for converting RDKIT molecule to Molecule object. """
 
+    @req_rdkit
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        
     @classmethod
     def input(cls):
         return MolInput
@@ -91,7 +100,7 @@ class RDKitToMolComponent(GenericComponent):
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             rdmol = RDKitMolecule.build(inputs, dtype)            
         elif inputs.file:
-            dtype = '.' + inputs.file.ext
+            dtype = inputs.file.ext
             from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
             rdmol = RDKitMolecule.build(inputs, dtype)
         else:
