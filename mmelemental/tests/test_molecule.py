@@ -17,8 +17,8 @@ def test_mmelemental_imported():
     assert "mmelemental" in sys.modules
 
 def test_mmelemental_moltop():
-    groFile = FileInput(path='mmelemental/data/molecules/dialanine.gro')
-    topFile = FileInput(path='mmelemental/data/molecules/dialanine.top')
+    groFile = FileInput(path='mmelemental/data/molecules/alanine.gro')
+    topFile = FileInput(path='mmelemental/data/molecules/alanine.top')
     #top = parmed.gromacs.GromacsTopologyFile(topFile.path)
     mol = Molecule.from_file(filename=groFile, top=topFile)
 
@@ -30,7 +30,7 @@ def test_mmelemental_codes():
 
 def test_mmelemental_molfiles(debug=True):
     for ext in ['pdb','gro']:
-        pdbFile = FileInput(path=f'mmelemental/data/molecules/dialanine.{ext}')
+        pdbFile = FileInput(path=f'mmelemental/data/molecules/alanine.{ext}')
 
         mol = Molecule.from_file(filename=pdbFile.path)
 
@@ -73,9 +73,9 @@ def test_mmelemental_molfiles(debug=True):
     return mol
 
 def test_mmelemental_molio():
-    inp = MolInput(file='mmelemental/data/molecules/dialanine.pdb')
+    inp = MolInput(file='mmelemental/data/molecules/alanine.pdb')
     mol = MolReaderComponent.compute(inp)
-    out = MolOutput(file='dialanine.pdb', mol=mol)
+    out = MolOutput(file='alanine.pdb', mol=mol)
     fo = MolWriterComponent.compute(out)
 
     return fo

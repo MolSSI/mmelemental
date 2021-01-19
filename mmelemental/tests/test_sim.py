@@ -15,8 +15,8 @@ def test_mmelemental_imported():
     assert "mmelemental" in sys.modules
 
 def test_mmelemental_molgro():
-    groFile = FileInput(path='mmelemental/data/molecules/dialanine.gro')
-    topFile = FileInput(path='mmelemental/data/molecules/dialanine.top')
+    groFile = FileInput(path='mmelemental/data/molecules/alanine.gro')
+    topFile = FileInput(path='mmelemental/data/molecules/alanine.top')
 
     return Molecule.from_file(filename=groFile.path, top_file=topFile)
 
