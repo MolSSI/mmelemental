@@ -2,12 +2,13 @@ from qcelemental import models
 from pydantic import Field, validator
 from typing import List, Dict, Any
 from .gen_molecule import ToolkitMolecule
+from mmelemental.util.decorators import req_rdkit
 
 try:
     from rdkit import Chem
     from rdkit.Chem import AllChem
-except:
-    raise ModuleNotFoundError('Make sure rdkit is installed.')
+except ImportError:  # pragma: no cover
+    Chem = AllChem = None  # pragma: no cover
 
 class Bond:
     """ RDKit-based bond order: {0: unspecified, 1: single, etc., up to 21} """  
@@ -15,6 +16,10 @@ class Bond:
 
 class RDKitMolecule(ToolkitMolecule):
     mol: Chem.rdchem.Mol = Field(..., description = 'Rdkit molecule object.')
+
+    @req_rdkit
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     @property
     def dtype(self):
@@ -48,21 +53,23 @@ class RDKitMolecule(ToolkitMolecule):
         return Chem.Mol(RWmol)
 
     @classmethod
-    def build(cls, inputs: Dict[str, Any], dtype: str) -> "RDKitMolecule":
+    def build(cls, inputs: Dict[str, Any], dtype: str = None) -> "RDKitMolecule":
         """ Creates an instance of RDKitMolecule object storing rdkit.Chem.Mol. 
         This is done by parsing an input file (pdb, ...) or a chemical code (smiles, ...).
         """
         if inputs.file:
+            if not dtype:
+                dtype = filename.ext
             filename = inputs.file.path
-            if dtype == '.pdb':
+            if dtype == '.pdb' or dtype == 'pdb':
                 rdkmol = Chem.MolFromPDBFile(filename, sanitize=False, removeHs=False)
-            elif dtype == '.mol':
+            elif dtype == '.mol' or dtype == 'mol':
                 rdkmol = Chem.MolFromMolFile(filename, sanitize=False, removeHs=False)
-            elif dtype == '.mol2':
+            elif dtype == '.mol2' or dtype == 'mol2':
                 rdkmol = Chem.MolFromMol2File(filename, sanitize=False, removeHs=False)
-            elif dtype == '.tpl':
+            elif dtype == '.tpl' or dtype == 'tpl':
                 rdkmol = Chem.MolFromTPLFile(filename, sanitize=False, removeHs=False)
-            elif dtype == '.sdf':
+            elif dtype == '.sdf' or dtype == 'sdf':
                 rdkmols = Chem.SDMolSupplier(filename, sanitize=False, removeHs=False)
 
                 if len(rdkmols) > 1:
@@ -70,7 +77,7 @@ class RDKitMolecule(ToolkitMolecule):
                 else:
                     rdkmol = rdkmols[0] # should we support multiple molecules?
             else:
-                raise ValueError(f"Unrecognized file type: {inputs.file.ext}")
+                raise ValueError(f"Unrecognized file type: {dtype}")
 
         # construct RDKit molecule from identifiers
         elif inputs.code:
