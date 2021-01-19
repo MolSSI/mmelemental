@@ -2,7 +2,7 @@
 ;	File 'topol.top' was generated
 ;	By user: unknown (1000)
 ;	On host: DESKTOP-SUQI6NO
-;	At date: Fri Dec  4 15:32:54 2020
+;	At date: Mon Jan 18 23:44:31 2021
 ;
 ;	This is a standalone topology file
 ;
@@ -13,12 +13,12 @@
 ;	Data prefix:  /usr
 ;	Working dir:  /mnt/c/Users/levnon/Desktop/Projects/MMElemental/mmelemental/data/molecules
 ;	Command line:
-;	  gmx pdb2gmx -f dialanine.gro
+;	  gmx pdb2gmx -f alanine.pdb
 ;	Force field was read from the standard GROMACS share directory.
 ;
 
 ; Include forcefield parameters
-#include "amber99sb-ildn.ff/forcefield.itp"
+#include "amber99.ff/forcefield.itp"
 
 [ moleculetype ]
 ; Name            nrexcl
@@ -51,31 +51,6 @@ Protein             3
     20         H1      3    NME   HH31     20     0.0976      1.008   ; qtot -0.1952
     21         H1      3    NME   HH32     21     0.0976      1.008   ; qtot -0.0976
     22         H1      3    NME   HH33     22     0.0976      1.008   ; qtot 0
-; residue   4 ACE rtp ACE  q  0.0
-    23         HC      4    ACE   HH31     23     0.1123      1.008   ; qtot 0.1123
-    24         CT      4    ACE    CH3     24    -0.3662      12.01   ; qtot -0.2539
-    25         HC      4    ACE   HH32     25     0.1123      1.008   ; qtot -0.1416
-    26         HC      4    ACE   HH33     26     0.1123      1.008   ; qtot -0.0293
-    27          C      4    ACE      C     27     0.5972      12.01   ; qtot 0.5679
-    28          O      4    ACE      O     28    -0.5679         16   ; qtot 0
-; residue   5 ALA rtp ALA  q  0.0
-    29          N      5    ALA      N     29    -0.4157      14.01   ; qtot -0.4157
-    30          H      5    ALA      H     30     0.2719      1.008   ; qtot -0.1438
-    31         CT      5    ALA     CA     31     0.0337      12.01   ; qtot -0.1101
-    32         H1      5    ALA     HA     32     0.0823      1.008   ; qtot -0.0278
-    33         CT      5    ALA     CB     33    -0.1825      12.01   ; qtot -0.2103
-    34         HC      5    ALA    HB1     34     0.0603      1.008   ; qtot -0.15
-    35         HC      5    ALA    HB2     35     0.0603      1.008   ; qtot -0.0897
-    36         HC      5    ALA    HB3     36     0.0603      1.008   ; qtot -0.0294
-    37          C      5    ALA      C     37     0.5973      12.01   ; qtot 0.5679
-    38          O      5    ALA      O     38    -0.5679         16   ; qtot 0
-; residue   6 NME rtp NME  q  0.0
-    39          N      6    NME      N     39    -0.4157      14.01   ; qtot -0.4157
-    40          H      6    NME      H     40     0.2719      1.008   ; qtot -0.1438
-    41         CT      6    NME    CH3     41     -0.149      12.01   ; qtot -0.2928
-    42         H1      6    NME   HH31     42     0.0976      1.008   ; qtot -0.1952
-    43         H1      6    NME   HH32     43     0.0976      1.008   ; qtot -0.0976
-    44         H1      6    NME   HH33     44     0.0976      1.008   ; qtot 0
 
 [ bonds ]
 ;  ai    aj funct            c0            c1            c2            c3
@@ -100,27 +75,6 @@ Protein             3
    19    20     1 
    19    21     1 
    19    22     1 
-   23    24     1 
-   24    25     1 
-   24    26     1 
-   24    27     1 
-   27    28     1 
-   27    29     1 
-   29    30     1 
-   29    31     1 
-   31    32     1 
-   31    33     1 
-   31    37     1 
-   33    34     1 
-   33    35     1 
-   33    36     1 
-   37    38     1 
-   37    39     1 
-   39    40     1 
-   39    41     1 
-   41    42     1 
-   41    43     1 
-   41    44     1 
 
 [ pairs ]
 ;  ai    aj funct            c0            c1            c2            c3
@@ -165,47 +119,6 @@ Protein             3
    18    20     1 
    18    21     1 
    18    22     1 
-   23    28     1 
-   23    29     1 
-   24    30     1 
-   24    31     1 
-   25    28     1 
-   25    29     1 
-   26    28     1 
-   26    29     1 
-   27    32     1 
-   27    33     1 
-   27    37     1 
-   28    30     1 
-   28    31     1 
-   29    34     1 
-   29    35     1 
-   29    36     1 
-   29    38     1 
-   29    39     1 
-   30    32     1 
-   30    33     1 
-   30    37     1 
-   31    40     1 
-   31    41     1 
-   32    34     1 
-   32    35     1 
-   32    36     1 
-   32    38     1 
-   32    39     1 
-   33    38     1 
-   33    39     1 
-   34    37     1 
-   35    37     1 
-   36    37     1 
-   37    42     1 
-   37    43     1 
-   37    44     1 
-   38    40     1 
-   38    41     1 
-   40    42     1 
-   40    43     1 
-   40    44     1 
 
 [ angles ]
 ;  ai    aj    ak funct            c0            c1            c2            c3
@@ -245,42 +158,6 @@ Protein             3
    20    19    21     1 
    20    19    22     1 
    21    19    22     1 
-   23    24    25     1 
-   23    24    26     1 
-   23    24    27     1 
-   25    24    26     1 
-   25    24    27     1 
-   26    24    27     1 
-   24    27    28     1 
-   24    27    29     1 
-   28    27    29     1 
-   27    29    30     1 
-   27    29    31     1 
-   30    29    31     1 
-   29    31    32     1 
-   29    31    33     1 
-   29    31    37     1 
-   32    31    33     1 
-   32    31    37     1 
-   33    31    37     1 
-   31    33    34     1 
-   31    33    35     1 
-   31    33    36     1 
-   34    33    35     1 
-   34    33    36     1 
-   35    33    36     1 
-   31    37    38     1 
-   31    37    39     1 
-   38    37    39     1 
-   37    39    40     1 
-   37    39    41     1 
-   40    39    41     1 
-   39    41    42     1 
-   39    41    43     1 
-   39    41    44     1 
-   42    41    43     1 
-   42    41    44     1 
-   43    41    44     1 
 
 [ dihedrals ]
 ;  ai    aj    ak    al funct            c0            c1            c2            c3            c4            c5
@@ -325,47 +202,6 @@ Protein             3
    18    17    19    20     9 
    18    17    19    21     9 
    18    17    19    22     9 
-   23    24    27    28     9 
-   23    24    27    29     9 
-   25    24    27    28     9 
-   25    24    27    29     9 
-   26    24    27    28     9 
-   26    24    27    29     9 
-   24    27    29    30     9 
-   24    27    29    31     9 
-   28    27    29    30     9 
-   28    27    29    31     9 
-   27    29    31    32     9 
-   27    29    31    33     9 
-   27    29    31    37     9 
-   30    29    31    32     9 
-   30    29    31    33     9 
-   30    29    31    37     9 
-   29    31    33    34     9 
-   29    31    33    35     9 
-   29    31    33    36     9 
-   32    31    33    34     9 
-   32    31    33    35     9 
-   32    31    33    36     9 
-   37    31    33    34     9 
-   37    31    33    35     9 
-   37    31    33    36     9 
-   29    31    37    38     9 
-   29    31    37    39     9 
-   32    31    37    38     9 
-   32    31    37    39     9 
-   33    31    37    38     9 
-   33    31    37    39     9 
-   31    37    39    40     9 
-   31    37    39    41     9 
-   38    37    39    40     9 
-   38    37    39    41     9 
-   37    39    41    42     9 
-   37    39    41    43     9 
-   37    39    41    44     9 
-   40    39    41    42     9 
-   40    39    41    43     9 
-   40    39    41    44     9 
 
 [ dihedrals ]
 ;  ai    aj    ak    al funct            c0            c1            c2            c3
@@ -373,10 +209,6 @@ Protein             3
     5     9     7     8     4 
     9    17    15    16     4 
    15    19    17    18     4 
-   24    29    27    28     4 
-   27    31    29    30     4 
-   31    39    37    38     4 
-   37    41    39    40     4 
 
 ; Include Position restraint file
 #ifdef POSRES
@@ -385,7 +217,7 @@ Protein             3
 
 [ system ]
 ; Name
-GROningen MAchine for Chemical Simulation
+Protein
 
 [ molecules ]
 ; Compound        #mols
