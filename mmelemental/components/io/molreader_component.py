@@ -1,7 +1,7 @@
 from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.io_molecule import MolInput
-from mmelemental.models.molecule.gen_molecule import ToolkitMolecule
+from mmelemental.models.molecule.io_mol import MolInput
+from mmelemental.models.molecule.gen_mol import ToolkitMol
 import qcelemental
 import importlib
 
@@ -41,7 +41,7 @@ class TkMolReaderComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return ToolkitMolecule
+        return ToolkitMol
 
     def execute(
         self,
@@ -78,10 +78,10 @@ class TkMolReaderComponent(GenericComponent):
             raise ValueError('Data type not understood. Supply a file or a chemical code.')
 
         if toolkit == 'rdkit':
-            from mmelemental.models.molecule.rdkit_molecule import RDKitMolecule
-            return True, RDKitMolecule.build(inputs, dtype)
+            from mmelemental.models.molecule.rdkit_mol import RDKitMol
+            return True, RDKitMol.build(inputs, dtype)
         elif toolkit == 'parmed':
-            from mmelemental.models.molecule.parmed_molecule import ParmedMolecule
-            return True, ParmedMolecule.build(inputs, dtype)
+            from mmelemental.models.molecule.parmed_molecule import ParmedMol
+            return True, ParmedMol.build(inputs, dtype)
         else:
             raise ValueError(f'Data type {dtype} not supported by {self.__class__}.')

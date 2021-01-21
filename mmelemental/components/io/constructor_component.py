@@ -2,8 +2,8 @@ from mmelemental.models.base import Base
 from mmic.components.blueprints.generic_component import GenericComponent
 from typing import Any, Dict, List, Optional, Tuple
 
-from mmelemental.models.molecule.mm_molecule import Molecule
-from mmelemental.models.molecule.io_molecule import MolInput
+from mmelemental.models.molecule.mm_mol import Mol
+from mmelemental.models.molecule.io_mol import MolInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
@@ -16,7 +16,7 @@ class MolConstructorComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return Molecule
+        return Mol
 
     def execute(
         self,
@@ -29,13 +29,13 @@ class MolConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: Base) -> Molecule:
+    def constructor(self, model: Base) -> Mol:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Mol(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
-            return Molecule.from_file(model.path)
-        elif isinstance(model, Molecule):
+            return Mol.from_file(model.path)
+        elif isinstance(model, Mol):
             return model
         elif isinstance(model, MolInput):
             if model.code:
@@ -52,7 +52,7 @@ class ForceFieldConstructorComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return Molecule
+        return Mol
 
     def execute(
         self,
@@ -65,13 +65,13 @@ class ForceFieldConstructorComponent(GenericComponent):
 
         return True, self.constructor(inputs)
 
-    def constructor(self, model: Base) -> Molecule:
+    def constructor(self, model: Base) -> Mol:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return Molecule(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Mol(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
-            return Molecule.from_file(model.path)
-        elif isinstance(model, Molecule):
+            return Mol.from_file(model.path)
+        elif isinstance(model, Mol):
             return model
         else:
             raise ValueError(f'Input type {type(model)} not supported for {self.__class__}')
