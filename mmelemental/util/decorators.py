@@ -1,9 +1,10 @@
 """ A list of helpful decorators for MMElemental """
 
-__all__ = ['req_openmm', 'req_rdkit', 'req_mda', 'req_parmed']
+__all__ = ['req_openmm', 'require', 'req_mda', 'req_parmed']
 
 import warnings
 import functools
+import importlib
 
 try:
     import simtk.openmm as mm
@@ -58,14 +59,15 @@ def req_mda(func):
         return func(*args, **kwargs)
     return func_inner
 
-def req_rdkit(func):
-    global HAS_RDKIT
-    @functools.wraps(func)
-    def func_inner(*args, **kwargs):
-        if not HAS_RDKIT:
-            raise ModuleNotFoundError('Could not find or import rdkit.')
-        return func(*args, **kwargs)
-    return func_inner
+def require(tk_name):
+    def inner_require(func):
+        @functools.wraps(func)
+        def inner_func(*args, **kwargs):
+            if not importlib.import_module(tk_name):      
+                raise ModuleNotFoundError(f'Could not find or import {tk_name}.')
+            return func(*args, **kwargs)
+        return inner_func
+    return inner_require
 
 def req_openmm(func):
     global HAS_OPENMM
