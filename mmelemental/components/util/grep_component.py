@@ -4,8 +4,8 @@ import os
 from mmelemental.models.util.input import GrepInput
 from mmelemental.models.util.output import CmdOutput
 
-class GrepComponent(CmdComponent):
 
+class GrepComponent(CmdComponent):
     @classmethod
     def input(cls):
         return GrepInput
@@ -15,25 +15,32 @@ class GrepComponent(CmdComponent):
         return CmdOutput
 
     def build_input(
-        self, inputs: Dict[str, Any], config: Optional["TaskConfig"] = None, template: Optional[str] = None
+        self,
+        inputs: Dict[str, Any],
+        config: Optional["TaskConfig"] = None,
+        template: Optional[str] = None,
     ) -> Dict[str, Any]:
-        
+
         cmd = ["grep"]
 
         args = inputs.args
-        input_model = {'input': inputs.fileInput.abs_path, 'pattern': inputs.pattern, 'args': args}
+        input_model = {
+            "input": inputs.fileInput.abs_path,
+            "pattern": inputs.pattern,
+            "args": args,
+        }
 
-        if input_model['args']:
-            for arg in input_model['args']:
+        if input_model["args"]:
+            for arg in input_model["args"]:
                 cmd.append(arg)
 
-        cmd.append(input_model['pattern']) 
+        cmd.append(input_model["pattern"])
 
-        if isinstance(input_model['input'], list):
-            for ginput in input_model['input']:
+        if isinstance(input_model["input"], list):
+            for ginput in input_model["input"]:
                 cmd.append(ginput)
-        elif isinstance(input_model['input'], str):
-            cmd.append(input_model['input'])
+        elif isinstance(input_model["input"], str):
+            cmd.append(input_model["input"])
         else:
             raise Exception
 
@@ -50,11 +57,13 @@ class GrepComponent(CmdComponent):
             "infiles": None,
             "outfiles": None,
             "scratch_directory": scratch_directory,
-            "environment": env
+            "environment": env,
         }
 
-    def parse_output(self, outfiles: Dict[str, str], input_model: GrepInput) -> CmdOutput:
-        
-        output_file = outfiles['stdout']
+    def parse_output(
+        self, outfiles: Dict[str, str], input_model: GrepInput
+    ) -> CmdOutput:
+
+        output_file = outfiles["stdout"]
 
         return CmdOutput(stdout=output_file)

@@ -7,6 +7,7 @@ from mmelemental.models.molecule.io_mol import MolInput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
+
 class MolConstructorComponent(GenericComponent):
     """ Class for constructing Molecule from ChemCode or FileInput. """
 
@@ -32,7 +33,7 @@ class MolConstructorComponent(GenericComponent):
     def constructor(self, model: Base) -> Mol:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return Mol(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Mol(symbols=["C"], geometry=[0, 0, 0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
             return Mol.from_file(model.path)
         elif isinstance(model, Mol):
@@ -43,9 +44,12 @@ class MolConstructorComponent(GenericComponent):
             elif model.file:
                 return self.constructor(model.file)
             else:
-                raise ValueError('Input file or chemical code must be supplied.')
+                raise ValueError("Input file or chemical code must be supplied.")
         else:
-            raise ValueError(f'Input type {type(model)} not supported for {self.__class__}')
+            raise ValueError(
+                f"Input type {type(model)} not supported for {self.__class__}"
+            )
+
 
 class ForceFieldConstructorComponent(GenericComponent):
     """ Class for constructing ForceField object from FileInput. """
@@ -68,10 +72,12 @@ class ForceFieldConstructorComponent(GenericComponent):
     def constructor(self, model: Base) -> Mol:
         if isinstance(model, ChemCode):
             ctype = str(model.code_type).lower()
-            return Mol(symbols=['C'], geometry=[0,0,0], identifiers={ctype: model})
+            return Mol(symbols=["C"], geometry=[0, 0, 0], identifiers={ctype: model})
         elif isinstance(model, FileInput):
             return Mol.from_file(model.path)
         elif isinstance(model, Mol):
             return model
         else:
-            raise ValueError(f'Input type {type(model)} not supported for {self.__class__}')
+            raise ValueError(
+                f"Input type {type(model)} not supported for {self.__class__}"
+            )

@@ -3,8 +3,8 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.input.sim_writer import SimWriterInput
 from typing import Dict, List, Any, Optional, Tuple
 
-class SimWriterComponent(GenericComponent):
 
+class SimWriterComponent(GenericComponent):
     @classmethod
     def input(cls):
         return SimWriterInput
@@ -26,15 +26,21 @@ class SimWriterComponent(GenericComponent):
         schema = inputs.model
         for key, value in schema:
 
-            if key == 'mol':
-                value.to_file(file.name + '.pdb')
-                value.to_file(file.name + '.psf')
+            if key == "mol":
+                value.to_file(file.name + ".pdb")
+                value.to_file(file.name + ".psf")
 
-                if 'NAMD' in inputs.engine:
-                    file.write('coordinates \t {}\n'.format(file.name + '.pdb'))
-                    file.write('structure \t {}\n'.format(file.name + '.psf'))
+                if "NAMD" in inputs.engine:
+                    file.write("coordinates \t {}\n".format(file.name + ".pdb"))
+                    file.write("structure \t {}\n".format(file.name + ".psf"))
 
-            elif value and key != 'cell' and key != 'forcefield' and key != 'solvent' and key != 'provenance':
-                file.write('{} \t {}\n'.format(key, value))
+            elif (
+                value
+                and key != "cell"
+                and key != "forcefield"
+                and key != "solvent"
+                and key != "provenance"
+            ):
+                file.write("{} \t {}\n".format(key, value))
 
         return True, file

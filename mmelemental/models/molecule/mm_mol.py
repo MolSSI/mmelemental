@@ -10,46 +10,46 @@ from mmelemental.models.util.output import FileOutput
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.base import Nothing
 
+
 class Identifiers(qcelemental.models.molecule.Identifiers):
-    """ 
-    An extension of the qcelemental.models.molecule.Identifiers for RDKit constructors.
-    See `link <https://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html>`_ for more info. 
     """
+    An extension of the qcelemental.models.molecule.Identifiers for RDKit constructors.
+    See `link <https://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html>`_ for more info.
+    """
+
     smiles: Optional[ChemCode] = Field(
-        None,
-        description="A simplified molecular-input line-entry system code."
+        None, description="A simplified molecular-input line-entry system code."
     )
     smarts: Optional[ChemCode] = Field(
         None,
-        description="A SMILES arbitrary target specification code for defining substructures."
+        description="A SMILES arbitrary target specification code for defining substructures.",
     )
     inchi: Optional[ChemCode] = Field(
-        None,
-        description="An international chemical identifier code."
+        None, description="An international chemical identifier code."
     )
     sequence: Optional[ChemCode] = Field(
         None,
-        description="A sequence code from RDKit (currently only supports peptides)."
+        description="A sequence code from RDKit (currently only supports peptides).",
     )
     fasta: Optional[ChemCode] = Field(
-        None,
-        description="A FASTA code (currently only supports peptides)."
+        None, description="A FASTA code (currently only supports peptides)."
     )
     helm: Optional[ChemCode] = Field(
-        None,
-        description="A HELM code (currently only supports peptides)."
+        None, description="A HELM code (currently only supports peptides)."
     )
+
 
 class Mol(qcelemental.models.Molecule):
     """
-    A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry, 
+    A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
-    Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively 
+    Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively
     to assist with duplicate detection.
     """
+
     symbols: Array[str] = Field(
         None,
-        description = "An ordered (natom,) array-like object of atomic elemental symbols. The index of "
+        description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
@@ -76,51 +76,57 @@ class Mol(qcelemental.models.Molecule):
         "(natoms,3) for this attribute.",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
-        None,
-        description = "Bond angles in degrees for three connected atoms."
+        None, description="Bond angles in degrees for three connected atoms."
     )
     dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
         None,
-        description = 'Dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.')
+        description="Dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
+    )
     improper_dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
         None,
-        description = 'Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.')
+        description="Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
+    )
     residues: Optional[List[Tuple[str, int]]] = Field(
-        None, 
-        description = "A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
+        None,
+        description="A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
         "of a polymer. Order follows atomic indices from 0 till Natoms-1. Residue number starts from 1."
         "\n"
-        "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1."
-        )
+        "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1.",
+    )
     chains: Optional[Dict[str, List[int]]] = Field(
-        None, description = "A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
-        "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another."
+        None,
+        description="A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
+        "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
     )
-    segments: Optional[Dict[str, List[int]]] = Field(
-        None, 
-        description = "..."
-    )
+    segments: Optional[Dict[str, List[int]]] = Field(None, description="...")
     names: Optional[Union[List[str], Array[str]]] = Field(
-        None, 
-        description = "A list of atomic label names."
+        None, description="A list of atomic label names."
     )
     identifiers: Optional[Identifiers] = Field(
-        None, 
-        description = "An optional dictionary of additional identifiers by which this Molecule can be referenced, "
-        "such as INCHI, SMILES, SMARTS, etc. See the :class:``Identifiers`` model for more details."
+        None,
+        description="An optional dictionary of additional identifiers by which this Molecule can be referenced, "
+        "such as INCHI, SMILES, SMARTS, etc. See the :class:``Identifiers`` model for more details.",
     )
     rotateBonds: Optional[List[Tuple[int, int]]] = Field(
-        None, 
-        description = "A list of bonded atomic indices: (atom1, atom2), specifying rotatable bonds in the molecule."
+        None,
+        description="A list of bonded atomic indices: (atom1, atom2), specifying rotatable bonds in the molecule.",
     )
     rigidBonds: Optional[List[Tuple[int, int]]] = Field(
-        None, description = "A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule."
+        None,
+        description="A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule.",
     )
 
     # Constructors
     @classmethod
-    def from_file(cls, filename: Union[FileInput, str], top: Union[FileInput, str] = None, dtype: Optional[str] = None, 
-        *, orient: bool = False, **kwargs) -> "Mol":
+    def from_file(
+        cls,
+        filename: Union[FileInput, str],
+        top: Union[FileInput, str] = None,
+        dtype: Optional[str] = None,
+        *,
+        orient: bool = False,
+        **kwargs,
+    ) -> "Mol":
         """
         Constructs a Molecule object from a file.
         Parameters
@@ -149,7 +155,7 @@ class Mol(qcelemental.models.Molecule):
             top = FileInput(path=top, dtype=dtype)
         elif top and isinstance(top, FileInput):
             top = FileInput(path=top.path, dtype=dtype)
- 
+
         if top:
             mol_input = MolInput(file=fileobj, top_file=top)
         else:
@@ -158,10 +164,17 @@ class Mol(qcelemental.models.Molecule):
         mol = TkMolReaderComponent.compute(mol_input)
 
         return cls.from_data(mol, dtype=mol.dtype)
-        
+
     @classmethod
-    def from_data(cls, data: Any, dtype: Optional[str] = None, *,
-        orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "Mol":
+    def from_data(
+        cls,
+        data: Any,
+        dtype: Optional[str] = None,
+        *,
+        orient: bool = False,
+        validate: bool = None,
+        **kwargs: Dict[str, Any],
+    ) -> "Mol":
         """
         Constructs a Mol object from a data object.
         Parameters
@@ -184,19 +197,30 @@ class Mol(qcelemental.models.Molecule):
         if isinstance(data, str):
             try:
                 code = ChemCode(code=data)
-                mol_input = MolInput(code=code, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+                mol_input = MolInput(
+                    code=code,
+                    args={"validate": validate, "orient": orient, "kwargs": kwargs},
+                )
             except:
                 raise ValueError
         elif isinstance(data, ChemCode):
-            mol_input = MolInput(code=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
+            mol_input = MolInput(
+                code=data,
+                args={"validate": validate, "orient": orient, "kwargs": kwargs},
+            )
         else:
             # Let's hope this is a toolkit-specific molecule and pass it as data
-            mol_input = MolInput(data=data, args={'validate': validate, 'orient': orient, 'kwargs': kwargs})
-        
+            mol_input = MolInput(
+                data=data,
+                args={"validate": validate, "orient": orient, "kwargs": kwargs},
+            )
+
         return MolReaderComponent.compute(mol_input)
 
-    def to_file(self, filename: str, dtype: Optional[str] = None, mode: str = 'w') -> Nothing:
-        """ Writes the Molecule to a file.
+    def to_file(
+        self, filename: str, dtype: Optional[str] = None, mode: str = "w"
+    ) -> Nothing:
+        """Writes the Molecule to a file.
         Parameters
         ----------
         filename : str
@@ -210,7 +234,7 @@ class Mol(qcelemental.models.Molecule):
         mol_input = MolOutput(file=fileobj, mol=self, mode=mode)
         toolkit = mol_input.files_toolkit()
 
-        if toolkit == 'qcelemental':
+        if toolkit == "qcelemental":
             super().to_file(filename, dtype, mode)
         else:
             MolWriterComponent.compute(mol_input)
@@ -218,16 +242,17 @@ class Mol(qcelemental.models.Molecule):
     def to_data(self, dtype: str) -> "ToolkitMol":
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
-        if dtype == 'rdkit':
+        if dtype == "rdkit":
             from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
+
             return MolToRDKitComponent.compute(self).mol
         else:
-            raise NotImplementedError(f'Data type {dtype} not available.')
+            raise NotImplementedError(f"Data type {dtype} not available.")
 
 
 class MolReaderComponent(GenericComponent):
-    """ Factory component that constructs a Molecule object from MolInput.
-    Which toolkit-specific component is called depends on data type and 
+    """Factory component that constructs a Molecule object from MolInput.
+    Which toolkit-specific component is called depends on data type and
     which toolkits are installed on the system."""
 
     @classmethod
@@ -244,45 +269,64 @@ class MolReaderComponent(GenericComponent):
         extra_outfiles: Optional[List[str]] = None,
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None) -> Tuple[bool, Dict[str, Any]]:
+        timeout: Optional[int] = None,
+    ) -> Tuple[bool, Dict[str, Any]]:
 
         if inputs.args:
-            orient = inputs.args.get('orient')
-            validate = inputs.args.get('validate')
-            kwargs = inputs.args.get('kwargs')
+            orient = inputs.args.get("orient")
+            validate = inputs.args.get("validate")
+            kwargs = inputs.args.get("kwargs")
         else:
             orient, validate, kwargs = False, None, None
 
         if inputs.data:
             dtype = inputs.data.dtype
-            if dtype == 'qcelemental':
-                qmol = qcelemental.models.molecule.Mol.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
+            if dtype == "qcelemental":
+                qmol = qcelemental.models.molecule.Mol.from_data(
+                    data, dtype, orient=orient, validate=validate, **kwargs
+                )
                 return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
-            elif dtype == 'rdkit':
-                from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+            elif dtype == "rdkit":
+                from mmelemental.components.trans.rdkit_component import (
+                    RDKitToMolComponent,
+                )
+
                 return True, RDKitToMolComponent.compute(inputs)
-            elif dtype == 'parmed':
-                from mmelemental.components.trans.parmed_component import ParmedToMolComponent
-                return True, ParmedToMolComponent.compute(inputs)               
+            elif dtype == "parmed":
+                from mmelemental.components.trans.parmed_component import (
+                    ParmedToMolComponent,
+                )
+
+                return True, ParmedToMolComponent.compute(inputs)
             else:
-                raise NotImplementedError(f'Data type not yet supported: {dtype}.')
+                raise NotImplementedError(f"Data type not yet supported: {dtype}.")
         # Only RDKit is handling chem codes and file objects for now!
         elif inputs.code:
             from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+
             return True, RDKitToMolComponent.compute(inputs)
         elif inputs.file:
             toolkit = inputs.files_toolkit()
-            if toolkit == 'rdkit':
-                from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
+            if toolkit == "rdkit":
+                from mmelemental.components.trans.rdkit_component import (
+                    RDKitToMolComponent,
+                )
+
                 return True, RDKitToMolComponent.compute(inputs)
-            elif toolkit == 'parmed':
-                from mmelemental.components.trans.parmed_component import ParmedToMolComponent
+            elif toolkit == "parmed":
+                from mmelemental.components.trans.parmed_component import (
+                    ParmedToMolComponent,
+                )
+
                 return True, ParmedToMolComponent.compute(inputs)
         else:
-            raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
+            raise NotImplementedError(
+                "Molecules can be instantiated from codes, files, or other data objects."
+            )
+
 
 class MolWriterComponent(GenericComponent):
-    """ Factory component that constructs a Mol object from MolInput.
+    """Factory component that constructs a Mol object from MolInput.
     Which toolkit-specific component is called depends on MolInput.data.dtype."""
 
     @classmethod
@@ -299,15 +343,16 @@ class MolWriterComponent(GenericComponent):
         extra_outfiles: Optional[List[str]] = None,
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None) -> Tuple[bool, None]:
-        
+        timeout: Optional[int] = None,
+    ) -> Tuple[bool, None]:
+
         if isinstance(inputs, dict):
             inputs = MolReaderComponent.input()(**inputs)
 
         if inputs.args:
-            orient = inputs.args.get('orient')
-            validate = inputs.args.get('validate')
-            kwargs = inputs.args.get('kwargs')
+            orient = inputs.args.get("orient")
+            validate = inputs.args.get("validate")
+            kwargs = inputs.args.get("kwargs")
         else:
             orient, validate, kwargs = False, None, None
 
@@ -316,34 +361,41 @@ class MolWriterComponent(GenericComponent):
         dtype = inputs.file.dtype or inputs.file.ext
         mode = inputs.file.mode
 
-        if toolkit == 'rdkit':
+        if toolkit == "rdkit":
             from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
             from rdkit import Chem
-            
-            rdkmol = MolToRDKitComponent.compute(inputs.mol)
-            if mode != 'w':
-                raise NotImplementedError('rdkit supports only write mode for file output. Ouch!')
 
-            if dtype == '.pdb':
+            rdkmol = MolToRDKitComponent.compute(inputs.mol)
+            if mode != "w":
+                raise NotImplementedError(
+                    "rdkit supports only write mode for file output. Ouch!"
+                )
+
+            if dtype == ".pdb":
                 writer = Chem.PDBWriter(filename)
-            elif dtype == '.sdf':
+            elif dtype == ".sdf":
                 writer = Chem.SDWriter(fp)
-            elif dtype == '.smi':
+            elif dtype == ".smi":
                 writer = Chem.SmilesWriter(fp)
             else:
-                raise NotImplementedError(f'File format {dtype} not supported by rdkit.')
+                raise NotImplementedError(
+                    f"File format {dtype} not supported by rdkit."
+                )
 
             writer.write(rdkmol.mol)
             writer.close()
 
-        elif toolkit == 'parmed':
-            overwrite = True if inputs.file.mode == 'w' else False
-            from mmelemental.components.trans.parmed_component import MolToParmedComponent
+        elif toolkit == "parmed":
+            overwrite = True if inputs.file.mode == "w" else False
+            from mmelemental.components.trans.parmed_component import (
+                MolToParmedComponent,
+            )
+
             pmol = MolToParmedComponent.compute(inputs.mol)
-            #print([atom.name for atom in pmol.mol.atoms])
-            #print([(residue.name, residue.atoms) for residue in pmol.mol.residues])
+            # print([atom.name for atom in pmol.mol.atoms])
+            # print([(residue.name, residue.atoms) for residue in pmol.mol.residues])
             pmol.mol.save(filename, overwrite=overwrite)
         else:
-            raise ValueError(f'Data type not yet supported: {dtype}')
+            raise ValueError(f"Data type not yet supported: {dtype}")
 
         return True, Nothing()

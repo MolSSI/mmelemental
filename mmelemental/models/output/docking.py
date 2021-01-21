@@ -4,6 +4,7 @@ from mmelemental.models.output.sim import SimOutput
 from mmelemental.models.base import Base
 from pydantic import Field
 
+
 class DockingOutput(Base):
     dockingInput: DockingInput = Field(..., description="Docking input model.")
     ligand: SimOutput = Field(
@@ -14,6 +15,7 @@ class DockingOutput(Base):
         None,
         description="Simulation output for non-rigid receptors i.e. conformation and orientation of the flexible side chains in the receptor relative to the ligand.",
     )
+
 
 class AffinityOutput(Base):
     Docking_Output: DockingOutput

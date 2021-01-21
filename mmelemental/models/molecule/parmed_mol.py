@@ -4,22 +4,23 @@ from .gen_mol import ToolkitMol
 from mmelemental.util.decorators import require
 import parmed
 
-class ParmedMol(ToolkitMol):
-    mol: parmed.structure.Structure = Field(..., description = 'ParmEd molecule object.')
 
-    @require('parmed')
+class ParmedMol(ToolkitMol):
+    mol: parmed.structure.Structure = Field(..., description="ParmEd molecule object.")
+
+    @require("parmed")
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     @property
     def dtype(self):
-        return 'parmed'   
-    
+        return "parmed"
+
     @classmethod
-    @require('parmed')
+    @require("parmed")
     def build(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMol":
         """
-        Creates an instance of ParmedMol object storing parmed.structure.Structure. 
+        Creates an instance of ParmedMol object storing parmed.structure.Structure.
         This is done by parsing an input file (pdb, gro, ...).
 
         .. todo:: use dtype somewhere? Do need it?
@@ -41,6 +42,6 @@ class ParmedMol(ToolkitMol):
                 raise ValueError(f"File type not supported: {inputs.file.ext}")
 
         elif inputs.code:
-            raise NotImplementedError('No support for Chemical codes with ParmEd.')
+            raise NotImplementedError("No support for Chemical codes with ParmEd.")
 
         return cls(mol=pmol)

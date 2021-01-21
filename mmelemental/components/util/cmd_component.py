@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Tuple, Optional, Union
 from mmelemental.models.util.output import CmdOutput
 from mmelemental.models.util.input import CmdInput
 
+
 class CmdComponent(GenericComponent):
     """ Cmd process: build_input() -> run() -> parse_output() -> [clean()] """
 
@@ -23,21 +24,22 @@ class CmdComponent(GenericComponent):
         else:
             files.remove()
 
-    def execute(self,
+    def execute(
+        self,
         inputs: Dict[str, Any],
         extra_outfiles: Optional[List[str]] = None,
         extra_commands: Optional[List[str]] = None,
         scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None
+        timeout: Optional[int] = None,
     ) -> Tuple[bool, Dict[str, Any]]:
 
         execute_input = self.build_input(inputs)
         exe_success, proc = self.run(execute_input)
-        
+
         if exe_success:
             out = True, self.parse_output(proc, inputs)
-            if execute_input.get('clean_files'):
-                self.clean(execute_input.get('clean_files'))
+            if execute_input.get("clean_files"):
+                self.clean(execute_input.get("clean_files"))
             return out
         else:
             raise ValueError(proc["stderr"])
@@ -68,9 +70,9 @@ class CmdComponent(GenericComponent):
             scratch_directory=inputs["scratch_directory"],
             scratch_name=scratch_name,
             timeout=timeout,
-            environment=inputs.get("environment", None)
+            environment=inputs.get("environment", None),
         )
-        
+
         return exe_success, proc
 
     def build_input(
@@ -82,8 +84,6 @@ class CmdComponent(GenericComponent):
         raise NotImplementedError
 
     def parse_output(
-        self, 
-        output: Dict[str, str], 
-        inputs: Dict[str, Any]
+        self, output: Dict[str, str], inputs: Dict[str, Any]
     ) -> Dict[str, Any]:
         raise NotImplementedError

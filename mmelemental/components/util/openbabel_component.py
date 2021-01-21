@@ -4,8 +4,8 @@ import os
 from mmelemental.models.util.input import OpenBabelInput
 from mmelemental.models.util.output import CmdOutput
 
-class OpenBabelComponent(CmdComponent):
 
+class OpenBabelComponent(CmdComponent):
     @classmethod
     def input(cls):
         return OpenBabelInput
@@ -15,9 +15,12 @@ class OpenBabelComponent(CmdComponent):
         return CmdOutput
 
     def build_input(
-        self, input_model: OpenBabelInput, config: "TaskConfig" = None, template: Optional[str] = None
+        self,
+        input_model: OpenBabelInput,
+        config: "TaskConfig" = None,
+        template: Optional[str] = None,
     ) -> Dict[str, Any]:
-        output = 'tmp.' + input_model.outputExt
+        output = "tmp." + input_model.outputExt
         cmd = ["obabel", input_model.fileInput.abs_path, "-O" + output]
 
         if input_model.args:
@@ -37,10 +40,12 @@ class OpenBabelComponent(CmdComponent):
             "infiles": None,
             "outfiles": [output],
             "scratch_directory": scratch_directory,
-            "environment": env
+            "environment": env,
         }
 
-    def parse_output(self, outfiles: Dict[str, Dict[str, str]], input_model: OpenBabelInput) -> CmdOutput:
-        output_file = outfiles['outfiles']['tmp.' + input_model.outputExt]
+    def parse_output(
+        self, outfiles: Dict[str, Dict[str, str]], input_model: OpenBabelInput
+    ) -> CmdOutput:
+        output_file = outfiles["outfiles"]["tmp." + input_model.outputExt]
 
         return CmdOutput(stdout=output_file)

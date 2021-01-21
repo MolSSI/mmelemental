@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.output.sim import Frame, TrajReaderInput
 
+
 class SingleFrameComponent(GenericComponent):
     """ Class for constructing Trajectory that reads a single frame from file(s). """
 
@@ -24,6 +25,7 @@ class SingleFrameComponent(GenericComponent):
     ) -> Tuple[bool, Dict[str, Any]]:
 
         return True, Frame(topology=..., result=...)
+
 
 class MultiFrameComponent(GenericComponent):
     """ Class for constructing Trajectory that reads all frames from file(s). """
