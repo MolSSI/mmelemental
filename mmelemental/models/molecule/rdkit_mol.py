@@ -1,8 +1,8 @@
 from qcelemental import models
 from pydantic import Field, validator
 from typing import List, Dict, Any
-from .gen_molecule import ToolkitMolecule
-from mmelemental.util.decorators import req_rdkit
+from .gen_mol import ToolkitMol
+from mmelemental.util.decorators import require
 
 try:
     from rdkit import Chem
@@ -14,10 +14,10 @@ class Bond:
     """ RDKit-based bond order: {0: unspecified, 1: single, etc., up to 21} """  
     orders = list(Chem.BondType.values.values())
 
-class RDKitMolecule(ToolkitMolecule):
+class RDKitMol(ToolkitMol):
     mol: Chem.rdchem.Mol = Field(..., description = 'Rdkit molecule object.')
 
-    @req_rdkit
+    @require('rdkit')
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -53,8 +53,8 @@ class RDKitMolecule(ToolkitMolecule):
         return Chem.Mol(RWmol)
 
     @classmethod
-    def build(cls, inputs: Dict[str, Any], dtype: str = None) -> "RDKitMolecule":
-        """ Creates an instance of RDKitMolecule object storing rdkit.Chem.Mol. 
+    def build(cls, inputs: Dict[str, Any], dtype: str = None) -> "RDKitMol":
+        """ Creates an instance of RDKitMol object storing rdkit.Chem.Mol. 
         This is done by parsing an input file (pdb, ...) or a chemical code (smiles, ...).
         """
         if inputs.file:

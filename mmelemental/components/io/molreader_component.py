@@ -81,7 +81,7 @@ class TkMolReaderComponent(GenericComponent):
             from mmelemental.models.molecule.rdkit_mol import RDKitMol
             return True, RDKitMol.build(inputs, dtype)
         elif toolkit == 'parmed':
-            from mmelemental.models.molecule.parmed_molecule import ParmedMol
+            from mmelemental.models.molecule.parmed_mol import ParmedMol
             return True, ParmedMol.build(inputs, dtype)
         else:
             raise ValueError(f'Data type {dtype} not supported by {self.__class__}.')

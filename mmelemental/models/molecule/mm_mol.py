@@ -3,7 +3,7 @@ from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import validator, Field, ValidationError
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
-from mmelemental.models.molecule.io_molecule import MolInput, MolOutput
+from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
@@ -40,9 +40,9 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
         description="A HELM code (currently only supports peptides)."
     )
 
-class Molecule(qcelemental.models.Molecule):
+class Mol(qcelemental.models.Molecule):
     """
-    An MMSchema representation of a Molecule based on QCSchema. This model contains data for symbols, geometry, 
+    A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry, 
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
     Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively 
     to assist with duplicate detection.
@@ -56,21 +56,21 @@ class Molecule(qcelemental.models.Molecule):
     )
     geometry: Optional[Array[float]] = Field(
         None,
-        description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. \n
+        description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. "
         "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
         "or the serialized version of the array in (3*natom,) shape; all forms will be reshaped to "
         "(natom,3) for this attribute.",
     )
     velocities: Optional[Array[float]] = Field(
         None,
-        description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. \n
+        description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
         "(natoms,3) for this attribute.",
     )
     forces: Optional[Array[float]] = Field(
         None,
-        description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. \n
+        description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
         "(natoms,3) for this attribute.",
@@ -100,7 +100,7 @@ class Molecule(qcelemental.models.Molecule):
         None, 
         description = "..."
     )
-    names: Optional[List[str]] = Field(
+    names: Optional[Union[List[str], Array[str]]] = Field(
         None, 
         description = "A list of atomic label names."
     )
@@ -120,7 +120,7 @@ class Molecule(qcelemental.models.Molecule):
     # Constructors
     @classmethod
     def from_file(cls, filename: Union[FileInput, str], top: Union[FileInput, str] = None, dtype: Optional[str] = None, 
-        *, orient: bool = False, **kwargs) -> "Molecule":
+        *, orient: bool = False, **kwargs) -> "Mol":
         """
         Constructs a Molecule object from a file.
         Parameters
@@ -137,8 +137,8 @@ class Molecule(qcelemental.models.Molecule):
             Any additional keywords to pass to the constructor
         Returns
         -------
-        Molecule
-            A constructed Molecule class.
+        Mol
+            A constructed Mol class.
         """
         if not isinstance(filename, FileInput):
             fileobj = FileInput(path=filename, dtype=dtype)
@@ -161,9 +161,9 @@ class Molecule(qcelemental.models.Molecule):
         
     @classmethod
     def from_data(cls, data: Any, dtype: Optional[str] = None, *,
-        orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "Molecule":
+        orient: bool = False, validate: bool = None, **kwargs: Dict[str, Any]) -> "Mol":
         """
-        Constructs a Molecule object from a data object.
+        Constructs a Mol object from a data object.
         Parameters
         ----------
         data: Any
@@ -178,8 +178,8 @@ class Molecule(qcelemental.models.Molecule):
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
         Returns
         -------
-        Molecule
-            A constructed Molecule class.
+        Mol
+            A constructed Mol class.
         """
         if isinstance(data, str):
             try:
@@ -215,7 +215,7 @@ class Molecule(qcelemental.models.Molecule):
         else:
             MolWriterComponent.compute(mol_input)
 
-    def to_data(self, dtype: str) -> "ToolkitMolecule":
+    def to_data(self, dtype: str) -> "ToolkitMol":
         """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
 
         if dtype == 'rdkit':
@@ -236,7 +236,7 @@ class MolReaderComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return Molecule
+        return Mol
 
     def execute(
         self,
@@ -256,8 +256,8 @@ class MolReaderComponent(GenericComponent):
         if inputs.data:
             dtype = inputs.data.dtype
             if dtype == 'qcelemental':
-                qmol = qcelemental.models.molecule.Molecule.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
-                return True, Molecule(orient=orient, validate=validate, **qmol.to_dict())
+                qmol = qcelemental.models.molecule.Mol.from_data(data, dtype, orient=orient, validate=validate, **kwargs)
+                return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
             elif dtype == 'rdkit':
                 from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
                 return True, RDKitToMolComponent.compute(inputs)
@@ -282,7 +282,7 @@ class MolReaderComponent(GenericComponent):
             raise NotImplementedError('Molecules can be instantiated from codes, files, or other data objects.')
 
 class MolWriterComponent(GenericComponent):
-    """ Factory component that constructs a Molecule object from MolInput.
+    """ Factory component that constructs a Mol object from MolInput.
     Which toolkit-specific component is called depends on MolInput.data.dtype."""
 
     @classmethod

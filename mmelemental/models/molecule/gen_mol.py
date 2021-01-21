@@ -2,7 +2,7 @@ from mmelemental.models.base import Base
 from pydantic import Field
 from typing import Any
 
-class ToolkitMolecule(Base):
+class ToolkitMol(Base):
     mol: Any = Field(..., description = 'Toolkit-specific molecule object.')
     
     class Config(Base.Config):

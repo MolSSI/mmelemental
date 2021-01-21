@@ -1,31 +1,35 @@
 from pydantic import Field, validator
 from typing import List, Dict, Any
-from .gen_molecule import ToolkitMolecule
+from .gen_mol import ToolkitMol
+from mmelemental.util.decorators import require
+import parmed
 
-try:
-    import parmed
-except:
-    raise ModuleNotFoundError('Make sure parmed is installed for code validation.')
-
-class ParmedMolecule(ToolkitMolecule):
+class ParmedMol(ToolkitMol):
     mol: parmed.structure.Structure = Field(..., description = 'ParmEd molecule object.')
+
+    @require('parmed')
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
     @property
     def dtype(self):
         return 'parmed'   
-
+    
     @classmethod
-    def build(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMolecule":
+    @require('parmed')
+    def build(cls, inputs: Dict[str, Any], dtype: str) -> "ParmedMol":
         """
-        Creates an instance of ParmedMolecule object storing parmed.structure.Structure. 
+        Creates an instance of ParmedMol object storing parmed.structure.Structure. 
         This is done by parsing an input file (pdb, gro, ...).
 
         .. todo:: use dtype somewhere? Do need it?
         """
+        import parmed
+
         if inputs.file:
-            coords_fname = inputs.file.path
+            coords_fname = inputs.file.abs_path
             if inputs.top_file:
-                top_fname = inputs.top_file.path
+                top_fname = inputs.top_file.abs_path
             else:
                 top_fname = None
             try:

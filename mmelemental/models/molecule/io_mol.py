@@ -2,7 +2,7 @@ from mmelemental.models.base import Base
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
-from .gen_molecule import ToolkitMolecule
+from .gen_mol import ToolkitMol
 from typing import Optional, Union, Dict, Any
 from pydantic import Field
 import importlib
@@ -39,7 +39,7 @@ class MolIO(Base):
         None, 
         description = 'Chemical code object that stores a smiles, smarts, etc. code. See :class: ``Identifiers``.'
     )
-    data: Optional[ToolkitMolecule] = Field(
+    data: Optional[ToolkitMol] = Field(
         None,
         description = 'Toolkit-specific data object e.g. rdkit.Chem.rdchem.Mol'
     ) 

@@ -1,14 +1,14 @@
 from .base import SimInput
 from typing import List, Optional, Tuple, Union
-from mmelemental.models.molecule.mm_molecule import Molecule
+from ..molecule.mm_mol import Mol
 from pydantic import Field
 
 class DockingInput(SimInput):
-    ligand: Molecule = Field(
-        ..., description="Molecule model for a candidate ligand (e.g. drug)."
+    ligand: Mol = Field(
+        ..., description="Molecule model for a candidate ligand (e.g. drug). See  the :class:``Mol``."
     )
-    receptor: Molecule = Field(
-        ..., description="Molecule model for a receptor (e.g. protein)."
+    receptor: Mol = Field(
+        ..., description="Molecule model for a receptor (e.g. protein). See  the :class:``Mol``."
     )
     searchSpace: Optional[List[Tuple[float, float, float, float, float, float]]] = Field(
         None,

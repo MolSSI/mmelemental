@@ -4,7 +4,7 @@ Simulation test for the mmelemental package.
 #import pytest
 import mmelemental
 from mmelemental.models.util.input import FileInput
-from mmelemental.models.molecule.mm_molecule import Molecule
+from mmelemental.models.molecule.mm_mol import Mol
 from mmelemental.models.input.dynamics import DynamicsInput
 from mmelemental.components.io.simwriter_component import SimWriterComponent
 from mmelemental.models.input.sim_writer import SimWriterInput
@@ -18,7 +18,7 @@ def test_mmelemental_molgro():
     groFile = FileInput(path='mmelemental/data/molecules/alanine.gro')
     topFile = FileInput(path='mmelemental/data/molecules/alanine.top')
 
-    return Molecule.from_file(filename=groFile.path, top_file=topFile)
+    return Mol.from_file(filename=groFile.path, top_file=topFile)
 
 mol = test_mmelemental_molgro()
 md = DynamicsInput(

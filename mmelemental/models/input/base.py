@@ -1,5 +1,5 @@
 from mmelemental.models.base import Base
-from mmelemental.models.molecule.mm_molecule import Molecule
+from mmelemental.models.molecule.mm_mol import Mol
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field
@@ -9,7 +9,7 @@ class SimInput(Base):
     """ Basic model for molecular simulation input parameters."""
 
     # System fields
-    solvent: Union[Tuple[Solvent], Molecule] = Field(None, description = 'Solvent Molecule object(s).')
+    solvent: Union[Tuple[Solvent], Mol] = Field(None, description = 'Solvent Mol object(s).')
     cell: Tuple[Tuple[float], Tuple[float]] = Field(None, description = 'Cell dimensions in the form: ((xmin, ymin, ...), (xmax, ymax, ...))')
     forcefield: Tuple[ForceField] = Field(None, description = 'Forcefield object(s) for every Molecule defined in "mol".')
     boundary: Tuple[str] = Field(None, description = 'Boundary conditions in all dimensions e.g. (periodic, periodic, periodic) imposes periodic boundaries in 3D.')

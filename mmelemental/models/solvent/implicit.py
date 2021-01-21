@@ -1,4 +1,4 @@
-from mmelemental.models.molecule.mm_molecule import Molecule
+from ..molecule.mm_mol import Mol
 from pydantic import Field
 from typing import Any, Tuple, Union
 
