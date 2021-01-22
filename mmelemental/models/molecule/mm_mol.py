@@ -3,12 +3,14 @@ from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import validator, Field, ValidationError
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
-from mmelemental.models.molecule.io_mol import MolInput, MolOutput
+from mmelemental.models.molecule.io_mol import MolInput, MolOutput, Translators
+from .gen_mol import ToolkitMol
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.base import Nothing
+import importlib
 
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
@@ -120,8 +122,8 @@ class Mol(qcelemental.models.Molecule):
     @classmethod
     def from_file(
         cls,
-        filename: Union[FileInput, str],
-        top: Union[FileInput, str] = None,
+        filename: Optional[str] = None,
+        top_filename: Optional[str] = None,
         dtype: Optional[str] = None,
         *,
         orient: bool = False,
@@ -131,9 +133,9 @@ class Mol(qcelemental.models.Molecule):
         Constructs a Molecule object from a file.
         Parameters
         ----------
-        filename : str
-            The coords filename to read
-        top: str
+        filename : str, optional
+            The atomic positions filename to read
+        top_filename: str, optional
             The topology i.e. connectivity filename to read
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
@@ -146,24 +148,19 @@ class Mol(qcelemental.models.Molecule):
         Mol
             A constructed Mol class.
         """
-        if not isinstance(filename, FileInput):
-            fileobj = FileInput(path=filename, dtype=dtype)
+        if top_filename and filename:
+            mol_input = MolInput(file=filename, top_file=top_filename, dtype=dtype)
+        elif filename:
+            mol_input = MolInput(file=filename, dtype=dtype)
+        elif top_filename:
+            mol_input = MolInput(file=filename, dtype=dtype)
         else:
-            fileobj = FileInput(path=filename.path, dtype=dtype)
+            raise TypeError(
+                "You must supply at least one of the following: filename or top_filename."
+            )
 
-        if top and not isinstance(top, FileInput):
-            top = FileInput(path=top, dtype=dtype)
-        elif top and isinstance(top, FileInput):
-            top = FileInput(path=top.path, dtype=dtype)
-
-        if top:
-            mol_input = MolInput(file=fileobj, top_file=top)
-        else:
-            mol_input = MolInput(file=fileobj)
-
-        mol = TkMolReaderComponent.compute(mol_input)
-
-        return cls.from_data(mol, dtype=mol.dtype)
+        tkmol = TkMolReaderComponent.compute(mol_input)
+        return cls.from_data(tkmol, dtype=tkmol.dtype)
 
     @classmethod
     def from_data(
@@ -196,29 +193,14 @@ class Mol(qcelemental.models.Molecule):
         """
         if isinstance(data, str):
             try:
-                code = ChemCode(code=data)
-                mol_input = MolInput(
-                    code=code,
-                    args={"validate": validate, "orient": orient, "kwargs": kwargs},
-                )
+                data = ChemCode(code=data)
             except:
                 raise ValueError
-        elif isinstance(data, ChemCode):
-            mol_input = MolInput(
-                code=data,
-                args={"validate": validate, "orient": orient, "kwargs": kwargs},
-            )
-        else:
-            # Let's hope this is a toolkit-specific molecule and pass it as data
-            mol_input = MolInput(
-                data=data,
-                args={"validate": validate, "orient": orient, "kwargs": kwargs},
-            )
 
-        return MolReaderComponent.compute(mol_input)
+        return data.to_data(orient=orient, validate=validate, **kwargs)
 
     def to_file(
-        self, filename: str, dtype: Optional[str] = None, mode: str = "w"
+        self, filename: str, dtype: Optional[str] = None, mode: str = "w", **kwargs
     ) -> Nothing:
         """Writes the Molecule to a file.
         Parameters
@@ -229,105 +211,29 @@ class Mol(qcelemental.models.Molecule):
             The type of file to write, attempts to infer dtype from the filename if not provided.
         mode: str
             Write new file or overwrite existing file (w) or append (a) to existing file.
+        **kwargs
+            Additional kwargs to pass to the constructor. kwargs take precedence over data.
         """
-        fileobj = FileOutput(path=filename, dtype=dtype)
-        mol_input = MolOutput(file=fileobj, mol=self, mode=mode)
-        toolkit = mol_input.files_toolkit()
+        inputs = MolOutput(file=filename, mol=self, mode=mode)
+        # tkmol = TkMolWriterComponent.compute(inputs)
+        # tkmol.to_file(filename, dtype, mode, **kwargs)
 
-        if toolkit == "qcelemental":
-            super().to_file(filename, dtype, mode)
-        else:
-            MolWriterComponent.compute(mol_input)
-
-    def to_data(self, dtype: str) -> "ToolkitMol":
-        """ Converts Molecule to toolkit-specific molecule (e.g. rdkit). """
-
-        if dtype == "rdkit":
-            from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
-
-            return MolToRDKitComponent.compute(self).mol
-        else:
-            raise NotImplementedError(f"Data type {dtype} not available.")
+    def to_data(self, dtype: str, **kwargs) -> ToolkitMol:
+        """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+        Parameters
+        ----------
+        dtype: str
+            The type of data object to convert to.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        """
+        inputs = MolOutput(mol=self, dtype=dtype, kwargs=kwargs)
+        return FromMolComponent.compute(inputs)
 
 
-class MolReaderComponent(GenericComponent):
-    """Factory component that constructs a Molecule object from MolInput.
-    Which toolkit-specific component is called depends on data type and
-    which toolkits are installed on the system."""
-
-    @classmethod
-    def input(cls):
-        return MolInput
-
-    @classmethod
-    def output(cls):
-        return Mol
-
-    def execute(
-        self,
-        inputs: Dict[str, Any],
-        extra_outfiles: Optional[List[str]] = None,
-        extra_commands: Optional[List[str]] = None,
-        scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None,
-    ) -> Tuple[bool, Dict[str, Any]]:
-
-        if inputs.args:
-            orient = inputs.args.get("orient")
-            validate = inputs.args.get("validate")
-            kwargs = inputs.args.get("kwargs")
-        else:
-            orient, validate, kwargs = False, None, None
-
-        if inputs.data:
-            dtype = inputs.data.dtype
-            if dtype == "qcelemental":
-                qmol = qcelemental.models.molecule.Mol.from_data(
-                    data, dtype, orient=orient, validate=validate, **kwargs
-                )
-                return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
-            elif dtype == "rdkit":
-                from mmelemental.components.trans.rdkit_component import (
-                    RDKitToMolComponent,
-                )
-
-                return True, RDKitToMolComponent.compute(inputs)
-            elif dtype == "parmed":
-                from mmelemental.components.trans.parmed_component import (
-                    ParmedToMolComponent,
-                )
-
-                return True, ParmedToMolComponent.compute(inputs)
-            else:
-                raise NotImplementedError(f"Data type not yet supported: {dtype}.")
-        # Only RDKit is handling chem codes and file objects for now!
-        elif inputs.code:
-            from mmelemental.components.trans.rdkit_component import RDKitToMolComponent
-
-            return True, RDKitToMolComponent.compute(inputs)
-        elif inputs.file:
-            toolkit = inputs.files_toolkit()
-            if toolkit == "rdkit":
-                from mmelemental.components.trans.rdkit_component import (
-                    RDKitToMolComponent,
-                )
-
-                return True, RDKitToMolComponent.compute(inputs)
-            elif toolkit == "parmed":
-                from mmelemental.components.trans.parmed_component import (
-                    ParmedToMolComponent,
-                )
-
-                return True, ParmedToMolComponent.compute(inputs)
-        else:
-            raise NotImplementedError(
-                "Molecules can be instantiated from codes, files, or other data objects."
-            )
-
-
-class MolWriterComponent(GenericComponent):
-    """Factory component that constructs a Mol object from MolInput.
-    Which toolkit-specific component is called depends on MolInput.data.dtype."""
+class FromMolComponent(GenericComponent):
+    """Factory component that reads a Mol object and constructs a toolkit-specific molecule.
+    Which toolkit-specific component is called depends on which package is installed on the system."""
 
     @classmethod
     def input(cls):
@@ -335,7 +241,7 @@ class MolWriterComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return Nothing
+        return ToolkitMol
 
     def execute(
         self,
@@ -346,56 +252,34 @@ class MolWriterComponent(GenericComponent):
         timeout: Optional[int] = None,
     ) -> Tuple[bool, None]:
 
-        if isinstance(inputs, dict):
-            inputs = MolReaderComponent.input()(**inputs)
+        import inspect
 
-        if inputs.args:
-            orient = inputs.args.get("orient")
-            validate = inputs.args.get("validate")
-            kwargs = inputs.args.get("kwargs")
-        else:
-            orient, validate, kwargs = False, None, None
+        translator = Translators.find_trans(inputs.dtype)
 
-        toolkit = inputs.files_toolkit()
-        filename = inputs.file.abs_path
-        dtype = inputs.file.dtype or inputs.file.ext
-        mode = inputs.file.mode
-
-        if toolkit == "rdkit":
-            from mmelemental.components.trans.rdkit_component import MolToRDKitComponent
-            from rdkit import Chem
-
-            rdkmol = MolToRDKitComponent.compute(inputs.mol)
-            if mode != "w":
-                raise NotImplementedError(
-                    "rdkit supports only write mode for file output. Ouch!"
-                )
-
-            if dtype == ".pdb":
-                writer = Chem.PDBWriter(filename)
-            elif dtype == ".sdf":
-                writer = Chem.SDWriter(fp)
-            elif dtype == ".smi":
-                writer = Chem.SmilesWriter(fp)
-            else:
-                raise NotImplementedError(
-                    f"File format {dtype} not supported by rdkit."
-                )
-
-            writer.write(rdkmol.mol)
-            writer.close()
-
-        elif toolkit == "parmed":
-            overwrite = True if inputs.file.mode == "w" else False
-            from mmelemental.components.trans.parmed_component import (
-                MolToParmedComponent,
+        if translator == "mmic_qcelemental":
+            qmol = qcelemental.models.molecule.Molecule.to_data(
+                data, orient=orient, validate=validate, **inputs.kwargs
             )
+            return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
+        elif importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator + ".models")
+            models = inspect.getmembers(mod, inspect.isclass)
 
-            pmol = MolToParmedComponent.compute(inputs.mol)
-            # print([atom.name for atom in pmol.mol.atoms])
-            # print([(residue.name, residue.atoms) for residue in pmol.mol.residues])
-            pmol.mol.save(filename, overwrite=overwrite)
+            tkmol = [mol for _, mol in models if issubclass(mol, ToolkitMol)]
+
+            if len(tkmol) > 1:
+                raise ValueError(
+                    "More than 1 compatible model found:"
+                    + (" {} " * len(tkmol)).format(*tkmol)
+                )
+            elif not tkmol:
+                raise ValueError(
+                    f"No compatible model found while looking in translator: {translator}."
+                )
+
+            tkmol = tkmol[0]
+            return True, tkmol.from_data(inputs.mol)
         else:
-            raise ValueError(f"Data type not yet supported: {dtype}")
-
-        return True, Nothing()
+            raise NotImplementedError(
+                f"Translator for {inputs.dtype} not yet available."
+            )
