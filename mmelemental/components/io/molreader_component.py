@@ -1,6 +1,7 @@
 from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.io_mol import MolInput, Translators
+from mmelemental.models.molecule.io_mol import MolInput
+from mmelemental.components.trans.template_component import TransComponent
 from mmelemental.models.molecule.gen_mol import ToolkitMol
 import qcelemental
 import importlib
@@ -63,7 +64,7 @@ class TkMolReaderComponent(GenericComponent):
             inputs = TkMolReaderComponent.input()(**inputs)
 
         if inputs.file:
-            toolkit = Translators.find_molread_tk(inputs.file.ext)
+            toolkit = TransComponent.find_molread_tk(inputs.file.ext)
 
             if not toolkit:
                 raise ValueError(

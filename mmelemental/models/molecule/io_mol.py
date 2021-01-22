@@ -3,68 +3,11 @@ from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from .gen_mol import ToolkitMol
-from typing import Optional, Union, Dict, List, Any
+from typing import Optional, Union, Dict, Any
 from pydantic import Field
-import importlib
 import abc
 
-__all__ = ['MolInput', 'MolOutput', 'Translators']
-
-class Translators:
-    """ A wrapper class that provides methods for discovering available/installed MMSchema translators. """
-
-    @staticmethod
-    def supported() -> Dict[str, str]:
-        return {
-            "mmic_mda": "MDAnalysis",
-        }
-
-    @staticmethod
-    def installed() -> List[str]:
-        """ Returns module spec if it exists. """
-        return [
-            spec for spec in Translators.supported() if importlib.util.find_spec(spec)
-        ]
-
-    @staticmethod
-    def find_molread_ext_maps() -> Dict[str, Dict]:
-        """ Returns a Dict of molecule translators and the file formats they can read. """
-        trans_mod = (importlib.import_module(mod) for mod in Translators.installed())
-        return {mod.__name__: mod.models.molread_ext_maps for mod in trans_mod}
-
-    @staticmethod
-    def find_molwrite_ext_maps() -> Dict[str, Dict]:
-        """ Returns a Dict of molecule translators and the file formats they can write. """
-        trans_mod = (importlib.import_module(mod) for mod in Translators.installed())
-        return {mod.__name__: mod.models.molwrite_ext_maps for mod in trans_mod}
-
-    @staticmethod
-    def find_molread_tk(dtype: str) -> Union[str, None]:
-        extension_maps = Translators.find_molread_ext_maps()
-        for toolkit in extension_maps:
-            if extension_maps[toolkit].get(dtype):
-                if importlib.util.find_spec(toolkit):
-                    return toolkit
-        return None
-
-    @staticmethod
-    def find_molwrite_tk(dtype: str) -> Union[str, None]:
-        extension_maps = Translators.find_molwrite_ext_maps()
-        for toolkit in extension_maps:
-            if extension_maps[toolkit].get(dtype):
-                if importlib.util.find_spec(toolkit):
-                    return toolkit
-        return None
-
-    @staticmethod
-    def find_trans(dtype: str = None) -> str:
-        """Returns mmic_translator name (if any) for writing molecular objects. If no
-        appropriate toolkit is available on the system, this method raises an error."""
-        for trans, tk in Translators.supported().items():
-            if dtype == tk:
-                return trans
-
-        raise ValueError(f"Could not find appropriate toolkit for {dtype} object.")
+__all__ = ["MolInput", "MolOutput"]
 
 
 class MolIO(Base, abc.ABC):
@@ -72,7 +15,7 @@ class MolIO(Base, abc.ABC):
         None,
         description="Chemical code object that stores a smiles, smarts, etc. code. See :class:``Identifiers``.",
     )
-    data: Optional[ToolkitMol] = Field(
+    tkmol: Optional[ToolkitMol] = Field(
         None, description="Toolkit-specific data object e.g. :class:``MdaMolecule``."
     )
     kwargs: Optional[Dict] = Field(None, description="Additional arguments to pass.")
@@ -138,11 +81,11 @@ class MolInput(MolIO):
         file_exists = args.get("file") or args.get("top_file")
         if (
             (file_exists and args.get("code"))
-            or (file_exists and args.get("data"))
-            or (args.get("data") and args.get("code"))
+            or (file_exists and args.get("tkmol"))
+            or (args.get("tkmol") and args.get("code"))
         ):
             raise ValueError(
-                "Only 1 input type Field (code, file(s), or data) is allowed."
+                "Only 1 input type Field (code, file(s), or toolkit molecule) is allowed."
             )
 
         if args.get("file"):
@@ -200,11 +143,11 @@ class MolOutput(MolIO):
         file_exists = args.get("file")
         if (
             (file_exists and args.get("code"))
-            or (file_exists and args.get("data"))
-            or (args.get("data") and args.get("code"))
+            or (file_exists and args.get("tkmol"))
+            or (args.get("tkmol") and args.get("code"))
         ):
             raise ValueError(
-                "Only 1 input type Field (code, file, or data) is allowed."
+                "Only 1 input type Field (code, file, or toolkit molecule) is allowed."
             )
 
         if args.get("file"):
