@@ -31,7 +31,7 @@ def test_mmelemental_moldata():
     assert isinstance(mm_mol, Mol)
 
     mda_mol = mm_mol.to_data(dtype="MDAnalysis")
-    assert isinstance(mda_mol.mol, mda_mol.dtype)
+    assert isinstance(mda_mol.data, mda_mol.dtype)
 
 
 def test_mmelemental_moltop():
