@@ -9,8 +9,6 @@ import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import (
     Mol,
-    MolReaderComponent,
-    MolWriterComponent,
 )
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
@@ -25,14 +23,24 @@ def test_mmelemental_imported():
     assert "mmelemental" in sys.modules
 
 
+def test_mmelemental_moldata():
+    groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
+    topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
+
+    mm_mol = Mol.from_file(groFile, top=topFile)
+    assert(isinstance(mm_mol, Mol))
+
+    mda_mol = mm_mol.to_data(dtype="MDAnalysis")
+    assert(isinstance(mda_mol.mol, mda_mol.dtype))
+
 def test_mmelemental_moltop():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
     # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
-    mol = Mol.from_file(filename=groFile, top=topFile)
+    mol = Mol.from_file(groFile, top=topFile)
 
 
-# @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
+@pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
 def test_mmelemental_codes():
     smiles = ChemCode(code="CCCC")
     inputs = MolInput(code=smiles)
@@ -43,7 +51,7 @@ def test_mmelemental_molfiles(debug=True):
     for ext in ["pdb", "gro"]:
         pdbFile = FileInput(path=f"mmelemental/data/molecules/alanine.{ext}")
 
-        mol = Mol.from_file(filename=pdbFile.path)
+        mol = Mol.from_file(pdbFile.path)
 
         if False:
             print("Molecule info:")
@@ -82,12 +90,3 @@ def test_mmelemental_molfiles(debug=True):
             # os.remove('rdkit.smiles')
 
     return mol
-
-
-def test_mmelemental_molio():
-    inp = MolInput(file="mmelemental/data/molecules/alanine.pdb")
-    mol = MolReaderComponent.compute(inp)
-    out = MolOutput(file="alanine.pdb", mol=mol)
-    fo = MolWriterComponent.compute(out)
-
-    return fo
