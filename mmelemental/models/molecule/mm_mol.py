@@ -4,7 +4,7 @@ from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import validator, Field, ValidationError
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput, Translators
-from .gen_mol import ToolkitMol
+from mmelemental.models.molecule.gen_mol import ToolkitMol
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
@@ -12,6 +12,7 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.base import Nothing
 import importlib
 
+__all__ = ['Mol']
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
     """

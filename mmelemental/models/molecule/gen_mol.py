@@ -4,6 +4,7 @@ from typing import Any
 import importlib
 import inspect
 
+__all__ = ['ToolkitMol']
 
 class ToolkitMol(Base):
     """ An abstract base class that acts as a wrapper for toolkit molecules """
