@@ -1,6 +1,6 @@
 from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.molecule.io_mol import MolInput
+from mmelemental.models.molecule.io_mol import MolInput, Translators
 from mmelemental.models.molecule.gen_mol import ToolkitMol
 import qcelemental
 import importlib
@@ -26,6 +26,12 @@ class TkMolReaderComponent(GenericComponent):
             ".smiles": "smiles",
         },
         "parmed": {".gro": "gro", ".psf": "psf", ".pdb": "pdb", ".top": "top"},
+        "MDAnalysis": {
+            ".gro": "gro",
+            ".pdb": "pdb",
+            ".top": "top",
+            ".psf": "psf",
+        },
     }
 
     @classmethod
@@ -49,21 +55,7 @@ class TkMolReaderComponent(GenericComponent):
             inputs = TkMolReaderComponent.input()(**inputs)
 
         if inputs.file:
-            for toolkit in TkMolReaderComponent._extension_maps:
-                dtype = TkMolReaderComponent._extension_maps[toolkit].get(
-                    inputs.file.ext
-                )
-                if dtype:
-                    if inputs.top_file:
-                        if TkMolReaderComponent._extension_maps[toolkit].get(
-                            inputs.top_file.ext
-                        ):
-                            if importlib.util.find_spec(toolkit):
-                                break  # module exists, hurray~!
-                    else:
-                        if importlib.util.find_spec(toolkit):
-                            break  # module exists, hurray~!
-                toolkit = None  # If no compatible tk is found, dtype is None. Exit now!
+            toolkit = Translators.find_molread_tk(inputs.file.ext)
 
             if not toolkit:
                 raise ValueError(
@@ -74,7 +66,6 @@ class TkMolReaderComponent(GenericComponent):
             dtype = inputs.code.code_type.lower()
             toolkit = "rdkit"  # need to support more toolkits for handling chem codes
         else:
-            # need to support TkMolecule conversion from e.g. rdkit to parmed, etc.
             raise ValueError(
                 "Data type not understood. Supply a file or a chemical code."
             )
@@ -87,5 +78,24 @@ class TkMolReaderComponent(GenericComponent):
             from mmelemental.models.molecule.parmed_mol import ParmedMol
 
             return True, ParmedMol.build(inputs, dtype)
+        elif toolkit == "mmic_mda":
+            from mmic_mda.models import MdaMol
+
+            if inputs.top_file and inputs.file:
+                return True, MdaMol.from_file(
+                    filename=inputs.file.abs_path,
+                    top_filename=inputs.top_file.abs_path,
+                    dtype=inputs.dtype,
+                )
+            elif inputs.top_file:
+                return True, MdaMol.from_file(
+                    top_filename=inputs.top_file.abs_path, dtype=inputs.dtype
+                )
+            elif inputs.file:
+                return True, MdaMol.from_file(
+                    filename=inputs.file.abs_path, dtype=inputs.dtype
+                )
+            else:
+                raise TypeError("No file was supplied!")
         else:
             raise ValueError(f"Data type {dtype} not supported by {self.__class__}.")
