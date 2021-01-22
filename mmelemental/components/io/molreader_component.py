@@ -25,7 +25,15 @@ class TkMolReaderComponent(GenericComponent):
             ".sdf": "sdf",
             ".smiles": "smiles",
         },
-        "parmed": {".gro": "gro", ".psf": "psf", ".pdb": "pdb", ".top": "top"},
+        "parmed": {
+            ".gro": "gro",
+            ".psf": "psf",
+            ".pdb": "pdb",
+            ".top": "top",
+            ".sdf": "sdf",
+            ".mol": "mol",
+            ".mol2": "mol2",
+        },
         "MDAnalysis": {
             ".gro": "gro",
             ".pdb": "pdb",
