@@ -6,7 +6,7 @@ from mmelemental.models.molecule.mm_molecule import Molecule
 from mmelemental.models.base import Base
 
 
-class TrajectoryReaderInput(Base):
+class TrajReaderInput(Base):
     traj: Union[FileInput, str] = Field(..., description="Trajectory input filename.")
     top: Optional[Union[FileInput, str]] = Field(
         ..., description="Topology input filename."
@@ -32,12 +32,12 @@ class Frame(Base):
     )
 
 
-class SimOutput(Base):
-    top: Optional[Array[Molecule]] = Field(
+class Traj(Base):
+    top: Optional[Union[Array[Molecule], Molecule]] = Field(
         None,
-        description="Single :class:``Molecule`` object representing the molecular topology, or multiple objects for time-dependent topologies.",
+        description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
-    traj: Array[Frame] = Field(
+    frames: Array[Frame] = Field(
         None, description="An Array of :class:``Frame`` objects of length nframes."
     )
     _formats: Dict[str, Tuple[str]] = {
@@ -62,7 +62,7 @@ class SimOutput(Base):
         *,
         all_frames: bool = False,
         **kwargs,
-    ) -> "Trajectory":
+    ) -> "Traj":
         """
         Constructs a Trajectory object from an input file.
         Parameters
@@ -100,7 +100,7 @@ class SimOutput(Base):
     @classmethod
     def from_data(
         cls, data: Any, dtype: Optional[str] = None, **kwargs: Dict[str, Any]
-    ) -> "Trajectory":
+    ) -> "Traj":
         """
         Constructs a Trajectory object from a data object.
         Parameters
