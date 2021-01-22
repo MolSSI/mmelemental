@@ -4,12 +4,13 @@ from typing import Any
 import importlib
 import inspect
 
-__all__ = ['ToolkitMol']
+__all__ = ["ToolkitMol"]
+
 
 class ToolkitMol(Base):
     """ An abstract base class that acts as a wrapper for toolkit molecules """
 
-    mol: Any = Field(
+    data: Any = Field(
         ..., description="Toolkit-specific molecule object."
     )  # Will be validated during runtime
 
@@ -18,7 +19,7 @@ class ToolkitMol(Base):
 
     @property
     def toolkit(self):
-        return type(self.mol).__module__
+        return type(self.data).__module__
 
     @property
     def translator(self):
@@ -40,8 +41,8 @@ class ToolkitMol(Base):
         return inspect.getmembers(mod, inspect.isclass)
 
     def check_type(self):
-        if isinstance(self.mol, self.dtype):
-            return self.mol
+        if isinstance(self.data, self.dtype):
+            return self.data
         raise ValidationError
 
     @staticmethod
