@@ -3,7 +3,8 @@ from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import validator, Field, ValidationError
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
-from mmelemental.models.molecule.io_mol import MolInput, MolOutput, Translators
+from mmelemental.models.molecule.io_mol import MolInput, MolOutput
+from mmelemental.components.trans.template_component import TransComponent
 from mmelemental.models.molecule.gen_mol import ToolkitMol
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
@@ -12,7 +13,8 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.base import Nothing
 import importlib
 
-__all__ = ['Mol']
+__all__ = ["Mol"]
+
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
     """
@@ -198,7 +200,7 @@ class Mol(qcelemental.models.Molecule):
             except:
                 raise ValueError
 
-        return data.to_data(orient=orient, validate=validate, **kwargs)
+        return data.to_schema(orient=orient, validate=validate, **kwargs)
 
     def to_file(
         self, filename: str, dtype: Optional[str] = None, mode: str = "w", **kwargs
@@ -255,7 +257,7 @@ class FromMolComponent(GenericComponent):
 
         import inspect
 
-        translator = Translators.find_trans(inputs.dtype)
+        translator = TransComponent.find_trans(inputs.dtype)
 
         if translator == "mmic_qcelemental":
             qmol = qcelemental.models.molecule.Molecule.to_data(
@@ -279,7 +281,7 @@ class FromMolComponent(GenericComponent):
                 )
 
             tkmol = tkmol[0]
-            return True, tkmol.from_data(inputs.mol)
+            return True, tkmol.from_schema(inputs.mol)
         else:
             raise NotImplementedError(
                 f"Translator for {inputs.dtype} not yet available."
