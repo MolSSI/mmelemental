@@ -28,10 +28,11 @@ def test_mmelemental_moldata():
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
 
     mm_mol = Mol.from_file(groFile, top=topFile)
-    assert(isinstance(mm_mol, Mol))
+    assert isinstance(mm_mol, Mol)
 
     mda_mol = mm_mol.to_data(dtype="MDAnalysis")
-    assert(isinstance(mda_mol.mol, mda_mol.dtype))
+    assert isinstance(mda_mol.mol, mda_mol.dtype)
+
 
 def test_mmelemental_moltop():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
