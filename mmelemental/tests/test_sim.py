@@ -24,10 +24,11 @@ def test_mmelemental_molgro():
     return Mol.from_file(filename=groFile.path, top_file=topFile)
 
 
-mol = test_mmelemental_molgro()
-md = DynamicsInput(mol=mol, temp=300, press=1.1, temp_method="berendsen")
+def test_mmelemental_md():
+    mol = test_mmelemental_molgro()
+    md = DynamicsInput(mol=mol, temp=300, press=1.1, temp_method="berendsen")
 
-print(md)
-
-sim_input = SimWriterInput(model=md, engine=("NAMD", "X.X.X"), filename="input.namd")
-file = SimWriterComponent.compute(sim_input)
+    sim_input = SimWriterInput(
+        model=md, engine=("NAMD", "X.X.X"), filename="input.namd"
+    )
+    file = SimWriterComponent.compute(sim_input)
