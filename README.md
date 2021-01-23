@@ -1,20 +1,18 @@
 MMElemental
 ==============================
 [//]: # (Badges)
-[![Travis Build Status](https://travis-ci.com/REPLACE_WITH_OWNER_ACCOUNT/mmelemental.svg?branch=master)](https://travis-ci.com/REPLACE_WITH_OWNER_ACCOUNT/mmelemental)
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/REPLACE_WITH_APPVEYOR_LINK/branch/master?svg=true)](https://ci.appveyor.com/project/REPLACE_WITH_OWNER_ACCOUNT/mmelemental/branch/master)
-[![codecov](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/mmelemental/branch/master/graph/badge.svg)](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/mmelemental/branch/master)
+[![GitHub Actions Build Status](https://github.com/MolSSI/MMElemental/workflows/CI/badge.svg)](https://github.com/MolSSI/MMElemental/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/MolSSI/MMElemental/branch/master/graph/badge.svg)](https://codecov.io/gh/MolSSI/MMElemental/branch/master)
 
 A python package which provides basic models and components for molecular mechanics applications.
 
 ![image](mmelemental/data/imgs/mmelemental.png)
 
+
 ### Copyright
-
-Copyright (c) 2020, MolSSI
-
+Copyright (c) 2021, MolSSI
 
 #### Acknowledgements
- 
-Project based on the 
-[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.1.
+
+Project based on the
+[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.5.
