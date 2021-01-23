@@ -68,7 +68,7 @@ class TkMolReaderComponent(GenericComponent):
 
             if not toolkit:
                 raise ValueError(
-                    f"Data type not understood for file ext {inputs.file.ext}."
+                    f"Could not read file with ext {inputs.file.ext}. Please install an appropriate toolkit."
                 )
 
         elif inputs.code:
