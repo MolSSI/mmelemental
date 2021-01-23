@@ -54,6 +54,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get install openbabel
         git clone https://github.com/MolSSI/mmic
         cd mmic && pip install . && cd .. && rm -rf mmic
         git clone https://github.com/MolSSI/mmic_mda
