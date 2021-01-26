@@ -1,7 +1,12 @@
-from ..molecule.mm_mol import Mol
+from mmelemental.models.base import Base
 from pydantic import Field
-from typing import Any, Tuple, Union
 
 
-class Solvent(str):
-    pass
+_all__ = ["Solvent"]
+
+
+class Solvent(Base):
+    implicit: bool = Field(
+        ...,
+        description="Sets the solvent to be implicitly represented in a simulation.",
+    )
