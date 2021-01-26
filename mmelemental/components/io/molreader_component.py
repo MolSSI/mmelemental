@@ -64,47 +64,26 @@ class TkMolReaderComponent(GenericComponent):
             inputs = TkMolReaderComponent.input()(**inputs)
 
         if inputs.file:
-            toolkit = TransComponent.find_molread_tk(inputs.file.ext)
+            translator = TransComponent.find_molread_tk(inputs.file.ext)
 
-            if not toolkit:
+            if not translator:
                 raise ValueError(
-                    f"Could not read file with ext {inputs.file.ext}. Please install an appropriate toolkit."
+                    f"Could not read file with ext {inputs.file.ext}. Please install an appropriate translator."
                 )
-
-        elif inputs.code:
-            dtype = inputs.code.code_type.lower()
-            toolkit = "rdkit"  # need to support more toolkits for handling chem codes
         else:
+            raise ValueError("Data type not understood. Supply a file.")
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator + ".models")
+            tkmol = mod.classes_map.get("Mol")
+
+        if not tkmol:
             raise ValueError(
-                "Data type not understood. Supply a file or a chemical code."
+                f"No Molecule model found while looking in translator: {translator}."
             )
 
-        if toolkit == "rdkit":
-            from mmelemental.models.molecule.rdkit_mol import RDKitMol
-
-            return True, RDKitMol.build(inputs, dtype)
-        elif toolkit == "parmed":
-            from mmelemental.models.molecule.parmed_mol import ParmedMol
-
-            return True, ParmedMol.build(inputs, dtype)
-        elif toolkit == "mmic_mda":
-            from mmic_mda.models import MdaMol
-
-            if inputs.top_file and inputs.file:
-                return True, MdaMol.from_file(
-                    filename=inputs.file.abs_path,
-                    top_filename=inputs.top_file.abs_path,
-                    dtype=inputs.dtype,
-                )
-            elif inputs.top_file:
-                return True, MdaMol.from_file(
-                    top_filename=inputs.top_file.abs_path, dtype=inputs.dtype
-                )
-            elif inputs.file:
-                return True, MdaMol.from_file(
-                    filename=inputs.file.abs_path, dtype=inputs.dtype
-                )
-            else:
-                raise TypeError("No file was supplied!")
-        else:
-            raise ValueError(f"Data type {dtype} not supported by {self.__class__}.")
+        return True, tkmol.from_file(
+            filename=inputs.file.abs_path if inputs.file else None,
+            top_filename=inputs.top_file.abs_path if inputs.top_file else None,
+            dtype=inputs.dtype,
+        )
