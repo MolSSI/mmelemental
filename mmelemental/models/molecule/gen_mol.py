@@ -1,5 +1,5 @@
-from mmelemental.models.base import Base
-from pydantic import Field
+from mmelemental.models.base import ToolkitModel
+from pydantic import Field, ValidationError
 from typing import Any
 import importlib
 import inspect
@@ -7,43 +7,12 @@ import inspect
 __all__ = ["ToolkitMol"]
 
 
-class ToolkitMol(Base):
-    """ An abstract base class that acts as a wrapper for toolkit molecules """
+class ToolkitMol(ToolkitModel):
+    """An abstract base class that acts as a wrapper for toolkit molecules
+    TODO: Delete this class and move check_name() to wherever it's needed (rdkit?!)"""
 
-    data: Any = Field(
-        ..., description="Toolkit-specific molecule object."
-    )  # Will be validated during runtime
-
-    class Config(Base.Config):
+    class Config:
         arbitrary_types_allowed = True
-
-    @property
-    def toolkit(self):
-        return type(self.data).__module__
-
-    @property
-    def translator(self):
-        name, _ = self.__module__.split(".", 1)
-        return name
-
-    @property
-    def path(self):
-        return self.__module__ + "." + self.__name__
-
-    @property
-    def components(self):
-        comp_mod = importlib.import_module(self.translator + ".components")
-        return inspect.getmembers(comp_mod, inspect.isclass)
-
-    @property
-    def models(self):
-        mod = importlib.import_module(self.translator + ".models")
-        return inspect.getmembers(mod, inspect.isclass)
-
-    def check_type(self):
-        if isinstance(self.data, self.dtype):
-            return self.data
-        raise ValidationError
 
     @staticmethod
     def check_name(name) -> str:

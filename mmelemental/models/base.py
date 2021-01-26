@@ -1,8 +1,10 @@
 from qcelemental import models
-from pydantic import Field
+from pydantic import Field, ValidationError
 from typing import Dict
 from mmelemental.extras import get_information
-from typing import Optional
+from typing import Optional, Any
+import importlib
+import inspect
 
 
 class Provenance(models.ProtoModel):
@@ -46,3 +48,43 @@ class Base(models.ProtoModel):
 
 class Nothing(Base):
     ...
+
+
+class ToolkitModel(Base):
+    """ An abstract base class that acts as a wrapper for toolkit molecules """
+
+    # class Config(Base.Config):
+    #    arbitrary_types_allowed = True
+
+    data: Any = Field(
+        ..., description="Toolkit-specific trajectory object."
+    )  # validator added in subclasses
+
+    @property
+    def toolkit(self) -> str:
+        """ Returns the path module that defines the data type object. """
+        return type(self.data).__module__
+
+    @property
+    def translator(self) -> str:
+        name, _ = self.__module__.split(".", 1)
+        return name
+
+    @property
+    def path(self) -> str:
+        return self.__module__ + "." + self.__name__
+
+    @property
+    def components(self):
+        comp_mod = importlib.import_module(self.translator + ".components")
+        return inspect.getmembers(comp_mod, inspect.isclass)
+
+    @property
+    def models(self):
+        mod = importlib.import_module(self.translator + ".models")
+        return inspect.getmembers(mod, inspect.isclass)
+
+    def check_type(self):
+        if isinstance(self.data, self.dtype):
+            return self.data
+        raise ValidationError
