@@ -2,7 +2,7 @@ from typing import List, Optional, Any, Dict, Tuple
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.molecule.io_mol import MolInput
 from mmelemental.components.trans.template_component import TransComponent
-from mmelemental.models.molecule.gen_mol import ToolkitMol
+from mmelemental.models.base import ToolkitModel
 import qcelemental
 import importlib
 
@@ -49,7 +49,7 @@ class TkMolReaderComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return ToolkitMol
+        return ToolkitModel
 
     def execute(
         self,
