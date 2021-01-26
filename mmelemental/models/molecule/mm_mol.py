@@ -2,13 +2,11 @@ import qcelemental
 from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field
-from mmelemental.components.io.molreader_component import TkMolReaderComponent
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.trans.template_component import TransComponent
 from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
 from mmic.components.blueprints.generic_component import GenericComponent
-from mmelemental.models.base import Nothing
 import importlib
 
 __all__ = ["Mol"]
@@ -167,6 +165,8 @@ class Mol(qcelemental.models.Molecule):
         Mol
             A constructed Mol class.
         """
+        from mmelemental.components.io.molreader_component import TkMolReaderComponent
+
         if top_filename and filename:
             mol_input = MolInput(file=filename, top_file=top_filename, dtype=dtype)
         elif filename:
@@ -218,26 +218,48 @@ class Mol(qcelemental.models.Molecule):
 
         return data.to_schema(orient=orient, validate=validate, **kwargs)
 
-    def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> Nothing:
+    def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> None:
         """Writes the Molecule to a file.
         Parameters
         ----------
         filename : str
             The filename to write to
         dtype : Optional[str], optional
-            The type of file to write, attempts to infer dtype from the filename if not provided.
+            The type of file to write (e.g. pdb, gro, etc.), attempts to infer dtype from
+            file extension if not provided.
         **kwargs
             Additional kwargs to pass to the constructor.
         """
-        tkmol = self.to_data(dtype, **kwargs)
-        tkmol.to_file(filename, dtype, **kwargs)
+        from mmelemental.components.io.molwriter_component import TkMolWriterComponent
+
+        if not dtype:
+            from pathlib import Path
+
+            ext = Path(filename).suffix
+            dtype = qcelemental.models.molecule._extension_map.get(ext)
+
+            if not dtype:
+                dtype = ext.strip(
+                    "."
+                )  # we're gonna assume file extension is the correct dtype
+
+        qcelemental_handle = (
+            dtype in qcelemental.models.molecule._extension_map.values()
+        )
+
+        if qcelemental_handle:
+            super().to_file(filename, dtype, **kwargs)
+        else:  # look for an installed mmic_translator
+            inputs = MolOutput(mol=self, ext=ext, kwargs=kwargs)
+            tkmol = TkMolWriterComponent.compute(inputs)
+            tkmol.to_file(filename, **kwargs)
 
     def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
         Parameters
         ----------
         dtype: str
-            The type of data object to convert to.
+            The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
         **kwargs
             Additional kwargs to pass to the constructor.
         """
