@@ -1,5 +1,5 @@
 from .base import SimInput
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 from ..molecule.mm_mol import Mol
 from pydantic import Field
 

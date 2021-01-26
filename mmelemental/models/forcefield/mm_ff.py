@@ -7,6 +7,9 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from .io_ff import FFInput
 
 
+_all__ = ["ForceField"]
+
+
 class ForceField(Base):
     bonds: Optional[Array[Array[float]]] = Field(
         None,

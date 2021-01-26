@@ -1,7 +1,7 @@
 from .base import SimInput
 from ..molecule.mm_mol import Mol
 from pydantic import Field
-from typing import Any, Tuple, Union, Optional
+from typing import Tuple, Union
 from qcelemental.models.types import Array
 
 

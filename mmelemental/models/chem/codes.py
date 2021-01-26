@@ -5,12 +5,11 @@ import os
 
 try:
     from rdkit import rdBase, Chem
-    from rdkit.Chem import AllChem
 
     if not os.environ.get("debugMMC"):
         rdBase.DisableLog("rdApp.error")
 except ImportError:
-    Chem = AllChem = None
+    Chem = None
 
 
 class ChemCode(Base):

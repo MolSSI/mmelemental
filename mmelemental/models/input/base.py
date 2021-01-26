@@ -3,7 +3,7 @@ from mmelemental.models.molecule.mm_mol import Mol
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field
-from typing import Any, Tuple, Union
+from typing import Tuple, Union
 
 
 class SimInput(Base):
