@@ -48,7 +48,7 @@ def test_mmelemental_codes():
     mol = MolConstructorComponent.compute(inputs)
 
 
-def test_mmelemental_molfiles(debug=True):
+def test_mmelemental_molfiles(debug=False):
     for ext in ["pdb", "gro"]:
         pdbFile = FileInput(path=f"mmelemental/data/molecules/alanine.{ext}")
 
@@ -80,13 +80,13 @@ def test_mmelemental_molfiles(debug=True):
             print("\n")
 
         mol.to_file("rdkit.pdb")
-        # mol.to_file('rdkit.gro')
+        mol.to_file("rdkit.gro")
         mol.to_file("rdkit.xyz")
         # mol.to_file('rdkit.smiles')
 
         if not debug:
             os.remove("rdkit.pdb")
-            # os.remove('rdkit.gro')
+            os.remove("rdkit.gro")
             os.remove("rdkit.xyz")
             # os.remove('rdkit.smiles')
 
