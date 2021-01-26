@@ -137,7 +137,9 @@ class MolOutput(MolIO):
     mol: Any = Field(
         ..., description="Input molecule object such as the :class:``Mol`` model. "
     )
-    dtype: Optional[str] = Field(None, description="Output data type.")
+    ext: Optional[str] = Field(
+        None, description="Output file extention e.g. pdb, gro, xyz, etc."
+    )
 
     def __init__(self, **args):
         file_exists = args.get("file")
