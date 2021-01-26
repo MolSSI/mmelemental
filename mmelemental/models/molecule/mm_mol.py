@@ -5,7 +5,7 @@ from pydantic import validator, Field, ValidationError
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.trans.template_component import TransComponent
-from mmelemental.models.molecule.gen_mol import ToolkitMol
+from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
@@ -59,26 +59,44 @@ class Mol(qcelemental.models.Molecule):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
+    mass_units: Optional[str] = Field(
+        "amu",
+        description="Units for atomic masses. Defaults to unified atomic mass unit.",
+    )
+    molecular_charge_units: Optional[str] = Field(
+        "eV", description="Units for molecular charge. Defaults to electron Volt."
+    )
     geometry: Optional[Array[float]] = Field(
         None,
         description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. "
         "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
         "or the serialized version of the array in (3*natom,) shape; all forms will be reshaped to "
-        "(natom,3) for this attribute.",
+        "(natom,3) for this attribute. Default unit is Angstroms.",
+    )
+    geometry_units: Optional[str] = Field(
+        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
     velocities: Optional[Array[float]] = Field(
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
-        "(natoms,3) for this attribute.",
+        "(natoms,3) for this attribute. Default unit is Angstroms/femtoseconds.",
+    )
+    velocities_units: Optional[str] = Field(
+        "angstrom/fs",
+        description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
     forces: Optional[Array[float]] = Field(
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
-        "(natoms,3) for this attribute.",
+        "(natoms,3) for this attribute. Default unit is KiloJoules/mol.Angstroms.",
+    )
+    forces_units: Optional[str] = Field(
+        "kJ/(mol*angstrom)",
+        description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
         None, description="Bond angles in degrees for three connected atoms."
@@ -221,7 +239,7 @@ class Mol(qcelemental.models.Molecule):
         # tkmol = TkMolWriterComponent.compute(inputs)
         # tkmol.to_file(filename, dtype, mode, **kwargs)
 
-    def to_data(self, dtype: str, **kwargs) -> ToolkitMol:
+    def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
         Parameters
         ----------
@@ -244,7 +262,7 @@ class FromMolComponent(GenericComponent):
 
     @classmethod
     def output(cls):
-        return ToolkitMol
+        return ToolkitModel
 
     def execute(
         self,
@@ -266,21 +284,13 @@ class FromMolComponent(GenericComponent):
             return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
         elif importlib.util.find_spec(translator):
             mod = importlib.import_module(translator + ".models")
-            models = inspect.getmembers(mod, inspect.isclass)
+            tkmol = mod.classes_map.get("Mol")
 
-            tkmol = [mol for _, mol in models if issubclass(mol, ToolkitMol)]
-
-            if len(tkmol) > 1:
+            if not tkmol:
                 raise ValueError(
-                    "More than 1 compatible model found:"
-                    + (" {} " * len(tkmol)).format(*tkmol)
-                )
-            elif not tkmol:
-                raise ValueError(
-                    f"No compatible model found while looking in translator: {translator}."
+                    f"No Molecule model found while looking in translator: {translator}."
                 )
 
-            tkmol = tkmol[0]
             return True, tkmol.from_schema(inputs.mol)
         else:
             raise NotImplementedError(
