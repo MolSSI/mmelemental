@@ -64,7 +64,7 @@ class TkMolReaderComponent(GenericComponent):
                     f"Could not read file with ext {inputs.file.ext}. Please install an appropriate translator."
                 )
         else:
-            raise ValueError("Data type not understood. Supply a file.")
+            raise ValueError("Data type not understood. Please supply a file.")
 
         if importlib.util.find_spec(translator):
             mod = importlib.import_module(translator + ".models")
