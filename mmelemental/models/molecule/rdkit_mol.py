@@ -1,5 +1,4 @@
-from qcelemental import models
-from pydantic import Field, validator
+from pydantic import Field
 from typing import List, Dict, Any
 from .gen_mol import ToolkitMol
 from mmelemental.util.decorators import require

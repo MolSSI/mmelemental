@@ -1,5 +1,5 @@
-from pydantic import Field, validator
-from typing import List, Dict, Any
+from pydantic import Field
+from typing import Dict, Any
 from .gen_mol import ToolkitMol
 from mmelemental.util.decorators import require
 import parmed
@@ -25,7 +25,6 @@ class ParmedMol(ToolkitMol):
 
         .. todo:: use dtype somewhere? Do need it?
         """
-        import parmed
 
         if inputs.file:
             coords_fname = inputs.file.abs_path

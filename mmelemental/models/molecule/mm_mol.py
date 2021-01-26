@@ -1,14 +1,12 @@
 import qcelemental
 from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
-from pydantic import validator, Field
+from pydantic import Field
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.trans.template_component import TransComponent
 from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.util.input import FileInput
-from mmelemental.models.util.output import FileOutput
 from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.models.base import Nothing
 import importlib
@@ -220,9 +218,7 @@ class Mol(qcelemental.models.Molecule):
 
         return data.to_schema(orient=orient, validate=validate, **kwargs)
 
-    def to_file(
-        self, filename: str, dtype: Optional[str] = None, mode: str = "w", **kwargs
-    ) -> Nothing:
+    def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> Nothing:
         """Writes the Molecule to a file.
         Parameters
         ----------
@@ -230,14 +226,11 @@ class Mol(qcelemental.models.Molecule):
             The filename to write to
         dtype : Optional[str], optional
             The type of file to write, attempts to infer dtype from the filename if not provided.
-        mode: str
-            Write new file or overwrite existing file (w) or append (a) to existing file.
         **kwargs
-            Additional kwargs to pass to the constructor. kwargs take precedence over data.
+            Additional kwargs to pass to the constructor.
         """
-        inputs = MolOutput(file=filename, mol=self, mode=mode)
-        # tkmol = TkMolWriterComponent.compute(inputs)
-        # tkmol.to_file(filename, dtype, mode, **kwargs)
+        tkmol = self.to_data(dtype, **kwargs)
+        tkmol.to_file(filename, dtype, **kwargs)
 
     def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
@@ -253,7 +246,7 @@ class Mol(qcelemental.models.Molecule):
 
 
 class FromMolComponent(GenericComponent):
-    """Factory component that reads a Mol object and constructs a toolkit-specific molecule.
+    """A component that reads a Mol object and constructs a toolkit-specific molecule.
     Which toolkit-specific component is called depends on which package is installed on the system."""
 
     @classmethod
@@ -275,7 +268,7 @@ class FromMolComponent(GenericComponent):
 
         translator = TransComponent.find_trans(inputs.dtype)
 
-        if translator == "mmic_qcelemental":
+        if translator == "qcelemental":
             qmol = qcelemental.models.molecule.Molecule.to_data(
                 data, orient=orient, validate=validate, **inputs.kwargs
             )
