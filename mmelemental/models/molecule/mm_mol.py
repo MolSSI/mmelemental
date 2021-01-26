@@ -1,7 +1,7 @@
 import qcelemental
 from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
-from pydantic import validator, Field, ValidationError
+from pydantic import validator, Field
 from mmelemental.components.io.molreader_component import TkMolReaderComponent
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.trans.template_component import TransComponent
@@ -272,8 +272,6 @@ class FromMolComponent(GenericComponent):
         scratch_name: Optional[str] = None,
         timeout: Optional[int] = None,
     ) -> Tuple[bool, None]:
-
-        import inspect
 
         translator = TransComponent.find_trans(inputs.dtype)
 
