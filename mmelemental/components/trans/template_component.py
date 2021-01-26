@@ -22,8 +22,7 @@ class TransComponent(GenericComponent, abc.ABC):
         """ Returns True if obj.prop exists and is not None. """
         if hasattr(obj, prop):
             return False if getattr(obj, prop) is None else True
-        else:
-            False
+        return False
 
     @staticmethod
     def installed() -> List[str]:
