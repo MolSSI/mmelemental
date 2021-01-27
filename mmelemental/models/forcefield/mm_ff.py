@@ -7,7 +7,7 @@ from mmic.components.blueprints.generic_component import GenericComponent
 from .io_ff import FFInput
 
 
-_all__ = ["ForceField"]
+__all__ = ["ForceField"]
 
 
 class ForceField(Base):

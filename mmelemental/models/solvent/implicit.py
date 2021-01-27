@@ -2,7 +2,7 @@ from mmelemental.models.base import Base
 from pydantic import Field
 
 
-_all__ = ["Solvent"]
+__all__ = ["Solvent"]
 
 
 class Solvent(Base):
