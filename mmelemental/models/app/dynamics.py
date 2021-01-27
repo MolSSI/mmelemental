@@ -1,5 +1,5 @@
-from .base import SimInput
-from ..molecule.mm_mol import Mol
+from mmelemental.models.app.base import SimInput
+from mmelemental.models.molecule.mm_mol import Mol
 from pydantic import Field
 from typing import Tuple, Union
 from qcelemental.models.types import Array

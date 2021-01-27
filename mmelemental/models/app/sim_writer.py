@@ -1,5 +1,5 @@
 from mmelemental.models.base import Base
-from mmelemental.models.input.base import SimInput
+from mmelemental.models.app.base import SimInput
 from pydantic import Field
 from typing import Any, Tuple
 import os
