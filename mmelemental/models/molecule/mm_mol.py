@@ -252,7 +252,7 @@ class Mol(qcelemental.models.Molecule):
         else:  # look for an installed mmic_translator
             inputs = MolOutput(mol=self, ext=ext, kwargs=kwargs)
             tkmol = TkMolWriterComponent.compute(inputs)
-            tkmol.to_file(filename, **kwargs)
+            tkmol.to_file(filename, **kwargs)  # pass dtype?
 
     def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
