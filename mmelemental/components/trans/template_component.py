@@ -37,13 +37,13 @@ class TransComponent(GenericComponent, abc.ABC):
     def find_molread_ext_maps() -> Dict[str, Dict]:
         """ Returns a Dict of molecule translators and the file formats they can read. """
         trans_mod = (importlib.import_module(mod) for mod in TransComponent.installed())
-        return {mod.__name__: mod.models.molread_ext_maps for mod in trans_mod}
+        return {mod.__name__: mod.molread_ext_maps for mod in trans_mod}
 
     @staticmethod
     def find_molwrite_ext_maps() -> Dict[str, Dict]:
         """ Returns a Dict of molecule translators and the file formats they can write. """
         trans_mod = (importlib.import_module(mod) for mod in TransComponent.installed())
-        return {mod.__name__: mod.models.molwrite_ext_maps for mod in trans_mod}
+        return {mod.__name__: mod.molwrite_ext_maps for mod in trans_mod}
 
     @staticmethod
     def find_molread_tk(dtype: str) -> Union[str, None]:
