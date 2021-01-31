@@ -59,6 +59,9 @@ class ToolkitModel(Base):
     data: Any = Field(
         ..., description="Toolkit-specific trajectory object."
     )  # validator added in subclasses
+    units: Dict = Field(
+        None, description="Unit system for the stored physical properties in data."
+    )
 
     @property
     def toolkit(self) -> str:
