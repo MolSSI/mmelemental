@@ -38,8 +38,8 @@ class TkMolWriterComponent(GenericComponent):
             raise ValueError("Data type not supplied.")
 
         if importlib.util.find_spec(translator):
-            mod = importlib.import_module(translator + ".models")
-            tkmol = mod.classes_map.get("Mol")
+            mod = importlib.import_module(translator)
+            tkmol = mod._classes_map.get("Mol")
 
         if not tkmol:
             raise ValueError(
