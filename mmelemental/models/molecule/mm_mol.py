@@ -55,7 +55,7 @@ class Mol(qcelemental.models.Molecule):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    mass_units: Optional[str] = Field(
+    masses_units: Optional[str] = Field(
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
     )
@@ -296,8 +296,8 @@ class FromMolComponent(GenericComponent):
             )
             return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
         elif importlib.util.find_spec(translator):
-            mod = importlib.import_module(translator + ".models")
-            tkmol = mod.classes_map.get("Mol")
+            mod = importlib.import_module(translator)
+            tkmol = mod._classes_map.get("Mol")
 
             if not tkmol:
                 raise ValueError(
