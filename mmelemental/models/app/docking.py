@@ -6,7 +6,7 @@ from pydantic import Field
 from typing import List, Optional, Tuple
 
 
-class DockingInput(SimInput):
+class DockInput(SimInput):
     ligand: Mol = Field(
         ...,
         description="Molecule model for a candidate ligand (e.g. drug). See  the :class:``Mol``.",
@@ -24,8 +24,8 @@ class DockingInput(SimInput):
     )
 
 
-class DockingOutput(Base):
-    dockingInput: DockingInput = Field(..., description="Docking input model.")
+class DockOutput(Base):
+    dockingInput: DockInput = Field(..., description="Docking input model.")
     ligand: Traj = Field(
         ...,
         description="Simulation output for the ligand, including its pose and score.",
@@ -37,5 +37,5 @@ class DockingOutput(Base):
 
 
 class AffinityOutput(Base):
-    Docking_Output: DockingOutput
-    Affinity: float
+    dockOutput: DockOutput
+    affinity: float
