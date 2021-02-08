@@ -92,11 +92,11 @@ class ForceField(Base):
         Parameters
         ----------
         filename : str
-            The filename to build from
+            The filename to build from.
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
         **kwargs
-            Any additional keywords to pass to the constructor
+            Any additional keywords to pass to the constructor.
         Returns
         -------
         ForceField
@@ -115,7 +115,7 @@ class ForceField(Base):
         Parameters
         ----------
         data: Any
-            Data to construct ForceField from
+            Data to construct ForceField from.
         **kwargs
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
         Returns
