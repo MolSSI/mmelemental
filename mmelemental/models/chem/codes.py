@@ -16,11 +16,18 @@ class ChemCode(Base):
     code: str = Field(
         ...,
         description="A chemical code that describes a molecule or molecular pattern e.g. smiles, smarts, etc. "
-        "See :class: ``Identifiers`` for supported codes.",
+        "See the :class:``Identifiers`` class for supported codes.",
     )
 
     class _CodesSupported:
-        codes = ("Smiles", "Smarts", "Inchi", "FASTA", "HELM", "Sequence")
+        codes = (
+            "Smiles",
+            "Smarts",
+            "Inchi",
+            "FASTA",
+            "HELM",
+            "Sequence",
+        )  # must replace with Identifiers
 
     @require("rdkit")
     def __init__(self, **kwargs):
