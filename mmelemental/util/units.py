@@ -2,10 +2,11 @@
 
 __all__ = ["convert"]
 
+from typing import Any
 from pint import UnitRegistry
 
 
-def convert(quant, from_units, to_units):
+def convert(quant: Any, from_units: str, to_units: str):
     """Converts quantity from units in 'from_units' to units in 'to_units'.
     All units supported by pint are supoorted in MMSchema.
     Parameters
