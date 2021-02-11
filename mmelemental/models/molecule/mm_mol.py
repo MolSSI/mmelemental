@@ -1,7 +1,8 @@
 import qcelemental
 from qcelemental.models.types import Array
+from mmelemental.models.base import Provenance, provenance_stamp
 from typing import List, Tuple, Optional, Any, Dict, Union
-from pydantic import Field
+from pydantic import Field, constr
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.trans.template_component import TransComponent
 from mmelemental.models.base import ToolkitModel
@@ -40,6 +41,9 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
     )
 
 
+mmschema_molecule_default = "mmschema_molecule"
+
+
 class Mol(qcelemental.models.Molecule):
     """
     A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
@@ -48,7 +52,13 @@ class Mol(qcelemental.models.Molecule):
     to assist with duplicate detection.
     """
 
-    symbols: Array[str] = Field(
+    schema_name: constr(strip_whitespace=True, regex="^(mmschema_molecule)$") = Field(  # type: ignore
+        mmschema_molecule_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_molecule_default}."
+        ),
+    )
+    symbols: Optional[Array[str]] = Field(
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
@@ -134,6 +144,58 @@ class Mol(qcelemental.models.Molecule):
         None,
         description="A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule.",
     )
+    provenance: Provenance = Field(
+        provenance_stamp(__name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
+        "provided, and manipulated.",
+    )
+
+    def __init__(self, **kwargs: Any) -> None:
+        """Initializes the molecule object from dictionary-like values.
+        Parameters
+        ----------
+        **kwargs : Any
+            The values of the Molecule object attributes.
+        """
+
+        kwargs["schema_name"] = kwargs.pop("schema_name", "mmschema_molecule")
+        kwargs["schema_version"] = kwargs.pop("schema_version", 0)
+
+        atomic_numbers = kwargs.get("atomic_numbers")
+        if atomic_numbers is not None:
+            if kwargs.get("symbols") is None:
+                from qcelemental import periodic_table
+
+                kwargs["symbols"] = [
+                    periodic_table.periodictable.to_E(x) for x in atomic_numbers
+                ]
+            else:
+                raise ValueError(
+                    "Both atomic numbers and symbols are defined. Supply only one of the 2 Fields."
+                )
+
+        # We are pulling out the values *explicitly* so that the pydantic skip_defaults works as expected
+        # All attributes set below are equivalent to the default set.
+        # We must always prevent QCElemental.Molecule from doing any validation, so validate=False.
+        super().__init__(orient=False, validate=False, **kwargs)
+
+        values = self.__dict__
+
+        if values.get("symbols") is not None:
+            import numpy
+
+            values["symbols"] = numpy.core.defchararray.title(
+                self.symbols
+            )  # Title case for consistency
+        else:
+            values["symbols"] = [
+                "H"
+            ]  # we need to figure out what the symbols are somehow?
+
+        if not values.get("name"):
+            from qcelemental.molparse.to_string import formula_generator
+
+            values["name"] = formula_generator(values["symbols"])
 
     # Constructors
     @classmethod
@@ -188,7 +250,7 @@ class Mol(qcelemental.models.Molecule):
         dtype: Optional[str] = None,
         *,
         orient: bool = False,
-        validate: bool = None,
+        validate: bool = False,
         **kwargs: Dict[str, Any],
     ) -> "Mol":
         """
@@ -211,10 +273,15 @@ class Mol(qcelemental.models.Molecule):
             A constructed Mol class.
         """
         if isinstance(data, str):
+            if not dtype:
+                raise ValueError(
+                    "You must supply dtype for proper interpretation of symbolic data. See the :class:``Identifiers`` class."
+                )
             try:
                 data = ChemCode(code=data)
-            except:
-                raise ValueError
+                return Mol(identifiers={dtype: data})
+            except Exception:
+                raise ValueError("Failed in interpreting {data} as {}.")
 
         return data.to_schema(orient=orient, validate=validate, **kwargs)
 
@@ -248,7 +315,9 @@ class Mol(qcelemental.models.Molecule):
         )
 
         if qcelemental_handle:
-            super().to_file(filename, dtype, **kwargs)
+            super().to_file(
+                filename, dtype, **kwargs
+            )  # replace this with openbabel that can handle xyz files
         else:  # look for an installed mmic_translator
             inputs = MolOutput(mol=self, ext=ext, kwargs=kwargs)
             tkmol = TkMolWriterComponent.compute(inputs)
