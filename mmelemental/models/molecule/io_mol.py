@@ -18,6 +18,10 @@ class MolIO(Base, abc.ABC):
     tkmol: Optional[ToolkitMol] = Field(
         None, description="Toolkit-specific data object e.g. :class:``MdaMolecule``."
     )
+    dtype: Optional[str] = Field(
+        None,
+        description="File or object data type e.g. pdb, gro, xyz, MDAnalysis, parmed, etc.",
+    )
     kwargs: Optional[Dict] = Field(None, description="Additional arguments to pass.")
 
     def __init__(self, **args):
@@ -136,9 +140,6 @@ class MolOutput(MolIO):
 
     mol: Any = Field(
         ..., description="Input molecule object such as the :class:``Mol`` model. "
-    )
-    ext: Optional[str] = Field(
-        None, description="Output file extention e.g. pdb, gro, xyz, etc."
     )
 
     def __init__(self, **args):
