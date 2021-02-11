@@ -9,6 +9,7 @@ class TransComponent(GenericComponent, abc.ABC):
 
     _supported_trans = {
         "mmic_mda": "MDAnalysis",
+        "mmic_parmed": "parmed",
     }
     _supported_versions = {}
 
@@ -35,7 +36,12 @@ class TransComponent(GenericComponent, abc.ABC):
 
     @staticmethod
     def find_molread_ext_maps() -> Dict[str, Dict]:
-        """ Returns a Dict of molecule translators and the file formats they can read. """
+        """Finds a Dict of molecule translators and the file formats they support reading.
+        Returns
+        -------
+        Dict
+            Dictionary of mmic_translators and files they can read.
+        """
         trans_mod = (importlib.import_module(mod) for mod in TransComponent.installed())
         return {mod.__name__: mod.molread_ext_maps for mod in trans_mod}
 
@@ -47,6 +53,16 @@ class TransComponent(GenericComponent, abc.ABC):
 
     @staticmethod
     def find_molread_tk(dtype: str) -> Union[str, None]:
+        """Finds an appropriate translator for reading a specific file object.
+        Parameters
+        ----------
+        dtype: str
+            Data type object e.g. gro, pdb, etc.
+        Returns
+        -------
+        str or None
+            Translator name e.g. mmic_mda
+        """
         extension_maps = TransComponent.find_molread_ext_maps()
         for toolkit in extension_maps:
             if extension_maps[toolkit].get(dtype):
@@ -56,6 +72,16 @@ class TransComponent(GenericComponent, abc.ABC):
 
     @staticmethod
     def find_molwrite_tk(dtype: str) -> Union[str, None]:
+        """Finds an appropriate translator for writing a specific file object.
+        Parameters
+        ----------
+        dtype: str
+            Data type object e.g. gro, pdb, etc.
+        Returns
+        -------
+        str or None
+            Translator name e.g. mmic_mda
+        """
         extension_maps = TransComponent.find_molwrite_ext_maps()
         for toolkit in extension_maps:
             if extension_maps[toolkit].get(dtype):
@@ -64,9 +90,18 @@ class TransComponent(GenericComponent, abc.ABC):
         return None
 
     @staticmethod
-    def find_trans(dtype: str = None) -> str:
+    def find_trans(dtype: str) -> str:
         """Returns mmic_translator name (if any) for writing molecular objects. If no
-        appropriate toolkit is available on the system, this method raises an error."""
+        appropriate toolkit is available on the system, this method raises an error.
+        Parameters
+        ----------
+        dtype: str
+            Data type e.g. MDAnalysis, parmed, etc.
+        Returns
+        -------
+        str
+            Translator name e.g. mmic_parmed
+        """
         for trans, tk in TransComponent._supported_trans.items():
             if dtype == tk:
                 return trans
