@@ -4,7 +4,7 @@ __all__ = ["ToolkitMol"]
 
 
 class ToolkitMol(ToolkitModel):
-    """An abstract base class that acts as a wrapper for toolkit molecules
+    """A generic base class that acts as a wrapper for toolkit molecules
     TODO: Delete this class and move check_name() to wherever it's needed (rdkit?!)"""
 
     class Config:
