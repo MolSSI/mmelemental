@@ -10,7 +10,7 @@ from mmelemental.models.chem.codes import ChemCode
 from mmic.components.blueprints.generic_component import GenericComponent
 import importlib
 
-__all__ = ["Mol"]
+__all__ = ["Molecule"]
 
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
@@ -44,7 +44,7 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
 mmschema_molecule_default = "mmschema_molecule"
 
 
-class Mol(qcelemental.models.Molecule):
+class Molecule(qcelemental.models.Molecule):
     """
     A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
@@ -169,10 +169,6 @@ class Mol(qcelemental.models.Molecule):
                 kwargs["symbols"] = [
                     periodic_table.periodictable.to_E(x) for x in atomic_numbers
                 ]
-            else:
-                raise ValueError(
-                    "Both atomic numbers and symbols are defined. Supply only one of the 2 Fields."
-                )
 
         # We are pulling out the values *explicitly* so that the pydantic skip_defaults works as expected
         # All attributes set below are equivalent to the default set.
@@ -207,7 +203,7 @@ class Mol(qcelemental.models.Molecule):
         *,
         orient: bool = False,
         **kwargs,
-    ) -> "Mol":
+    ) -> "Molecule":
         """
         Constructs a Molecule object from a file.
         Parameters
@@ -224,11 +220,9 @@ class Mol(qcelemental.models.Molecule):
             Any additional keywords to pass to the constructor
         Returns
         -------
-        Mol
-            A constructed Mol class.
+        Molecule
+            A constructed Molecule class.
         """
-        from mmelemental.components.io.molreader_component import TkMolReaderComponent
-
         if top_filename and filename:
             mol_input = MolInput(file=filename, top_file=top_filename, dtype=dtype)
         elif filename:
@@ -240,7 +234,7 @@ class Mol(qcelemental.models.Molecule):
                 "You must supply at least one of the following: filename or top_filename."
             )
 
-        tkmol = TkMolReaderComponent.compute(mol_input)
+        tkmol = cls._tkFromFile(mol_input)
         return cls.from_data(tkmol, dtype=tkmol.dtype)
 
     @classmethod
@@ -252,9 +246,9 @@ class Mol(qcelemental.models.Molecule):
         orient: bool = False,
         validate: bool = False,
         **kwargs: Dict[str, Any],
-    ) -> "Mol":
+    ) -> "Molecule":
         """
-        Constructs a Mol object from a data object.
+        Constructs a Molecule object from a data object.
         Parameters
         ----------
         data: Any
@@ -269,8 +263,8 @@ class Mol(qcelemental.models.Molecule):
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
         Returns
         -------
-        Mol
-            A constructed Mol class.
+        Molecule
+            A constructed Molecule class.
         """
         if isinstance(data, str):
             if not dtype:
@@ -279,7 +273,7 @@ class Mol(qcelemental.models.Molecule):
                 )
             try:
                 data = ChemCode(code=data)
-                return Mol(identifiers={dtype: data})
+                return Molecule(identifiers={dtype: data})
             except Exception:
                 raise ValueError("Failed in interpreting {data} as {}.")
 
@@ -297,31 +291,21 @@ class Mol(qcelemental.models.Molecule):
         **kwargs
             Additional kwargs to pass to the constructor.
         """
-        from mmelemental.components.io.molwriter_component import TkMolWriterComponent
-
         if not dtype:
             from pathlib import Path
 
             ext = Path(filename).suffix
-            dtype = qcelemental.models.molecule._extension_map.get(ext)
 
-            if not dtype:
-                dtype = ext.strip(
-                    "."
-                )  # we're gonna assume file extension is the correct dtype
-
-        qcelemental_handle = (
-            dtype in qcelemental.models.molecule._extension_map.values()
-        )
+        qcelemental_handle = ext in qcelemental.models.molecule._extension_map
 
         if qcelemental_handle:
             super().to_file(
-                filename, dtype, **kwargs
+                filename, ext, **kwargs
             )  # replace this with openbabel that can handle xyz files
         else:  # look for an installed mmic_translator
-            inputs = MolOutput(mol=self, ext=ext, kwargs=kwargs)
-            tkmol = TkMolWriterComponent.compute(inputs)
-            tkmol.to_file(filename, **kwargs)  # pass dtype?
+            translator = TransComponent.find_molwrite_tk(ext)
+            tkmol = self._tkFromSchema(translator=translator, **kwargs)
+            tkmol.to_file(filename, dtype=ext.strip("."), **kwargs)  # pass dtype?
 
     def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
@@ -332,49 +316,68 @@ class Mol(qcelemental.models.Molecule):
         **kwargs
             Additional kwargs to pass to the constructor.
         """
-        inputs = MolOutput(mol=self, dtype=dtype, kwargs=kwargs)
-        return FromMolComponent.compute(inputs)
+        return self._tkFromSchema(dtype=dtype, **kwargs)
 
+    def _tkFromSchema(
+        self, translator: str = None, dtype: str = None, **kwargs
+    ) -> ToolkitModel:
+        """Helper function that constructs a toolkit-specific molecule from MMSchema molecule.
+        Which toolkit-specific component is called depends on which package is installed on the system."""
 
-class FromMolComponent(GenericComponent):
-    """A component that reads a Mol object and constructs a toolkit-specific molecule.
-    Which toolkit-specific component is called depends on which package is installed on the system."""
-
-    @classmethod
-    def input(cls):
-        return MolOutput
-
-    @classmethod
-    def output(cls):
-        return ToolkitModel
-
-    def execute(
-        self,
-        inputs: Dict[str, Any],
-        extra_outfiles: Optional[List[str]] = None,
-        extra_commands: Optional[List[str]] = None,
-        scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None,
-    ) -> Tuple[bool, None]:
-
-        translator = TransComponent.find_trans(inputs.dtype)
+        if not translator:
+            if not dtype:
+                raise ValueError(
+                    f"Either translator or dtype must be supplied when calling {__name__}."
+                )
+            translator = TransComponent.find_trans(dtype)
 
         if translator == "qcelemental":
             qmol = qcelemental.models.molecule.Molecule.to_data(
-                data, orient=orient, validate=validate, **inputs.kwargs
+                data, orient=orient, validate=validate, **kwargs
             )
-            return True, Mol(orient=orient, validate=validate, **qmol.to_dict())
+            return Molecule(orient=orient, validate=validate, **qmol.to_dict())
         elif importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
-            tkmol = mod._classes_map.get("Mol")
+            tkmol = mod._classes_map.get("Molecule")
 
             if not tkmol:
                 raise ValueError(
                     f"No Molecule model found while looking in translator: {translator}."
                 )
 
-            return True, tkmol.from_schema(inputs.mol)
+            return tkmol.from_schema(self)
         else:
             raise NotImplementedError(
-                f"Translator for {inputs.dtype} not yet available."
+                f"Translator {translator} not available. Make sure it is properly installed."
             )
+
+    @classmethod
+    def _tkFromFile(cls, inputs: MolInput) -> ToolkitModel:
+        """Helper function that constructs a toolkit-specific molecule from an input file.
+        Which toolkit-specific component is called depends on which package is installed on the system."""
+
+        if inputs.file:
+            dtype = inputs.dtype or inputs.file.ext
+            translator = TransComponent.find_molread_tk(dtype)
+
+            if not translator:
+                raise ValueError(
+                    f"Could not read file with ext {dtype}. Please install an appropriate translator."
+                )
+        else:
+            raise ValueError("Data type not understood. Please supply a file.")
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+            tkmol = mod._classes_map.get("Molecule")
+
+        if not tkmol:
+            raise ValueError(
+                f"No Molecule model found while looking in translator: {translator}."
+            )
+
+        return tkmol.from_file(
+            filename=inputs.file.abs_path if inputs.file else None,
+            top_filename=inputs.top_file.abs_path if inputs.top_file else None,
+            dtype=dtype.strip("."),
+        )
