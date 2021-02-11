@@ -8,7 +8,7 @@ import parmed
 import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import (
-    Mol,
+    Molecule,
 )
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
@@ -27,8 +27,8 @@ def test_mmelemental_moldata():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
 
-    mm_mol = Mol.from_file(groFile, top=topFile)
-    assert isinstance(mm_mol, Mol)
+    mm_mol = Molecule.from_file(groFile, top=topFile)
+    assert isinstance(mm_mol, Molecule)
 
     mda_mol = mm_mol.to_data(dtype="MDAnalysis")
     assert isinstance(mda_mol.data, mda_mol.dtype)
@@ -38,7 +38,7 @@ def test_mmelemental_moltop():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
     # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
-    return Mol.from_file(groFile, top=topFile)
+    return Molecule.from_file(groFile, top=topFile)
 
 
 # @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
@@ -52,7 +52,7 @@ def test_mmelemental_molfiles():
     for ext in ["pdb", "gro"]:
         pdbFile = FileInput(path=f"mmelemental/data/molecules/alanine.{ext}")
 
-        mol = Mol.from_file(pdbFile.path)
+        mol = Molecule.from_file(pdbFile.path)
 
         mol.to_file("rdkit.pdb")
         mol.to_file("rdkit.gro")
