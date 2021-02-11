@@ -38,56 +38,30 @@ def test_mmelemental_moltop():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
     # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
-    mol = Mol.from_file(groFile, top=topFile)
+    return Mol.from_file(groFile, top=topFile)
 
 
-@pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
+# @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
 def test_mmelemental_codes():
     smiles = ChemCode(code="CCCC")
     inputs = MolInput(code=smiles)
-    mol = MolConstructorComponent.compute(inputs)
+    return MolConstructorComponent.compute(inputs)
 
 
-def test_mmelemental_molfiles(debug=False):
+def test_mmelemental_molfiles():
     for ext in ["pdb", "gro"]:
         pdbFile = FileInput(path=f"mmelemental/data/molecules/alanine.{ext}")
 
         mol = Mol.from_file(pdbFile.path)
 
-        if False:
-            print("Molecule info:")
-            print("===============")
-            print("\n")
-
-            print("Bonds:")
-            print("======")
-            print(mol.connectivity)
-            print("\n")
-
-            print("Residues:")
-            print("==========")
-            print(mol.residues)
-            print("\n")
-
-            print("Positions:")
-            print("==========")
-            print(mol.geometry)
-            print("\n")
-
-            print("Atom Names:")
-            print("==========")
-            print(mol.names)
-            print("\n")
-
         mol.to_file("rdkit.pdb")
         mol.to_file("rdkit.gro")
-        mol.to_file("rdkit.xyz")
+        # mol.to_file("rdkit.xyz")
         # mol.to_file('rdkit.smiles')
 
-        if not debug:
-            os.remove("rdkit.pdb")
-            os.remove("rdkit.gro")
-            os.remove("rdkit.xyz")
-            # os.remove('rdkit.smiles')
+        os.remove("rdkit.pdb")
+        os.remove("rdkit.gro")
+        # os.remove("rdkit.xyz")
+        # os.remove('rdkit.smiles')
 
     return mol
