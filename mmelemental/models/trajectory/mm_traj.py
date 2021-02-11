@@ -2,11 +2,11 @@ from pydantic import Field
 from typing import Union, Optional, Tuple, List, Dict, Any
 from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
-from mmelemental.models.molecule.mm_mol import Mol
+from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import Base
 
 
-__all__ = ["Traj", "Frame"]
+__all__ = ["Trajectory", "Frame"]
 
 
 class TrajReaderInput(Base):
@@ -56,10 +56,10 @@ class Frame(Base):
     )
 
 
-class Traj(Base):
-    top: Optional[Union[List[Mol], Mol]] = Field(
+class Trajectory(Base):
+    top: Optional[Union[List[Molecule], Molecule]] = Field(
         None,
-        description="Single or multiple :class:``Mol`` object(s) representing the molecular topology.",
+        description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
     frames: List[Frame] = Field(
         None, description="A list of :class:``Frame`` objects of length nframes."
@@ -86,7 +86,7 @@ class Traj(Base):
         *,
         all_frames: bool = False,
         **kwargs,
-    ) -> "Traj":
+    ) -> "Trajectory":
         """
         Constructs a Trajectory object from an input file.
         Parameters
@@ -124,7 +124,7 @@ class Traj(Base):
     @classmethod
     def from_data(
         cls, data: Any, dtype: Optional[str] = None, **kwargs: Dict[str, Any]
-    ) -> "Traj":
+    ) -> "Trajectory":
         """
         Constructs a Trajectory object from a data object.
         Parameters
