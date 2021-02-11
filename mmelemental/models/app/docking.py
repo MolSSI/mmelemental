@@ -1,20 +1,12 @@
 from mmelemental.models.app.base import SimInput
 from mmelemental.models.base import Base
-from mmelemental.models.molecule.mm_mol import Mol
-from mmelemental.models.trajectory.mm_traj import Traj
+from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models.trajectory.mm_traj import Trajectory
 from pydantic import Field
 from typing import List, Optional, Tuple
 
 
 class DockInput(SimInput):
-    ligand: Mol = Field(
-        ...,
-        description="Molecule model for a candidate ligand (e.g. drug). See  the :class:``Mol``.",
-    )
-    receptor: Mol = Field(
-        ...,
-        description="Molecule model for a receptor (e.g. protein). See  the :class:``Mol``.",
-    )
     searchSpace: Optional[
         List[Tuple[float, float, float, float, float, float]]
     ] = Field(
@@ -26,11 +18,11 @@ class DockInput(SimInput):
 
 class DockOutput(Base):
     dockingInput: DockInput = Field(..., description="Docking input model.")
-    ligand: Traj = Field(
+    ligand: Trajectory = Field(
         ...,
         description="Simulation output for the ligand, including its pose and score.",
     )
-    receptor: Optional[Traj] = Field(
+    receptor: Optional[Trajectory] = Field(
         None,
         description="Simulation output for non-rigid receptors i.e. conformation and orientation of the flexible side chains in the receptor relative to the ligand.",
     )

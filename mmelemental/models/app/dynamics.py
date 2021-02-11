@@ -1,5 +1,5 @@
 from mmelemental.models.app.base import SimInput
-from mmelemental.models.molecule.mm_mol import Mol
+from mmelemental.models.molecule.mm_mol import Molecule
 from pydantic import Field
 from typing import Tuple, Union
 from qcelemental.models.types import Array
@@ -7,12 +7,6 @@ from qcelemental.models.types import Array
 
 class DynamicsInput(SimInput):
     """ Molecular dynamics parameter input schema."""
-
-    # System fields
-    mol: Union[Tuple[Mol], Mol] = Field(
-        ...,
-        description="Molecular mechanics molecule object(s). See  the :class:``Mol``.",
-    )
 
     # Velocity fields
     gen_vel: Array[bool] = Field(

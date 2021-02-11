@@ -1,17 +1,19 @@
 from mmelemental.models.base import Base
-from mmelemental.models.molecule.mm_mol import Mol
+from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field
-from typing import Tuple, Union
+from typing import Tuple, Union, Dict
 
 
 class SimInput(Base):
     """ Basic model for molecular simulation input parameters."""
 
     # System fields
-    solvent: Union[Tuple[Solvent], Mol] = Field(
-        None, description="Solvent Mol object(s)."
+    mol: Union[Molecule, Dict[str, Molecule]] = Field(
+        None,
+        description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
+        "Example: mol = {'ligand': Molecule, 'receptor': Molecule, 'solvent': Molecule}.",
     )
     cell: Tuple[Tuple[float], Tuple[float]] = Field(
         None,
