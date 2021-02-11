@@ -1,10 +1,11 @@
 from qcelemental import models
-from pydantic import Field, ValidationError
+from pydantic import Field, ValidationError, validator
 from typing import Dict, Optional
 from mmelemental.extras import get_information
 from typing import Optional, Any
 import importlib
 import inspect
+import abc
 
 
 class Provenance(models.ProtoModel):
@@ -43,18 +44,15 @@ class Base(models.ProtoModel):
 
     class Config(models.ProtoModel.Config):
         canonical_repr = True
-        extra = "allow"
+        # extra = "allow"
 
 
 class Nothing(Base):
     ...
 
 
-class ToolkitModel(Base):
+class ToolkitModel(Base, abc.ABC):
     """ An abstract base class that acts as a wrapper for toolkit molecules """
-
-    # class Config(Base.Config):
-    #    arbitrary_types_allowed = True
 
     data: Any = Field(
         ..., description="Toolkit-specific trajectory object."
@@ -62,6 +60,55 @@ class ToolkitModel(Base):
     units: Optional[Dict] = Field(
         None, description="Unit system for the stored physical properties in data."
     )
+
+    @property
+    @abc.abstractmethod
+    def dtype(self):
+        """ Returns the fundamental molecule object type. """
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def from_file(cls, filename: str = None, dtype: str = None, **kwargs):
+        """ Constructs a data object from file(s). """
+        raise NotImplementedError
+
+    @classmethod
+    @abc.abstractmethod
+    def from_schema(
+        cls,
+        data: Any,
+        version: Optional[str] = None,
+        **kwargs,
+    ):
+        """ Constructs data object from MMSchema. """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def to_file(self, filename: str, dtype: str = None, **kwargs):
+        """Writes the data object to a file.
+        Parameters
+        ----------
+        filename : str
+            The filename to write to
+        dtype : Optional[str], optional
+            File format
+        **kwargs
+            Additional kwargs to pass to the constructors.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def to_schema(self, version: Optional[str] = None, **kwargs):
+        """Converts the data object to MMSchema compliant object.
+        Parameters
+        ----------
+        version: str, optional
+            Schema specification version to comply with e.g. 1.0.1.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        """
+        raise NotImplementedError
 
     @property
     def toolkit(self) -> str:
@@ -87,7 +134,8 @@ class ToolkitModel(Base):
         mod = importlib.import_module(self.translator + ".models")
         return inspect.getmembers(mod, inspect.isclass)
 
-    def check_type(self):
-        if isinstance(self.data, self.dtype):
-            return self.data
+    # @validator("data")
+    def check_type(cls, data):
+        if isinstance(data, cls.dtype):
+            return data
         raise ValidationError
