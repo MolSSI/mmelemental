@@ -1,6 +1,6 @@
 from qcelemental import models
 from pydantic import Field, ValidationError
-from typing import Dict
+from typing import Dict, Optional
 from mmelemental.extras import get_information
 from typing import Optional, Any
 import importlib
@@ -59,7 +59,7 @@ class ToolkitModel(Base):
     data: Any = Field(
         ..., description="Toolkit-specific trajectory object."
     )  # validator added in subclasses
-    units: Dict = Field(
+    units: Optional[Dict] = Field(
         None, description="Unit system for the stored physical properties in data."
     )
 
