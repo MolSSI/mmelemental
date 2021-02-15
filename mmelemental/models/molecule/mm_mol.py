@@ -1,14 +1,20 @@
 import qcelemental
 from qcelemental.models.types import Array
-from mmelemental.models.base import Provenance, provenance_stamp
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr
+import importlib
+
+# Import MM models
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
-from mmelemental.components.trans.template_component import TransComponent
+from mmelemental.models.util.output import FileOutput
 from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
+from mmelemental.models.base import Provenance, provenance_stamp
+
+# Import MM components
+from mmelemental.components.trans import TransComponent
 from mmic.components.blueprints.generic_component import GenericComponent
-import importlib
+
 
 __all__ = ["Molecule"]
 
@@ -184,9 +190,9 @@ class Molecule(qcelemental.models.Molecule):
                 self.symbols
             )  # Title case for consistency
         else:
-            values["symbols"] = [
-                "H"
-            ]  # we need to figure out what the symbols are somehow?
+            raise ValueError(
+                "Either symbols or atomic_numbers must be supplied for a unique definition of a Molecule."
+            )
 
         if not values.get("name"):
             from qcelemental.molparse.to_string import formula_generator
@@ -200,8 +206,6 @@ class Molecule(qcelemental.models.Molecule):
         filename: Optional[str] = None,
         top_filename: Optional[str] = None,
         dtype: Optional[str] = None,
-        *,
-        orient: bool = False,
         **kwargs,
     ) -> "Molecule":
         """
@@ -214,8 +218,6 @@ class Molecule(qcelemental.models.Molecule):
             The topology i.e. connectivity filename to read
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
-        orient : bool, optional
-            Orientates the molecule to a standard frame or not.
         **kwargs
             Any additional keywords to pass to the constructor
         Returns
@@ -223,18 +225,14 @@ class Molecule(qcelemental.models.Molecule):
         Molecule
             A constructed Molecule class.
         """
-        if top_filename and filename:
-            mol_input = MolInput(file=filename, top_file=top_filename, dtype=dtype)
-        elif filename:
-            mol_input = MolInput(file=filename, dtype=dtype)
-        elif top_filename:
-            mol_input = MolInput(file=filename, dtype=dtype)
-        else:
+        if not top_filename and not filename:
             raise TypeError(
                 "You must supply at least one of the following: filename or top_filename."
             )
 
-        tkmol = cls._tkFromFile(mol_input)
+        tkmol = cls._tkFromFile(
+            filename=filename, top_filename=top_filename, dtype=dtype
+        )
         return cls.from_data(tkmol, dtype=tkmol.dtype)
 
     @classmethod
@@ -242,9 +240,6 @@ class Molecule(qcelemental.models.Molecule):
         cls,
         data: Any,
         dtype: Optional[str] = None,
-        *,
-        orient: bool = False,
-        validate: bool = False,
         **kwargs: Dict[str, Any],
     ) -> "Molecule":
         """
@@ -255,10 +250,6 @@ class Molecule(qcelemental.models.Molecule):
             Data to construct Molecule from
         dtype: str, optional
             How to interpret the data, if not passed attempts to discover this based on input type.
-        orient: bool, optional
-            Orientates the molecule to a standard frame or not.
-        validate: bool, optional
-            Validates the molecule or not.
         **kwargs
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
         Returns
@@ -277,7 +268,7 @@ class Molecule(qcelemental.models.Molecule):
             except Exception:
                 raise ValueError("Failed in interpreting {data} as {}.")
 
-        return data.to_schema(orient=orient, validate=validate, **kwargs)
+        return data.to_schema(**kwargs)
 
     def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> None:
         """Writes the Molecule to a file.
@@ -315,6 +306,10 @@ class Molecule(qcelemental.models.Molecule):
             The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
         **kwargs
             Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+            Toolkit-specific molecule model
         """
         return self._tkFromSchema(dtype=dtype, **kwargs)
 
@@ -322,7 +317,20 @@ class Molecule(qcelemental.models.Molecule):
         self, translator: str = None, dtype: str = None, **kwargs
     ) -> ToolkitModel:
         """Helper function that constructs a toolkit-specific molecule from MMSchema molecule.
-        Which toolkit-specific component is called depends on which package is installed on the system."""
+        Which toolkit-specific component is called depends on which package is installed on the system.
+        Parameters
+        ----------
+        translator: str
+            translator name e.g. mmic_parmed. The translator should be registered in the :class:``TransComponent`` class.
+        dtype: str
+            The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+            Toolkit-specific molecule model
+        """
 
         if not translator:
             if not dtype:
@@ -333,7 +341,7 @@ class Molecule(qcelemental.models.Molecule):
 
         if translator == "qcelemental":
             qmol = qcelemental.models.molecule.Molecule.to_data(
-                data, orient=orient, validate=validate, **kwargs
+                data, orient=False, validate=False, **kwargs
             )
             return Molecule(orient=orient, validate=validate, **qmol.to_dict())
         elif importlib.util.find_spec(translator):
@@ -348,24 +356,47 @@ class Molecule(qcelemental.models.Molecule):
             return tkmol.from_schema(self)
         else:
             raise NotImplementedError(
-                f"Translator {translator} not available. Make sure it is properly installed."
+                f"translator {translator} not available. Make sure it is properly installed."
             )
 
     @classmethod
-    def _tkFromFile(cls, inputs: MolInput) -> ToolkitModel:
+    def _tkFromFile(
+        cls, filename: str = None, top_filename: str = None, dtype: str = None, **kwargs
+    ) -> ToolkitModel:
         """Helper function that constructs a toolkit-specific molecule from an input file.
-        Which toolkit-specific component is called depends on which package is installed on the system."""
+        Which toolkit-specific component is called depends on which package is installed on the system.
+        Parameters
+        ----------
+        filename: str, optional
+            Molecule file name. The file should define the molecule.
+        top_filename: str, optional
+            Topology file name. The file should define the molecular connectivity.
+        dtype: str
+            The type of data file object to read e.g. gro, pdb, etc.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+        """
 
-        if inputs.file:
-            dtype = inputs.dtype or inputs.file.ext
-            translator = TransComponent.find_molread_tk(dtype)
+        fileobj = FileOutput(path=filename) if filename else None
+        top_fileobj = FileOutput(path=top_filename) if top_filename else None
 
-            if not translator:
-                raise ValueError(
-                    f"Could not read file with ext {dtype}. Please install an appropriate translator."
-                )
+        if top_filename:
+            dtype = dtype or top_fileobj.ext
+        elif filename:
+            dtype = dtype or fileobj.ext
         else:
-            raise ValueError("Data type not understood. Please supply a file.")
+            raise TypeError(
+                "At least one file must be supplied! You must define either the connectivity or molecule, or both."
+            )
+        translator = TransComponent.find_molread_tk(dtype)
+
+        if not translator:
+            raise ValueError(
+                f"Could not read file with ext {dtype}. Please install an appropriate translator."
+            )
 
         if importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
@@ -377,7 +408,7 @@ class Molecule(qcelemental.models.Molecule):
             )
 
         return tkmol.from_file(
-            filename=inputs.file.abs_path if inputs.file else None,
-            top_filename=inputs.top_file.abs_path if inputs.top_file else None,
+            filename=fileobj.abs_path if fileobj else None,
+            top_filename=top_fileobj.abs_path if top_fileobj else None,
             dtype=dtype.strip("."),
         )
