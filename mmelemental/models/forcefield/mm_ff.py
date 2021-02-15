@@ -1,11 +1,16 @@
 from pydantic import Field
+import importlib
 from typing import Any, Tuple, Union, List, Dict, Optional
-from mmelemental.models.base import Base
 from qcelemental.models.types import Array
-from mmelemental.models.util.input import FileInput
-from mmic.components.blueprints.generic_component import GenericComponent
-from .io_ff import FFInput
 
+# Import MM models
+from mmelemental.models.base import Base
+from mmelemental.models.base import ToolkitModel
+from mmelemental.models.util.output import FileOutput
+
+# Import MM components
+from mmic.components.blueprints.generic_component import GenericComponent
+from mmelemental.components.trans import TransComponent
 
 __all__ = ["ForceField"]
 
@@ -13,23 +18,29 @@ __all__ = ["ForceField"]
 class ForceField(Base):
     bonds: Optional[Array[Array[float]]] = Field(
         None,
-        description="Bond parameters: eq length in Angstrom, constant (e.g. spring const) in kJ/mol*Angstrom^2, extra params.",
+        description="Bond parameters: eq length, constant (e.g. spring const), extra params.",
     )
     bonds_type: Optional[List[str]] = Field(
         None, description="Bond potential form e.g. harmonic, morse, etc."
     )
 
-    angles: Optional[Array[Array[float]]] = Field(
+    angles: Optional[Array[float]] = Field(
         None,
-        description="Angle parameters: eq angle in degrees, constant (e.g. spring const) in kJ/mol*Angstrom, extra params.",
+        description="Array of equilibrium angles. Length of the array should be the number of all angles.",
+    )
+    angles_units: Optional[str] = Field(
+        "degrees",
+        description="Equilibrium angle units."
+    )
+    angles_k: Optional[Array[float]] = Field(
+        ""
     )
     angles_type: Optional[List[str]] = Field(
         None, description="Angle potential form e.g. harmonic, quartic, etc."
     )
-
     dihedrals: Optional[Array[Array[float]]] = Field(
         None,
-        description="Dihedral/torsion parameters: eq energy in kJ/mol, phase in degrees, extra params.",
+        description="Dihedral/torsion parameters: eq energy, phase in degrees, extra params.",
     )
     dihedrals_type: Optional[List[str]] = Field(
         None,
@@ -37,7 +48,7 @@ class ForceField(Base):
     )
 
     improper_dihedrals: Optional[Array[Array[float]]] = Field(
-        ..., description="Dihedral/torsion parameters."
+        ..., description="Improper dihedral/torsion parameters."
     )
     improper_dihedrals_type: Optional[List[str]] = Field(
         None,
@@ -85,14 +96,14 @@ class ForceField(Base):
 
     @classmethod
     def from_file(
-        cls, filename: Union[FileInput, str], dtype: Optional[str] = None, **kwargs
+        cls, filename: str, dtype: Optional[str] = None, **kwargs
     ) -> "ForceField":
         """
         Constructs a ForceField object from a file.
         Parameters
         ----------
         filename : str
-            The filename to build from.
+            The topology or FF filename to build from.
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
         **kwargs
@@ -100,16 +111,13 @@ class ForceField(Base):
         Returns
         -------
         ForceField
-            A constructed ForceField class.
+            A constructed ForceField object.
         """
-        if not isinstance(filename, FileInput):
-            filename = FileInput(path=filename)
-
-        ff_input = FFInput(file=filename)
-        return FFReaderComponent.compute(ff_input)
+        tkmol = cls._tkFromFile(filename=filename, dtype=dtype)
+        return cls.from_data(tkmol, dtype=tkmol.dtype)
 
     @classmethod
-    def from_data(cls, data: Any, **kwargs: Dict[str, Any]) -> "ForceField":
+    def from_data(cls, data: Any, **kwargs) -> "ForceField":
         """
         Constructs a ForceField object from a data object.
         Parameters
@@ -117,57 +125,128 @@ class ForceField(Base):
         data: Any
             Data to construct ForceField from.
         **kwargs
-            Additional kwargs to pass to the constructors. kwargs take precedence over data.
+            Additional kwargs to pass to the constructors.
         Returns
         -------
         ForceField
-            A constructed ForceField class.
+            A constructed ForceField object.
         """
-        ff_input = FFInput(data=data)
-        return FFReaderComponent.compute(ff_input)
+        return data.to_schema(**kwargs)
 
+    def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> None:
+        """Writes the ForceField to a file.
+        Parameters
+        ----------
+        filename : str
+            The filename to write to
+        dtype : Optional[str], optional
+            The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
+            file extension if not provided.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        """
+        if not dtype:
+            from pathlib import Path
 
-class FFReaderComponent(GenericComponent):
-    """Factory component that constructs a Molecule object from MolInput.
-    Which toolkit-specific component is called depends on data type and
-    which toolkits are installed on the system."""
+            ext = Path(filename).suffix
 
-    @classmethod
-    def input(cls):
-        return FFInput
+        translator = TransComponent.find_ffwrite_tk(ext)
+        tkff = self._tkFromSchema(translator=translator, **kwargs)
+        tkff.to_file(filename, dtype=ext.strip("."), **kwargs)  # pass dtype?
 
-    @classmethod
-    def output(cls):
-        return ForceField
+    def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
+        """Converts ForceField to toolkit-specific forcefield object.
+        Parameters
+        ----------
+        dtype: str
+            The type of data object to convert to e.g. parmed, MDAnalysis, etc.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+            Toolkit-specific forcefield model
+        """
+        return self._tkFromSchema(dtype=dtype, **kwargs)
 
-    def execute(
-        self,
-        inputs: Dict[str, Any],
-        extra_outfiles: Optional[List[str]] = None,
-        extra_commands: Optional[List[str]] = None,
-        scratch_name: Optional[str] = None,
-        timeout: Optional[int] = None,
-    ) -> Tuple[bool, Dict[str, Any]]:
+    def _tkFromSchema(
+        self, translator: str = None, dtype: str = None, **kwargs
+    ) -> ToolkitModel:
+        """
+        Helper function that constructs a toolkit-specific forcefield from MMSchema ForceField.
+        Which toolkit-specific component is called depends on which package is installed on the system.
+        Parameters
+        ----------
+        translator: str, optional
+            Translator name e.g. mmic_mda, etc.
+        dtype: str, optional
+            Data type e.g. MDAnalysis, parmed, etc.
+        **kwargs
+            Additional kwargs to pass to the constructors.
+        Results
+        -------
+        ToolkitModel
+            Toolkit-specific ForceField object
+        """
 
-        if inputs.data:
-            dtype = inputs.data.dtype
-            if dtype == "parmed":
-                from mmelemental.components.trans.parmed_component import (
-                    ParmedToFFComponent,
+        if not translator:
+            if not dtype:
+                raise ValueError(
+                    f"Either translator or dtype must be supplied when calling {__name__}."
+                )
+            translator = TransComponent.find_trans(dtype)
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+            tkff = mod._classes_map.get("ForceField")
+
+            if not tkff:
+                raise ValueError(
+                    f"No ForceField model found while looking in translator: {translator}."
                 )
 
-                return True, ParmedToFFComponent.compute(inputs)
-            else:
-                raise NotImplementedError(f"Data type not yet supported: {dtype}.")
-        elif inputs.file:
-            toolkit = inputs.files_toolkit()
-            if toolkit == "parmed":
-                from mmelemental.components.trans.parmed_component import (
-                    ParmedToFFComponent,
-                )
-
-                return True, ParmedToFFComponent.compute(inputs)
+            return tkff.from_schema(self)
         else:
             raise NotImplementedError(
-                "Forcefield can be instantiated only from files or other ssupported data objects."
+                f"Translator {translator} not available. Make sure it is properly installed."
             )
+
+    @classmethod
+    def _tkFromFile(cls, filename: str, dtype: str = None, **kwargs) -> ToolkitModel:
+        """Helper function that constructs a toolkit-specific parameterized molecule from an input file.
+        Which toolkit-specific component is called depends on which package is installed on the system.
+        Parameters
+        ----------
+        filename: str
+            Topology file name. The file should define FF parameters.
+        dtype: str, optional
+            The type of data file object to read e.g. top, psf, etc.
+        **kwargs
+            Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+        """
+
+        fileobj = FileOutput(path=filename)
+        dtype = dtype or fileobj.ext
+        translator = TransComponent.find_molread_tk(dtype)
+
+        if not translator:
+            raise ValueError(
+                f"Could not read file with ext {dtype}. Please install an appropriate TransComponent."
+            )
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+            tkff = mod._classes_map.get("ForceField")
+
+        if not tkff:
+            raise ValueError(
+                f"No ForceField model found while looking in translator: {translator}."
+            )
+
+        return tkff.from_file(
+            filename=fileobj.abs_path,
+            dtype=dtype.strip("."),
+        )
