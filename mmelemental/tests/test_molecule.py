@@ -24,8 +24,8 @@ def test_mmelemental_imported():
 
 
 def test_mmelemental_moldata():
-    groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
-    topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
+    groFile = "mmelemental/data/molecules/alanine.gro"
+    topFile = "mmelemental/data/molecules/alanine.top"
 
     mm_mol = Molecule.from_file(groFile, top=topFile)
     assert isinstance(mm_mol, Molecule)
@@ -35,13 +35,13 @@ def test_mmelemental_moldata():
 
 
 def test_mmelemental_moltop():
-    groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
-    topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
+    groFile = "mmelemental/data/molecules/alanine.gro"
+    topFile = "mmelemental/data/molecules/alanine.top"
     # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
     return Molecule.from_file(groFile, top=topFile)
 
 
-# @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
+@pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
 def test_mmelemental_codes():
     smiles = ChemCode(code="CCCC")
     inputs = MolInput(code=smiles)
@@ -50,9 +50,9 @@ def test_mmelemental_codes():
 
 def test_mmelemental_molfiles():
     for ext in ["pdb", "gro"]:
-        pdbFile = FileInput(path=f"mmelemental/data/molecules/alanine.{ext}")
+        pdbFile = f"mmelemental/data/molecules/alanine.{ext}"
 
-        mol = Molecule.from_file(pdbFile.path)
+        mol = Molecule.from_file(pdbFile)
 
         mol.to_file("rdkit.pdb")
         mol.to_file("rdkit.gro")
