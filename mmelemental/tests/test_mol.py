@@ -26,7 +26,6 @@ def test_mmelemental_moldata():
     topFile = "mmelemental/data/molecules/alanine.top"
 
     mm_mol = Molecule.from_file(groFile, top=topFile)
-    mm_mol.to_file("alanine.json")
     assert isinstance(mm_mol, Molecule)
 
     mda_mol = mm_mol.to_data(dtype="MDAnalysis")
