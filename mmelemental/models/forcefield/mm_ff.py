@@ -29,12 +29,9 @@ class ForceField(Base):
         description="Array of equilibrium angles. Length of the array should be the number of all angles.",
     )
     angles_units: Optional[str] = Field(
-        "degrees",
-        description="Equilibrium angle units."
+        "degrees", description="Equilibrium angle units."
     )
-    angles_k: Optional[Array[float]] = Field(
-        ""
-    )
+    angles_k: Optional[Array[float]] = Field("")
     angles_type: Optional[List[str]] = Field(
         None, description="Angle potential form e.g. harmonic, quartic, etc."
     )
@@ -246,7 +243,4 @@ class ForceField(Base):
                 f"No ForceField model found while looking in translator: {translator}."
             )
 
-        return tkff.from_file(
-            filename=fileobj.abs_path,
-            dtype=dtype.strip("."),
-        )
+        return tkff.from_file(filename=fileobj.abs_path, dtype=dtype.strip("."))
