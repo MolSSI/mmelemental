@@ -3,6 +3,7 @@ from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr
 import importlib
+from pathlib import Path
 
 # Import MM models
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
@@ -51,14 +52,15 @@ mmschema_molecule_default = "mmschema_molecule"
 
 
 class Molecule(qcelemental.models.Molecule):
-    """
-    A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
+    """A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
     Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively
     to assist with duplicate detection.
     """
 
-    schema_name: constr(strip_whitespace=True, regex="^(mmschema_molecule)$") = Field(  # type: ignore
+    schema_name: constr(
+        strip_whitespace=True, regex="^(mmschema_molecule)$"
+    ) = Field(  # type: ignore
         mmschema_molecule_default,
         description=(
             f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_molecule_default}."
@@ -157,7 +159,8 @@ class Molecule(qcelemental.models.Molecule):
     )
 
     def __init__(self, **kwargs: Any) -> None:
-        """Initializes the molecule object from dictionary-like values.
+        """
+        Initializes the molecule object from dictionary-like values.
         Parameters
         ----------
         **kwargs : Any
@@ -212,7 +215,7 @@ class Molecule(qcelemental.models.Molecule):
         Constructs a Molecule object from a file.
         Parameters
         ----------
-        filename : str, optional
+        filename : str
             The atomic positions filename to read
         top_filename: str, optional
             The topology i.e. connectivity filename to read
@@ -225,20 +228,39 @@ class Molecule(qcelemental.models.Molecule):
         Molecule
             A constructed Molecule class.
         """
-        if not top_filename and not filename:
-            raise TypeError(
-                "You must supply at least one of the following: filename or top_filename."
-            )
+        file_ext = Path(filename).suffix if filename else None
+        top_ext = Path(top_filename).suffix if top_filename else None
+
+        if file_ext in qcelemental.models.molecule._extension_map:
+            if top_filename:
+                raise TypeError(
+                    "Molecule topology must be supplied in a single JSON (or similar) file."
+                )
+
+            import json
+
+            if dtype is None:
+                dtype = qcelemental.models.molecule._extension_map[file_ext]
+
+            # Raw string type, read and pass through
+            if dtype == "json":
+                with open(filename, "r") as infile:
+                    data = json.load(infile)
+                dtype = "dict"
+            else:
+                raise KeyError(f"Data type not supported: {dtype}.")
+
+            return cls.from_data(data, dtype=dtype, **kwargs)
 
         tkmol = cls._tkFromFile(
             filename=filename, top_filename=top_filename, dtype=dtype
         )
-        return cls.from_data(tkmol, dtype=tkmol.dtype)
+        return cls.from_data(tkmol, dtype=tkmol.dtype, **kwargs)
 
     @classmethod
     def from_data(
         cls,
-        data: Any,
+        data: Optional[Any] = None,
         dtype: Optional[str] = None,
         **kwargs: Dict[str, Any],
     ) -> "Molecule":
@@ -246,12 +268,12 @@ class Molecule(qcelemental.models.Molecule):
         Constructs a Molecule object from a data object.
         Parameters
         ----------
-        data: Any
-            Data to construct Molecule from
+        data: Any, optional
+            Data to construct Molecule from such as a data object (e.g. MDAnalysis.Universe) or dict.
         dtype: str, optional
             How to interpret the data, if not passed attempts to discover this based on input type.
         **kwargs
-            Additional kwargs to pass to the constructors. kwargs take precedence over data.
+            Additional kwargs to pass to the constructors.
         Returns
         -------
         Molecule
@@ -266,7 +288,10 @@ class Molecule(qcelemental.models.Molecule):
                 data = ChemCode(code=data)
                 return Molecule(identifiers={dtype: data})
             except Exception:
-                raise ValueError("Failed in interpreting {data} as {}.")
+                raise ValueError(f"Failed in interpreting {data} as a valid code.")
+        elif isinstance(data, dict):
+            kwargs.update(data)
+            return cls(**kwargs)
 
         return data.to_schema(**kwargs)
 
@@ -277,7 +302,7 @@ class Molecule(qcelemental.models.Molecule):
         filename : str
             The filename to write to
         dtype : Optional[str], optional
-            The type of file to write (e.g. pdb, gro, etc.), attempts to infer dtype from
+            The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
             file extension if not provided.
         **kwargs
             Additional kwargs to pass to the constructor.
@@ -286,17 +311,20 @@ class Molecule(qcelemental.models.Molecule):
             from pathlib import Path
 
             ext = Path(filename).suffix
+        else:
+            ext = "." + dtype
 
         qcelemental_handle = ext in qcelemental.models.molecule._extension_map
 
         if qcelemental_handle:
+            dtype = qcelemental.models.molecule._extension_map[ext]
             super().to_file(
-                filename, ext, **kwargs
+                filename, dtype, **kwargs
             )  # replace this with openbabel that can handle xyz files
         else:  # look for an installed mmic_translator
             translator = TransComponent.find_molwrite_tk(ext)
             tkmol = self._tkFromSchema(translator=translator, **kwargs)
-            tkmol.to_file(filename, dtype=ext.strip("."), **kwargs)  # pass dtype?
+            tkmol.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
     def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
