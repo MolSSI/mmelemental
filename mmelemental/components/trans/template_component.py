@@ -9,10 +9,7 @@ __all__ = ["TransComponent"]
 class TransComponent(GenericComponent, abc.ABC):
     """ An abstract template component that provides methods for converting between MMSchema and other MM codes. """
 
-    _supported_trans = {
-        "mmic_mda": "MDAnalysis",
-        "mmic_parmed": "parmed",
-    }
+    _supported_trans = {"mmic_mda": "MDAnalysis", "mmic_parmed": "parmed"}
     _supported_versions = {}
 
     @classmethod
