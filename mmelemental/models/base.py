@@ -75,12 +75,7 @@ class ToolkitModel(Base, abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def from_schema(
-        cls,
-        data: Any,
-        version: Optional[str] = None,
-        **kwargs,
-    ):
+    def from_schema(cls, data: Any, version: Optional[str] = None, **kwargs):
         """ Constructs data object from MMSchema. """
         raise NotImplementedError
 
