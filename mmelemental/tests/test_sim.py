@@ -10,13 +10,6 @@ from mmelemental.models.app.sim_writer import SimWriterInput
 from mmelemental.components.io.simwriter_component import SimWriterComponent
 
 
-def test_mmelemental_imported():
-    """Sample test, will always pass so long as import statement worked"""
-    import sys
-
-    assert "mmelemental" in sys.modules
-
-
 def test_mmelemental_molgro():
     groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
     topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
