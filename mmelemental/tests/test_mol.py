@@ -7,9 +7,7 @@ import os
 import parmed
 import mmelemental
 from mmelemental.models.util.input import FileInput
-from mmelemental.models.molecule.mm_mol import (
-    Molecule,
-)
+from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.components.io.constructor_component import (
@@ -28,6 +26,7 @@ def test_mmelemental_moldata():
     topFile = "mmelemental/data/molecules/alanine.top"
 
     mm_mol = Molecule.from_file(groFile, top=topFile)
+    mm_mol.to_file("alanine.json")
     assert isinstance(mm_mol, Molecule)
 
     mda_mol = mm_mol.to_data(dtype="MDAnalysis")
