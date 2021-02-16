@@ -150,7 +150,7 @@ latex_documents = [
         "mmelemental Documentation",
         "mmelemental",
         "manual",
-    ),
+    )
 ]
 
 
@@ -175,7 +175,7 @@ texinfo_documents = [
         "mmelemental",
         "A short description of the project.",
         "Miscellaneous",
-    ),
+    )
 ]
 
 
