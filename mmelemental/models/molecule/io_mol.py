@@ -66,12 +66,7 @@ class MolInput(MolIO):
             ".pdb": "pdb",
             ".top": "top",
         },
-        "MDAnalysis": {
-            ".gro": "gro",
-            ".pdb": "pdb",
-            ".top": "top",
-            ".psf": "psf",
-        },
+        "MDAnalysis": {".gro": "gro", ".pdb": "pdb", ".top": "top", ".psf": "psf"},
     }
 
     file: Optional[Union[FileInput, str]] = Field(
