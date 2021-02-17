@@ -15,26 +15,47 @@ from mmelemental.components.trans import TransComponent
 __all__ = ["ForceField"]
 
 
-class ForceField(Base):
-    bonds: Optional[Array[Array[float]]] = Field(
-        None,
-        description="Bond parameters: eq length, constant (e.g. spring const), extra params.",
+class Bonds(Base):
+    length: Optional[Array[float]] = Field(
+        None, description="Bond equilibrium lengths. Default unit is Angstroms."
     )
-    bonds_type: Optional[List[str]] = Field(
+    length_units: Optional[str] = Field("angstroms", description="Bond lengths unit.")
+    spring: Optional[Array[float]] = Field(
+        0, description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
+    )
+    spring_units: Optional[str] = Field(
+        "kJ/(mol*angstrom**2)", description="Bond spring constant unit."
+    )
+    params: Optional[Array[float]] = Field(
+        None,
+        description="Extra or custom parameters for describing the bond potential.",
+    )
+    form: Optional[str] = Field(
         None, description="Bond potential form e.g. harmonic, morse, etc."
     )
 
-    angles: Optional[Array[float]] = Field(
-        None,
-        description="Array of equilibrium angles. Length of the array should be the number of all angles.",
+
+class Angles(Base):
+    angle: Optional[Array[float]] = Field(
+        None, description="Equilibrium angles. Default unit is degrees."
     )
-    angles_units: Optional[str] = Field(
+    angle_units: Optional[str] = Field(
         "degrees", description="Equilibrium angle units."
     )
-    angles_k: Optional[Array[float]] = Field("")
-    angles_type: Optional[List[str]] = Field(
+    spring: Optional[Array[float]] = Field(0, description="Angle spring constant. ")
+    spring_units: Optional[str] = Field(
+        "kJ/(mol*degrees**2)", description="Angle spring constant unit."
+    )
+    params: Optional[Array[float]] = Field(
+        None,
+        description="Extra or custom parameters for describing the angle potential.",
+    )
+    form: Optional[str] = Field(
         None, description="Angle potential form e.g. harmonic, quartic, etc."
     )
+
+
+class Dihedrals(Base):
     dihedrals: Optional[Array[Array[float]]] = Field(
         None,
         description="Dihedral/torsion parameters: eq energy, phase in degrees, extra params.",
@@ -44,29 +65,58 @@ class ForceField(Base):
         description="Proper dihedral potential form e.g. harmonic, helix, fourier, etc.",
     )
 
+
+class ImproperDihedrals(Base):
     improper_dihedrals: Optional[Array[Array[float]]] = Field(
-        ..., description="Improper dihedral/torsion parameters."
+        None, description="Improper dihedral/torsion parameters."
     )
     improper_dihedrals_type: Optional[List[str]] = Field(
         None,
         description="Improper dihedral potential form e.g. harmonic, fourier, etc.",
     )
 
-    charges: Array[float] = Field(
-        ..., description="Atomic charges in elementary charge units."
-    )
-    charge_groups: Optional[Array[int]] = Field(
-        None, description="Charge groups per atom."
-    )
 
-    nonbonded: Array[float] = Field(
-        ..., description="Non-bonded short potential parameters."
+class NonBonded(Base):
+    epsilon: Optional[Array[float]] = Field(
+        0,
+        description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
     )
-    nonbonded_type: Optional[List[str]] = Field(
+    epsilon_units: Optional[str] = Field(
+        "kJ/mol", description="The epsilon (well depth) Lennard-Jones unit."
+    )
+    sigma: Optional[Array[float]] = Field(
+        0,
+        description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
+    )
+    sigma_units: Optional[str] = Field(
+        "angstrom", description="The Lennard-Jones sigma unit."
+    )
+    params: Optional[Array[float]] = Field(
+        None, description="Extra or custom non-bonded short potential parameters."
+    )
+    form: Optional[str] = Field(
         None,
         description="Non-bonded short potential form e.g. Lennard-Jones, Buckingham, etc.",
     )
+    charges: Optional[Array[float]] = Field(
+        None, description="Atomic charges. Default unit is in elementary charge units."
+    )
+    charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
 
+
+class ForceField(Base):
+    bonds: Optional[Bonds] = Field(None, description="2-body covalent bond schema.")
+    angles: Optional[Angles] = Field(None, description="3-body angular bond schema.")
+    dihedrals: Optional[Dihedrals] = Field(
+        None, description="4-body torsional bond schema."
+    )
+    im_dihedrals: Optional[ImproperDihedrals] = Field(
+        None, description="Improper dihedral bond schema."
+    )
+    nonbonded: NonBonded = Field(..., description="Non-bonded parameters schema.")
+    charge_groups: Optional[Array[int]] = Field(
+        None, description="Charge groups per atom. Length of the array must be natoms."
+    )
     exclusions: Optional[str] = Field(
         None,
         description="Which pairs of bonded atoms to exclude from non-bonded calculations. \
@@ -81,7 +131,6 @@ class ForceField(Base):
         None,
         description="Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.",
     )
-
     name: Optional[str] = Field(
         None, description="Forcefield name e.g. charmm27, amber99, etc."
     )
