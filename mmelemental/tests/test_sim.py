@@ -19,7 +19,7 @@ def test_mmelemental_molgro():
 
 def test_mmelemental_md():
     mol = test_mmelemental_molgro()
-    md = DynamicsInput(mol=mol, temp=300, press=1.1, temp_method="berendsen")
+    md = DynamicsInput(mol={"mol":mol}, temp=300, press=1.1, temp_method="berendsen")
 
     sim_input = SimWriterInput(
         model=md, engine=("NAMD", "X.X.X"), filename="input.namd"
