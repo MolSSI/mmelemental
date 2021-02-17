@@ -26,24 +26,24 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
     See `link <https://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html>`_ for more info.
     """
 
-    smiles: Optional[ChemCode] = Field(
+    smiles: Optional[Union[ChemCode, str]] = Field(
         None, description="A simplified molecular-input line-entry system code."
     )
-    smarts: Optional[ChemCode] = Field(
+    smarts: Optional[Union[ChemCode, str]] = Field(
         None,
         description="A SMILES arbitrary target specification code for defining substructures.",
     )
-    inchi: Optional[ChemCode] = Field(
+    inchi: Optional[Union[ChemCode, str]] = Field(
         None, description="An international chemical identifier code."
     )
-    sequence: Optional[ChemCode] = Field(
+    sequence: Optional[Union[ChemCode, str]] = Field(
         None,
         description="A sequence code from RDKit (currently only supports peptides).",
     )
-    fasta: Optional[ChemCode] = Field(
+    fasta: Optional[Union[ChemCode, str]] = Field(
         None, description="A FASTA code (currently only supports peptides)."
     )
-    helm: Optional[ChemCode] = Field(
+    helm: Optional[Union[ChemCode, str]] = Field(
         None, description="A HELM code (currently only supports peptides)."
     )
 
@@ -285,10 +285,13 @@ class Molecule(qcelemental.models.Molecule):
                     "You must supply dtype for proper interpretation of symbolic data. See the :class:``Identifiers`` class."
                 )
             try:
-                data = ChemCode(code=data)
-                return Molecule(identifiers={dtype: data})
-            except Exception:
-                raise ValueError(f"Failed in interpreting {data} as a valid code.")
+                code = ChemCode(code=data, dtype=dtype)
+                symbols = list(code.code)  # this is garbage, must be replaced
+                return Molecule(identifiers={dtype: data}, symbols=symbols)
+            except Exception as e:
+                raise ValueError(
+                    f"Failed in interpreting {data} as a valid code. Exception: {e}"
+                )
         elif isinstance(data, dict):
             kwargs.update(data)
             return cls(**kwargs)
