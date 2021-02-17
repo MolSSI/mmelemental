@@ -1,15 +1,8 @@
 from mmelemental.models.base import Base
-from pydantic import validator, Field, ValidationError
+from pydantic import Field, ValidationError
 from mmelemental.util.decorators import require
+from typing import Optional
 import os
-
-try:
-    from rdkit import rdBase, Chem
-
-    if not os.environ.get("debugMMC"):
-        rdBase.DisableLog("rdApp.error")
-except ImportError:
-    Chem = None
 
 
 class ChemCode(Base):
@@ -17,6 +10,9 @@ class ChemCode(Base):
         ...,
         description="A chemical code that describes a molecule or molecular pattern e.g. smiles, smarts, etc. "
         "See the :class:``Identifiers`` class for supported codes.",
+    )
+    dtype: Optional[str] = Field(
+        None, description="Data type e.g. smiles, smarts, etc. "
     )
 
     class _CodesSupported:
@@ -29,12 +25,17 @@ class ChemCode(Base):
             "Sequence",
         )  # must replace with Identifiers
 
-    @require("rdkit")
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    @validator("code")
+    def __repr__(self):
+        return self.code
+
+    @require("rdkit")
+    # @validator("code")
     def valid_code(cls, code):
+        from rdkit import Chem
+
         for ccode in ChemCode._CodesSupported.codes:
             function = getattr(Chem, f"MolFrom{ccode}")
             if function(code):
@@ -42,7 +43,10 @@ class ChemCode(Base):
         raise ValidationError
 
     @property
-    def code_type(self):
+    @require("rdkit")
+    def guess_dtype(self):
+        from rdkit import Chem
+
         for ccode in ChemCode._CodesSupported.codes:
             function = getattr(Chem, f"MolFrom{ccode}")
             if function(self.code):
