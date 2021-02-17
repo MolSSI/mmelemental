@@ -4,7 +4,7 @@ from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import Base
-
+from .sm_ensem import Microstate
 
 __all__ = ["Trajectory", "Frame"]
 
@@ -16,48 +16,17 @@ class TrajReaderInput(Base):
     )
 
 
-class Frame(Base):
-    geometry: Optional[Array[float]] = Field(
-        ..., description="Atomic positions of length natoms. Default unit is Angstroms."
-    )
-    geometry_units: Optional[str] = Field(
-        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
-    )
-    velocities: Optional[Array[float]] = Field(
-        None,
-        description="Atomic velocities of length natoms. Default unit is Angstroms/femotoseconds.",
-    )
-    velocities_units: Optional[str] = Field(
-        "angstrom/fs",
-        description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
-    )
-    forces: Optional[Array[float]] = Field(
-        None, description="Atomic forces of length natoms. KiloJoules/mol.Angstroms."
-    )
-    forces_units: Optional[str] = Field(
-        "kJ/(mol*angstrom)",
-        description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
-    )
-    pot_energy: Optional[Array[float]] = Field(
-        None,
-        description="Total system potential energy. Default unit is KiloJoules/mol.",
-    )
-    pot_energy_units: Optional[str] = Field(
-        "kJ/mol", description="Potential energy units. Defaults to KiloJoules/mol."
-    )
-    timestep: Optional[float] = Field(
+class Frame(Microstate):
+    timestep: float = Field(
         None, description="Timestep size. Default unit is femtoseconds."
     )
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
-    score: Optional[float] = Field(
-        None, description="Ligand score used in docking simulations."
-    )
 
 
 class Trajectory(Base):
-    top: Optional[Union[List[Molecule], Molecule]] = Field(
+    mol: Optional[Union[List[Molecule], Molecule]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
