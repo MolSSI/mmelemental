@@ -10,7 +10,7 @@ class SimInput(Base):
     """ Basic model for molecular simulation input parameters."""
 
     # System fields
-    mol: Union[Molecule, Dict[str, Molecule]] = Field(
+    mol: Dict[str, Molecule] = Field(
         None,
         description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
         "Example: mol = {'ligand': Molecule, 'receptor': Molecule, 'solvent': Molecule}.",
@@ -19,7 +19,7 @@ class SimInput(Base):
         None,
         description="Cell dimensions in the form: ((xmin, ymin, ...), (xmax, ymax, ...))",
     )
-    forcefield: Tuple[ForceField] = Field(
+    forcefield: Dict[str, ForceField] = Field(
         None, description='Forcefield object(s) for every Molecule defined in "mol".'
     )
     boundary: Tuple[str] = Field(
