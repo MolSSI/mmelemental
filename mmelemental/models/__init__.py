@@ -1,1 +1,1 @@
-from . import trajectory, chem, molecule, app, solvent, util, forcefield
+from . import collect, chem, molecule, app, solvent, util, forcefield
