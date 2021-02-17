@@ -4,7 +4,7 @@ Basic sanity test for the mmelemental package.
 # import pytest
 import mmelemental
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models.molecule import Molecule
 
 
 def test_mmelemental_imported():
