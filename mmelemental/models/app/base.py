@@ -37,15 +37,15 @@ class SimInput(Base):
         None, description="Step size e.g. timestep, minimization step size, etc."
     )
 
-    # Bonds fields
-    constraints: Union[Tuple[str], str] = Field(
-        None, description="Groups of atoms/bonds/angles/etc. to constrain e.g. h-bonds."
+    # Constraint fields
+    bond_const: Optional[Dict[str, List[int]]] = Field(
+        None, description="Specifies which bonds/angles/etc. in a molecule are constrained specified by their indices. E.g bond_const = {'solvent': [0,2,6]}."
     )
-    constraints_method: Union[Tuple[str], str] = Field(
+    bond_const_method: Optional[str] = Field(
         None,
         description="Method used to constraint what's defined in 'constraints' e.g. LINCS or SHAKE.",
     )
-    constraints_tol: float = Field(
+    bond_const_tol: Optional[float] = Field(
         None, description="Tolerance used for constraint self-consistency."
     )
 
