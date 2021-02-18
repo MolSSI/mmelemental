@@ -3,7 +3,7 @@ from mmelemental.models.base import Base
 from mmelemental.models.molecule import Molecule
 from mmelemental.models.collect import Ensemble, Trajectory
 from pydantic import Field
-from typing import List, Optional, Tuple, Union
+from typing import List, Dict, Optional, Tuple, Union
 
 
 class DockInput(SimInput):
