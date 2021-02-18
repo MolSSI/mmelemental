@@ -1,5 +1,5 @@
 from pydantic import Field
-from typing import Union, Optional, List, Dict
+from typing import Union, Optional, List, Dict, Any
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import Base
@@ -37,6 +37,11 @@ class Microstate(Base):
     pot_energy_units: Optional[str] = Field(
         "kJ/mol", description="Potential energy units. Defaults to KiloJoules/mol."
     )
+    observables: Optional[Dict[str, Any]] = Field(
+        None,
+        description="Observables or physical variables not accounted in the schema \
+            e.g. ligand scores used in docking simulations.",
+    )
 
 
 class Ensemble(Base):
@@ -48,7 +53,4 @@ class Ensemble(Base):
         None,
         description="Similar to Molecule but without the connectivity. Provides improved efficiency over the \
             latter. See :class:``Microstate``.",
-    )
-    scores: Optional[Array[float]] = Field(
-        None, description="Ligand scores used in docking simulations."
     )
