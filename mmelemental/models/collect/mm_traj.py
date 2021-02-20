@@ -3,13 +3,13 @@ from typing import Union, Optional, Tuple, List, Dict, Any
 from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from .sm_ensem import Microstate
 
 __all__ = ["Trajectory", "Frame"]
 
 
-class TrajReaderInput(Base):
+class TrajReaderInput(ProtoModel):
     traj: Union[FileInput, str] = Field(..., description="Trajectory input filename.")
     top: Optional[Union[FileInput, str]] = Field(
         ..., description="Topology input filename."
@@ -25,7 +25,7 @@ class Frame(Microstate):
     )
 
 
-class Trajectory(Base):
+class Trajectory(ProtoModel):
     mol: Optional[Union[List[Molecule], Molecule]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",

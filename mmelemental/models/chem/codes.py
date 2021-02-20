@@ -1,11 +1,11 @@
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from pydantic import Field, ValidationError
 from mmelemental.util.decorators import require
 from typing import Optional
 import os
 
 
-class ChemCode(Base):
+class ChemCode(ProtoModel):
     code: str = Field(
         ...,
         description="A chemical code that describes a molecule or molecular pattern e.g. smiles, smarts, etc. "

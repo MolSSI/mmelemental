@@ -1,11 +1,11 @@
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from mmelemental.models.app.base import SimInput
 from pydantic import Field
 from typing import Any, Tuple
 import os
 
 
-class SimWriterInput(Base):
+class SimWriterInput(ProtoModel):
     model: SimInput = Field(..., description="Simulation schema model.")
     engine: Tuple[str, Any] = Field(
         ..., description="Name of simulation engine and version: (engine_name, x.x.x)."

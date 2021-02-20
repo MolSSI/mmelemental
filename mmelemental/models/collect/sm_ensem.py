@@ -2,13 +2,13 @@ from pydantic import Field
 from typing import Union, Optional, List, Dict, Any
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 
 
 __all__ = ["Microstate", "Ensemble"]
 
 
-class Microstate(Base):
+class Microstate(ProtoModel):
     geometry: Optional[Array[float]] = Field(
         ..., description="Atomic positions of length natoms. Default unit is Angstroms."
     )
@@ -44,7 +44,7 @@ class Microstate(Base):
     )
 
 
-class Ensemble(Base):
+class Ensemble(ProtoModel):
     mol: Optional[Union[List[Molecule], Molecule]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",

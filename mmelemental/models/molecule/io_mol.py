@@ -1,4 +1,4 @@
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
@@ -10,7 +10,7 @@ import abc
 __all__ = ["MolInput", "MolOutput"]
 
 
-class MolIO(Base, abc.ABC):
+class MolIO(ProtoModel, abc.ABC):
     code: Optional[Union[ChemCode, str]] = Field(
         None,
         description="Chemical code object that stores a smiles, smarts, etc. code. See :class:``Identifiers``.",

@@ -35,23 +35,15 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
     }
 
 
-class Base(models.ProtoModel):
+class ProtoModel(models.ProtoModel):
     provenance: Provenance = Field(
         provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
 
-    class Config(models.ProtoModel.Config):
-        canonical_repr = True
-        # extra = "allow"
 
-
-class Nothing(Base):
-    ...
-
-
-class ToolkitModel(Base, abc.ABC):
+class ToolkitModel(ProtoModel, abc.ABC):
     """ An abstract base class that acts as a wrapper for toolkit molecules """
 
     data: Any = Field(
@@ -104,6 +96,15 @@ class ToolkitModel(Base, abc.ABC):
             Additional kwargs to pass to the constructor.
         """
         raise NotImplementedError
+
+    @classmethod
+    @abc.abstractclassmethod
+    def isvalid(cls, data):
+        raise NotImplementedError
+
+    @validator("data")
+    def valid_data(cls, data):
+        return cls.isvalid(data)
 
     @property
     def toolkit(self) -> str:

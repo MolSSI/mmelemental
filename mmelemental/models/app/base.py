@@ -1,12 +1,14 @@
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field
 from typing import Tuple, List, Union, Dict, Optional
 
+__all__ = ["SimInput", "SimOutput"]
 
-class SimInput(Base):
+
+class SimInput(ProtoModel):
     """ Basic model for molecular simulation input parameters."""
 
     # System fields
@@ -39,7 +41,8 @@ class SimInput(Base):
 
     # Constraint fields
     bond_const: Optional[Dict[str, List[int]]] = Field(
-        None, description="Specifies which bonds/angles/etc. in a molecule are constrained specified by their indices. E.g bond_const = {'solvent': [0,2,6]}."
+        None,
+        description="Specifies which bonds/angles/etc. in a molecule are constrained specified by their indices. E.g bond_const = {'solvent': [0,2,6]}.",
     )
     bond_const_method: Optional[str] = Field(
         None,
@@ -79,3 +82,9 @@ class SimInput(Base):
         None, description="Frequency of writing to restart output file."
     )
     restart_file: str = Field(None, description="Name of restart output file.")
+
+
+class SimOutput(ProtoModel):
+    """ Basic model for molecular simulation output."""
+
+    ...

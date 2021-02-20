@@ -1,5 +1,5 @@
 from typing import List, Optional, Union
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from pydantic import validator, Field
 import os
 
@@ -7,7 +7,7 @@ from .output import FileOutput
 from pathlib import Path
 
 
-class FileInput(Base):
+class FileInput(ProtoModel):
     """ A model that represents system files that may or may not exist at the time of object insantiation. """
 
     path: str = Field(..., description="File path, relative or absolute.")
@@ -52,7 +52,7 @@ class FileInput(Base):
             raise Exception
 
 
-class CmdInput(Base):
+class CmdInput(ProtoModel):
     fileInput: Union[FileInput, List[FileInput]] = Field(
         ...,
         description="FileInput object or list of FileInut objects. See the :class: ``FileInput``.",

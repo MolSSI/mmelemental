@@ -1,16 +1,16 @@
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from typing import Optional
 from pydantic import validator, Field
 from pathlib import Path
 import os
 
 
-class CmdOutput(Base):
+class CmdOutput(ProtoModel):
     stdout_: str = Field(..., description="Standard output.")
     stderr_: Optional[str] = Field(None, description="Standard error.")
     log_: Optional[str] = Field(None, description="Logging output")
 
-    class Config(Base.Config):
+    class Config(ProtoModel.Config):
         fields = {"stdout_": "stdout", "stderr_": "stderr", "log_": "log"}
 
     @property
@@ -31,7 +31,7 @@ class CmdOutput(Base):
         return super().dict(*args, **kwargs)
 
 
-class FileOutput(Base):
+class FileOutput(ProtoModel):
     """ Model for writing output to files. No file is created if "write" method is not invoked. """
 
     path: str = Field(..., description="Output filename path. ")
@@ -92,7 +92,7 @@ class FileOutput(Base):
             raise Exception
 
 
-class ComputeOutput(Base):
+class ComputeOutput(ProtoModel):
     cmdout: Optional[CmdOutput] = Field(
         None,
         description="Command-line output class which provides stdout, stderr, and log info.",

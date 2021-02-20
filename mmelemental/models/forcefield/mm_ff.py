@@ -4,7 +4,7 @@ from typing import Any, Tuple, Union, List, Dict, Optional
 from qcelemental.models.types import Array
 
 # Import MM models
-from mmelemental.models.base import Base
+from mmelemental.models.base import ProtoModel
 from mmelemental.models.base import ToolkitModel
 from mmelemental.models.util.output import FileOutput
 
@@ -15,7 +15,7 @@ from mmelemental.components.trans import TransComponent
 __all__ = ["ForceField"]
 
 
-class Bonds(Base):
+class Bonds(ProtoModel):
     length: Optional[Array[float]] = Field(
         None, description="Bond equilibrium lengths. Default unit is Angstroms."
     )
@@ -35,7 +35,7 @@ class Bonds(Base):
     )
 
 
-class Angles(Base):
+class Angles(ProtoModel):
     angle: Optional[Array[float]] = Field(
         None, description="Equilibrium angles. Default unit is degrees."
     )
@@ -55,7 +55,7 @@ class Angles(Base):
     )
 
 
-class Dihedrals(Base):
+class Dihedrals(ProtoModel):
     dihedrals: Optional[Array[Array[float]]] = Field(
         None,
         description="Dihedral/torsion parameters: eq energy, phase in degrees, extra params.",
@@ -66,7 +66,7 @@ class Dihedrals(Base):
     )
 
 
-class ImproperDihedrals(Base):
+class ImproperDihedrals(ProtoModel):
     improper_dihedrals: Optional[Array[Array[float]]] = Field(
         None, description="Improper dihedral/torsion parameters."
     )
@@ -76,7 +76,7 @@ class ImproperDihedrals(Base):
     )
 
 
-class NonBonded(Base):
+class NonBonded(ProtoModel):
     epsilon: Optional[Array[float]] = Field(
         0,
         description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
@@ -104,7 +104,7 @@ class NonBonded(Base):
     charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
 
 
-class ForceField(Base):
+class ForceField(ProtoModel):
     bonds: Optional[Bonds] = Field(None, description="2-body covalent bond schema.")
     angles: Optional[Angles] = Field(None, description="3-body angular bond schema.")
     dihedrals: Optional[Dihedrals] = Field(

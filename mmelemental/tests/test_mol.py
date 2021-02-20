@@ -28,6 +28,7 @@ def test_mmelemental_moldata():
     mm_mol = Molecule.from_file(groFile, top=topFile)
     assert isinstance(mm_mol, Molecule)
 
+
 def test_mmelemental_moltop():
     groFile = "mmelemental/data/molecules/alanine.gro"
     topFile = "mmelemental/data/molecules/alanine.top"
