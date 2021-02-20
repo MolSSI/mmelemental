@@ -1,7 +1,7 @@
 import qcelemental
 from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
-from pydantic import Field, constr
+from pydantic import Field, constr, validator
 import importlib
 from pathlib import Path
 
@@ -66,93 +66,97 @@ class Molecule(qcelemental.models.Molecule):
             f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_molecule_default}."
         ),
     )
-    symbols: Optional[Array[str]] = Field(
+    symbols: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    masses_units: Optional[str] = Field(
+    masses_units: Optional[str] = Field(  # type: ignore
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
     )
-    molecular_charge_units: Optional[str] = Field(
+    molecular_charge_units: Optional[str] = Field(  # type: ignore
         "eV", description="Units for molecular charge. Defaults to electron Volt."
     )
-    geometry: Optional[Array[float]] = Field(
+    geometry: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. "
         "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
         "or the serialized version of the array in (3*natom,) shape; all forms will be reshaped to "
         "(natom,3) for this attribute. Default unit is Angstroms.",
     )
-    geometry_units: Optional[str] = Field(
+    geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[float]] = Field(
+    velocities: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
         "(natoms,3) for this attribute. Default unit is Angstroms/femtoseconds.",
     )
-    velocities_units: Optional[str] = Field(
+    velocities_units: Optional[str] = Field(  # type: ignore
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
-    forces: Optional[Array[float]] = Field(
+    forces: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
         "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
         "(natoms,3) for this attribute. Default unit is KiloJoules/mol.Angstroms.",
     )
-    forces_units: Optional[str] = Field(
+    forces_units: Optional[str] = Field(  # type: ignore
         "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
     )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
         None, description="Bond angles in degrees for three connected atoms."
     )
-    dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
+    dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(  # type: ignore
         None,
         description="Dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
     )
-    improper_dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(
+    improper_dihedrals: Optional[
+        List[Tuple[int, int, int, int, int]]
+    ] = Field(  # type: ignore
         None,
         description="Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
     )
-    residues: Optional[List[Tuple[str, int]]] = Field(
+    residues: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
         None,
         description="A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
         "of a polymer. Order follows atomic indices from 0 till Natoms-1. Residue number starts from 1."
         "\n"
         "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1.",
     )
-    chains: Optional[Dict[str, List[int]]] = Field(
+    chains: Optional[Dict[str, List[int]]] = Field(  # type: ignore
         None,
         description="A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
         "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
     )
-    segments: Optional[Dict[str, List[int]]] = Field(None, description="...")
-    names: Optional[Union[List[str], Array[str]]] = Field(
+    segments: Optional[Dict[str, List[int]]] = Field(
+        None, description="..."
+    )  # type: ignore
+    names: Optional[Union[List[str], Array[str]]] = Field(  # type: ignore
         None, description="A list of atomic label names."
     )
-    identifiers: Optional[Identifiers] = Field(
+    identifiers: Optional[Identifiers] = Field(  # type: ignore
         None,
         description="An optional dictionary of additional identifiers by which this Molecule can be referenced, "
         "such as INCHI, SMILES, SMARTS, etc. See the :class:``Identifiers`` model for more details.",
     )
-    rotateBonds: Optional[List[Tuple[int, int]]] = Field(
+    connectivity_: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
         None,
-        description="A list of bonded atomic indices: (atom1, atom2), specifying rotatable bonds in the molecule.",
+        description="A list of bonds within the molecule. Each entry is a tuple "
+        "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "Bonds may be freely reordered and inverted.",
+        min_items=1,
     )
-    rigidBonds: Optional[List[Tuple[int, int]]] = Field(
-        None,
-        description="A list of bonded atomic indices: (atom1, atom2), specifying rigid bonds in the molecule.",
-    )
-    provenance: Provenance = Field(
+    provenance: Provenance = Field(  # type: ignore
         provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
@@ -166,7 +170,6 @@ class Molecule(qcelemental.models.Molecule):
         **kwargs : Any
             The values of the Molecule object attributes.
         """
-
         kwargs["schema_name"] = kwargs.pop("schema_name", "mmschema_molecule")
         kwargs["schema_version"] = kwargs.pop("schema_version", 0)
 
@@ -201,6 +204,15 @@ class Molecule(qcelemental.models.Molecule):
             from qcelemental.molparse.to_string import formula_generator
 
             values["name"] = formula_generator(values["symbols"])
+
+    @validator("*", pre=True)
+    def emptyIsNone(cls, v, values):
+        """ 
+        Makes sure empty lists or tuples are converted to None.
+        """
+        if isinstance(v, List) or isinstance(v, Tuple):
+            return v if v else None
+        return v
 
     # Constructors
     @classmethod
