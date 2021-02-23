@@ -1,5 +1,4 @@
 pydantic==1.7.3
-qcelemental==0.17.0
+qcelemental==0.18.0
 qcengine==0.17.0
-parmed==3.2.0
 MDAnalysis==1.0.0
