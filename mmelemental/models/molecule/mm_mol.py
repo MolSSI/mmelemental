@@ -335,7 +335,7 @@ class Molecule(qcelemental.models.Molecule):
             dtype = qcelemental.models.molecule._extension_map[ext]
             super().to_file(
                 filename, dtype, **kwargs
-            )  # replace this with openbabel that can handle xyz files
+            )  # qcelemental handles serialization
         else:  # look for an installed mmic_translator
             translator = TransComponent.find_molwrite_tk(ext)
             tkmol = self._tkFromSchema(translator=translator, **kwargs)
