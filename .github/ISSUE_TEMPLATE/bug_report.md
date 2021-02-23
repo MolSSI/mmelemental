@@ -18,8 +18,8 @@ hello world
 **Expected behavior**
 If applicable, a clear and concise description of what you expected to happen.
 
-**OS (please complete the following information):**
- - Name & version: [e.g. GNU/Linux Ubuntu 20.04]
+**System info**
+ - OS & version: [e.g. GNU/Linux Ubuntu 20.04]
  - Interpreter/compiler & version: [e.g. CPython 3.8.6]
 
 **Additional context**
