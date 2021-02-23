@@ -3,6 +3,8 @@ from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator
 import importlib
 from pathlib import Path
+import hashlib
+import json
 
 # Import MM models
 from mmelemental.models.util.output import FileOutput
@@ -16,6 +18,12 @@ from mmelemental.components.trans import TransComponent
 
 __all__ = ["Molecule"]
 
+# Rounding quantities for hashing
+GEOMETRY_NOISE = 8
+VELOCITY_NOISE = 8
+FORCE_NOISE = 8
+MASS_NOISE = 6
+CHARGE_NOISE = 4
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
     """
@@ -51,7 +59,7 @@ mmschema_molecule_default = "mmschema_molecule"
 class Molecule(qcelemental.models.Molecule):
     """A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
     connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
-    Molecule objects geometry, masses, and charges are truncated to 8, 6, and 4 decimal places respectively
+    Charges, masses, geometry, velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively
     to assist with duplicate detection.
     """
 
@@ -210,6 +218,95 @@ class Molecule(qcelemental.models.Molecule):
         if isinstance(v, List) or isinstance(v, Tuple):
             return v if v else None
         return v
+
+    def __eq__(self, other):
+        """
+        Checks if two molecules are identical. This is a molecular identity defined
+        by scientific terms, and not programing terms, so it's less rigorous than
+        a programmatic equality or a memory equivalent `is`.
+        """
+
+        if isinstance(other, dict):
+            other = Molecule(**other)
+        elif isinstance(other, Molecule):
+            pass
+        else:
+            raise TypeError(f"Comparison molecule not understood of type '{type(other)}'.")
+
+        return self.get_hash() == other.get_hash()
+
+    def pretty_print(self):
+        """Prints the molecule. Not sure yet what this is used for, but I have modified the
+        original implementation in qcelemental.
+        Returns
+        -------
+        str
+            Molecule representation in terms of its total charge and coordinates (geometry).
+        """
+        text = ""
+
+        text += """    Geometry (in {0:s}), charge = {1:.1f} (in {2:s}):\n\n""".format(
+            self.geometry_units, self.molecular_charge, self.molecular_charge_units
+        )
+        text += """       Center              X                  Y                   Z       \n"""
+        text += """    ------------   -----------------  -----------------  -----------------\n"""
+
+        for i in range(len(self.geometry)):
+            text += """    {0:8s}{1:4s} """.format(self.symbols[i], "" if self.real[i] else "(Gh)")
+            for j in range(3):
+                text += """  {0:17.12f}""".format(
+                    self.geometry[i][j]
+                )
+            text += "\n"
+
+        return text
+
+    @property
+    def hash_fields(self):
+        return [
+            "symbols",
+            "masses",
+            "molecular_charge",
+            "molecular_multiplicity",
+            "real",
+            "geometry",
+            "velocities",
+            "forces",
+            "fragments",
+            "fragment_charges",
+            "fragment_multiplicities",
+            "connectivity",
+        ]
+
+    def get_hash(self):
+        """
+        Returns the hash of the molecule.
+        """
+
+        m = hashlib.sha1()
+        concat = ""
+
+        # np.set_printoptions(precision=16)
+        for field in self.hash_fields:
+            data = getattr(self, field)
+            if data is not None:
+                if field == "geometry":
+                    data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+                elif field == "velocities":
+                    data = qcelemental.models.molecule.float_prep(data, VELOCITY_NOISE)
+                elif field == "forces":
+                    data = qcelemental.models.molecule.float_prep(data, FORCE_NOISE)
+                elif field == "fragment_charges":
+                    data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
+                elif field == "molecular_charge":
+                    data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
+                elif field == "masses":
+                    data = qcelemental.models.molecule.float_prep(data, MASS_NOISE)
+
+                concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+
+        m.update(concat.encode("utf-8"))
+        return m.hexdigest()
 
     # Constructors
     @classmethod
