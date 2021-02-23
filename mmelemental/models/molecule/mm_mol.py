@@ -1,12 +1,10 @@
 import qcelemental
-from qcelemental.models.types import Array
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator
 import importlib
 from pathlib import Path
 
 # Import MM models
-from mmelemental.models.molecule.io_mol import MolInput, MolOutput
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
@@ -14,7 +12,6 @@ from mmelemental.models.base import Provenance, provenance_stamp
 
 # Import MM components
 from mmelemental.components.trans import TransComponent
-from mmic.components.blueprints.generic_component import GenericComponent
 
 
 __all__ = ["Molecule"]
@@ -66,7 +63,7 @@ class Molecule(qcelemental.models.Molecule):
             f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_molecule_default}."
         ),
     )
-    symbols: Optional[Array[str]] = Field(  # type: ignore
+    symbols: Optional[qcelemental.models.types.Array[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
@@ -80,7 +77,7 @@ class Molecule(qcelemental.models.Molecule):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "eV", description="Units for molecular charge. Defaults to electron Volt."
     )
-    geometry: Optional[Array[float]] = Field(  # type: ignore
+    geometry: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. "
         "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
@@ -90,7 +87,7 @@ class Molecule(qcelemental.models.Molecule):
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[float]] = Field(  # type: ignore
+    velocities: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
@@ -101,7 +98,7 @@ class Molecule(qcelemental.models.Molecule):
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
-    forces: Optional[Array[float]] = Field(  # type: ignore
+    forces: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. "
         "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
@@ -140,7 +137,7 @@ class Molecule(qcelemental.models.Molecule):
     segments: Optional[Dict[str, List[int]]] = Field(
         None, description="..."
     )  # type: ignore
-    names: Optional[Union[List[str], Array[str]]] = Field(  # type: ignore
+    names: Optional[List[str]] = Field(  # type: ignore
         None, description="A list of atomic label names."
     )
     identifiers: Optional[Identifiers] = Field(  # type: ignore
@@ -241,7 +238,6 @@ class Molecule(qcelemental.models.Molecule):
             A constructed Molecule class.
         """
         file_ext = Path(filename).suffix if filename else None
-        top_ext = Path(top_filename).suffix if top_filename else None
 
         if file_ext in qcelemental.models.molecule._extension_map:
             if top_filename:
