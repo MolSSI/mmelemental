@@ -16,24 +16,38 @@ from mmelemental.components.io.constructor_component import (
 )
 
 
+translators = mmelemental.components.trans.TransComponent.installed()
+
+
+def pytest_generate_tests(metafunc):
+    if "translator" in metafunc.fixturenames:
+        metafunc.parametrize("translator", translators)
+
+
 def test_mmelemental_imported():
     """Sample test, will always pass so long as import statement worked"""
     assert "mmelemental" in sys.modules
 
 
-def test_mmelemental_moldata():
+def test_mmelemental_moldata(translator):
     groFile = "mmelemental/data/molecules/alanine.gro"
-    topFile = "mmelemental/data/molecules/alanine.top"
 
-    mm_mol = Molecule.from_file(groFile, top=topFile)
+    mm_mol = Molecule.from_file(groFile, translator=translator)
     assert isinstance(mm_mol, Molecule)
 
 
-def test_mmelemental_moltop():
-    groFile = "mmelemental/data/molecules/alanine.gro"
+def test_mmelemental_moltop(translator):
     topFile = "mmelemental/data/molecules/alanine.top"
-    # top = parmed.gromacs.GromacsTopologyFile(topFile.path)
-    return Molecule.from_file(groFile, top=topFile)
+    groFile = "mmelemental/data/molecules/alanine.gro"
+
+    import importlib
+    from pathlib import Path
+
+    mod = importlib.import_module(translator)
+
+    if Path(topFile).suffix in mod.ffread_ext_maps:
+        mm_mol = Molecule.from_file(groFile, topFile, translator=translator)
+        assert mm_mol.connectivity is not None
 
 
 @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
@@ -43,11 +57,11 @@ def test_mmelemental_codes():
     return MolConstructorComponent.compute(inputs)
 
 
-def test_mmelemental_molfiles():
+def test_mmelemental_mol_tofile(translator):
     for ext in ["pdb", "gro"]:
         pdbFile = f"mmelemental/data/molecules/alanine.{ext}"
 
-        mol = Molecule.from_file(pdbFile)
+        mol = Molecule.from_file(pdbFile, translator=translator)
 
         mol.to_file("mol.pdb")
         # mol.to_file("mol.gro") -> broken in mmic_parmed, why?!
