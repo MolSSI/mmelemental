@@ -58,6 +58,8 @@ jobs:
 
     - name: Install pkg dependencies
       run: |
+        git clone https://github.com/ParmEd/parmed
+        cd parmed && pip install . && cd .. && rm -r parmed
         git clone https://github.com/MolSSI/mmic
         cd mmic && pip install . && cd .. && rm -rf mmic
         git clone https://github.com/MolSSI/mmic_mda
