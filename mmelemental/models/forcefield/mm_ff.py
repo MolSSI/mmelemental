@@ -1,6 +1,6 @@
 from pydantic import Field
 import importlib
-from typing import Any, Tuple, Union, List, Dict, Optional
+from typing import Any, List, Optional
 from qcelemental.models.types import Array
 
 # Import MM models
@@ -9,7 +9,6 @@ from mmelemental.models.base import ToolkitModel
 from mmelemental.models.util.output import FileOutput
 
 # Import MM components
-from mmic.components.blueprints.generic_component import GenericComponent
 from mmelemental.components.trans import TransComponent
 
 __all__ = ["ForceField"]
