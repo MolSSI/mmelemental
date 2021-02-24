@@ -25,6 +25,7 @@ FORCE_NOISE = 8
 MASS_NOISE = 6
 CHARGE_NOISE = 4
 
+
 class Identifiers(qcelemental.models.molecule.Identifiers):
     """
     An extension of the qcelemental.models.molecule.Identifiers for RDKit constructors.
@@ -231,7 +232,9 @@ class Molecule(qcelemental.models.Molecule):
         elif isinstance(other, Molecule):
             pass
         else:
-            raise TypeError(f"Comparison molecule not understood of type '{type(other)}'.")
+            raise TypeError(
+                f"Comparison molecule not understood of type '{type(other)}'."
+            )
 
         return self.get_hash() == other.get_hash()
 
@@ -252,11 +255,11 @@ class Molecule(qcelemental.models.Molecule):
         text += """    ------------   -----------------  -----------------  -----------------\n"""
 
         for i in range(len(self.geometry)):
-            text += """    {0:8s}{1:4s} """.format(self.symbols[i], "" if self.real[i] else "(Gh)")
+            text += """    {0:8s}{1:4s} """.format(
+                self.symbols[i], "" if self.real[i] else "(Gh)"
+            )
             for j in range(3):
-                text += """  {0:17.12f}""".format(
-                    self.geometry[i][j]
-                )
+                text += """  {0:17.12f}""".format(self.geometry[i][j])
             text += "\n"
 
         return text
