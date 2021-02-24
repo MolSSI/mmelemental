@@ -275,7 +275,7 @@ class ForceField(ProtoModel):
 
         fileobj = FileOutput(path=filename)
         dtype = dtype or fileobj.ext
-        translator = TransComponent.find_molread_tk(dtype)
+        translator = TransComponent.find_ffread_tk(dtype)
 
         if not translator:
             raise ValueError(
