@@ -318,7 +318,8 @@ class Molecule(qcelemental.models.Molecule):
         filename: str,
         top_filename: Optional[str] = None,
         dtype: Optional[str] = None,
-        **kwargs,
+        translator: Optional[str] = None,
+        **kwargs: Optional[Dict[str, Any]],
     ) -> "Molecule":
         """
         Constructs a Molecule object from a file.
@@ -330,7 +331,11 @@ class Molecule(qcelemental.models.Molecule):
             The topology i.e. connectivity filename to read
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
-        **kwargs
+        translator: Optional[str], optional
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
+            MMElemental attempts to find an appropriate translator if it is registered 
+            in the :class:``TransComponent`` class. 
+        **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor
         Returns
         -------
@@ -360,9 +365,54 @@ class Molecule(qcelemental.models.Molecule):
 
             return cls.from_data(data, dtype=dtype, **kwargs)
 
-        tkmol = cls._tkFromFile(
-            filename=filename, top_filename=top_filename, dtype=dtype
+        fileobj = FileOutput(path=filename) if filename else None
+        top_fileobj = FileOutput(path=top_filename) if top_filename else None
+
+        dtype = dtype or fileobj.ext.strip(".")
+        ext = "." + dtype
+
+        if not translator:
+            from mmelemental.components.trans.supported import reg_trans
+
+            reg_trans = list(reg_trans)
+
+            while not translator:
+                translator = TransComponent.find_molread_tk(ext, trans=reg_trans)
+                if not translator:
+                    raise ValueError(
+                        f"Could not read xyz file with ext {ext}. Please install an appropriate translator."
+                    )
+                # Make sure we can import the translator module
+                if importlib.util.find_spec(translator):
+                    mod = importlib.import_module(translator)
+
+                # If top if supplied, make sure the translator supports the top file extension
+                if top_fileobj:
+                    top_ext = top_fileobj.ext
+                    if top_ext not in mod.ffread_ext_maps:
+                        reg_trans.remove(translator)
+                        translator = None
+                    if not len(reg_trans):
+                        raise ValueError(
+                            f"Could not read xyz and top files with exts {ext} and {top_ext}. \
+                            Please install an appropriate translator."
+                        )
+        elif importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+
+        tkmol_class = mod._classes_map.get("Molecule")
+
+        if not tkmol_class:
+            raise ValueError(
+                f"No Molecule model found while looking in translator: {translator}."
+            )
+
+        tkmol = tkmol_class.from_file(
+            filename=fileobj.abs_path if fileobj else None,
+            top_filename=top_fileobj.abs_path if top_fileobj else None,
+            dtype=dtype,
         )
+
         return cls.from_data(tkmol, dtype=tkmol.dtype, **kwargs)
 
     @classmethod
@@ -380,7 +430,7 @@ class Molecule(qcelemental.models.Molecule):
             Data to construct Molecule from such as a data object (e.g. MDAnalysis.Universe) or dict.
         dtype: str, optional
             How to interpret the data, if not passed attempts to discover this based on input type.
-        **kwargs
+        **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructors.
         Returns
         -------
@@ -411,7 +461,7 @@ class Molecule(qcelemental.models.Molecule):
         filename: str,
         dtype: Optional[str] = None,
         translator: Optional[str] = None,
-        **kwargs,
+        **kwargs: Optional[Dict[str, Any]],
     ) -> None:
         """Writes the Molecule to a file.
         Parameters
@@ -422,9 +472,10 @@ class Molecule(qcelemental.models.Molecule):
             The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
             file extension if not provided.
         translator: Optional[str], optional
-            Translator name e.g. mmic_parmed. If unset, MMElemental attempts to find an appropriate 
-            translator if it is registered in the :class:``TransComponent`` class. 
-        **kwargs
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
+            MMElemental attempts to find an appropriate translator if it is registered 
+            in the :class:``TransComponent`` class. 
+        **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
         """
         if not dtype:
@@ -443,48 +494,25 @@ class Molecule(qcelemental.models.Molecule):
             )  # qcelemental handles serialization
         else:  # look for an installed mmic_translator
             translator = TransComponent.find_molwrite_tk(ext)
-            tkmol = self._tkFromSchema(translator=translator, **kwargs)
+            tkmol = self.to_data(translator=translator, **kwargs)
             tkmol.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
     def to_data(
         self,
-        dtype: str,
+        dtype: Optional[str] = None,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> ToolkitModel:
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
         Parameters
         ----------
-        dtype: str
-            The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
-        translator: Optional[str], optional
-            Translator name e.g. mmic_rdkit. If unset, MMElemental attempts to find an appropriate 
-            translator if it is registered in the :class:``TransComponent`` class. 
-        **kwargs
-            Additional kwargs to pass to the constructor.
-        Returns
-        -------
-        ToolkitModel
-            Toolkit-specific molecule model
-        """
-        return self._tkFromSchema(dtype=dtype, translator=translator, **kwargs)
-
-    def _tkFromSchema(
-        self,
-        dtype: str = None,
-        translator: Optional[str] = None,
-        **kwargs: Optional[Dict[str, Any]],
-    ) -> ToolkitModel:
-        """Helper function that constructs a toolkit-specific molecule from MMSchema molecule.
-        Which toolkit-specific component is called depends on which package is installed on the system.
-        Parameters
-        ----------
         dtype: Optional[str], optional
             The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
         translator: Optional[str], optional
-            Translator name e.g. mmic_parmed. If unset, MMElemental attempts to find an appropriate 
-            translator if it is registered in the :class:``TransComponent`` class. 
-        **kwargs
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
+            MMElemental attempts to find an appropriate translator if it is registered 
+            in the :class:``TransComponent`` class. 
+        **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
         Returns
         -------
@@ -518,76 +546,3 @@ class Molecule(qcelemental.models.Molecule):
             raise NotImplementedError(
                 f"translator {translator} not available. Make sure it is properly installed."
             )
-
-    @classmethod
-    def _tkFromFile(
-        cls,
-        filename: str,
-        top_filename: Optional[str] = None,
-        dtype: Optional[str] = None,
-        translator: Optional[str] = None,
-        **kwargs: Optional[Dict[str, Any]],
-    ) -> ToolkitModel:
-        """Helper function that constructs a toolkit-specific molecule from an input file.
-        Which toolkit-specific component is called depends on which package is installed on the system.
-        Parameters
-        ----------
-        filename: str
-            Molecule file name. The file should define the molecule.
-        top_filename: Optional[str], optional
-            Topology file name. The file should define the molecular connectivity.
-        dtype: Optional[str], optional
-            The type of data file object to read e.g. gro, pdb, etc.
-        translator: Optional[str], optional
-            Translator name e.g. mmic_mda. If unset, MMElemental attempts to find an appropriate 
-            translator if it is registered in the :class:``TransComponent`` class. 
-            Additional kwargs to pass to the constructor.
-        Returns
-        -------
-        ToolkitModel
-        """
-
-        fileobj = FileOutput(path=filename) if filename else None
-        top_fileobj = FileOutput(path=top_filename) if top_filename else None
-
-        dtype = dtype or fileobj.ext
-
-        if not translator:
-            from mmelemental.components.trans.supported import reg_trans
-
-            reg_trans = list(reg_trans)
-
-            while not translator:
-                translator = TransComponent.find_molread_tk(dtype, trans=reg_trans)
-                if not translator:
-                    raise ValueError(
-                        f"Could not read xyz file with ext {dtype}. Please install an appropriate translator."
-                    )
-                # Make sure we can import the translator module
-                if importlib.util.find_spec(translator):
-                    mod = importlib.import_module(translator)
-
-                # If top if supplied, make sure the translator supports the top file extension
-                if top_fileobj:
-                    top_dtype = top_fileobj.ext
-                    if top_dtype not in mod.ffread_ext_maps:
-                        reg_trans.remove(translator)
-                        translator = None
-                    if not len(reg_trans):
-                        raise ValueError(
-                            f"Could not read xyz and top files with exts {dtype} and {top_dtype}. \
-                            Please install an appropriate translator."
-                        )
-
-        tkmol = mod._classes_map.get("Molecule")
-
-        if not tkmol:
-            raise ValueError(
-                f"No Molecule model found while looking in translator: {translator}."
-            )
-
-        return tkmol.from_file(
-            filename=fileobj.abs_path if fileobj else None,
-            top_filename=top_fileobj.abs_path if top_fileobj else None,
-            dtype=dtype.strip("."),
-        )
