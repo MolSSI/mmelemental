@@ -1,6 +1,8 @@
 from pydantic import Field
 import importlib
-from typing import Any, List, Optional
+import hashlib
+import json
+from typing import Any, List, Dict, Optional
 from qcelemental.models.types import Array
 
 # Import MM models
@@ -55,13 +57,22 @@ class Angles(ProtoModel):
 
 
 class Dihedrals(ProtoModel):
-    dihedrals: Optional[Array[Array[float]]] = Field(
-        None,
-        description="Dihedral/torsion parameters: eq energy, phase in degrees, extra params.",
+    angle: Optional[Array[float]] = Field(
+        None, description="Equilibrium angles. Default unit is degrees."
     )
-    dihedrals_type: Optional[List[str]] = Field(
+    angle_units: Optional[str] = Field(
+        "degrees", description="Equilibrium angle units."
+    )
+    spring: Optional[Array[float]] = Field(0, description="Dihedral spring constant. ")
+    spring_units: Optional[str] = Field(
+        "kJ/(mol*degrees**2)", description="Dihedral spring constant unit."
+    )
+    params: Optional[Array[float]] = Field(
         None,
-        description="Proper dihedral potential form e.g. harmonic, helix, fourier, etc.",
+        description="Extra or custom parameters for describing the dihedral potential.",
+    )
+    form: Optional[str] = Field(
+        None, description="Dihedral potential form e.g. harmonic, fourier, etc."
     )
 
 
@@ -141,25 +152,55 @@ class ForceField(ProtoModel):
 
     @classmethod
     def from_file(
-        cls, filename: str, dtype: Optional[str] = None, **kwargs
+        cls,
+        filename: str,
+        dtype: Optional[str] = None,
+        translator: Optional[str] = None,
+        **kwargs,
     ) -> "ForceField":
         """
         Constructs a ForceField object from a file.
         Parameters
         ----------
-        filename : str
+        filename: str
             The topology or FF filename to build from.
-        dtype : str, optional
-            The type of file to interpret. If not set, mmelemental attempts to discover the file type.
-        **kwargs
+        dtype: Optional[str], optional
+            The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.
+        translator: Optional[str], optional
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+        **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor.
         Returns
         -------
         ForceField
             A constructed ForceField object.
         """
-        tkmol = cls._tkFromFile(filename=filename, dtype=dtype)
-        return cls.from_data(tkmol, dtype=tkmol.dtype)
+
+        fileobj = FileOutput(path=filename)
+        dtype = dtype or fileobj.ext.strip(".")
+        ext = "." + dtype
+
+        if not translator:
+            translator = TransComponent.find_ffread_tk(ext)
+
+        if not translator:
+            raise ValueError(
+                f"Could not read file with ext {dtype}. Please install an appropriate TransComponent."
+            )
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+            tkff_class = mod._classes_map.get("ForceField")
+
+        if not tkff_class:
+            raise ValueError(
+                f"No ForceField model found while looking in translator: {translator}."
+            )
+
+        tkff = tkff_class.from_file(filename=fileobj.abs_path, dtype=dtype)
+
+        return cls.from_data(tkff, dtype=tkff.dtype)
 
     @classmethod
     def from_data(cls, data: Any, **kwargs) -> "ForceField":
@@ -169,7 +210,7 @@ class ForceField(ProtoModel):
         ----------
         data: Any
             Data to construct ForceField from.
-        **kwargs
+        **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructors.
         Returns
         -------
@@ -178,7 +219,13 @@ class ForceField(ProtoModel):
         """
         return data.to_schema(**kwargs)
 
-    def to_file(self, filename: str, dtype: Optional[str] = None, **kwargs) -> None:
+    def to_file(
+        self,
+        filename: str,
+        dtype: Optional[str] = None,
+        translator: Optional[str] = None,
+        **kwargs: Dict[str, Any],
+    ) -> None:
         """Writes the ForceField to a file.
         Parameters
         ----------
@@ -187,46 +234,42 @@ class ForceField(ProtoModel):
         dtype : Optional[str], optional
             The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
             file extension if not provided.
-        **kwargs
+        translator: Optional[str], optional
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+        **kwargs: Optional[str, Dict], optional
             Additional kwargs to pass to the constructor.
         """
         if not dtype:
             from pathlib import Path
 
             ext = Path(filename).suffix
+        else:
+            ext = "." + dtype
 
-        translator = TransComponent.find_ffwrite_tk(ext)
-        tkff = self._tkFromSchema(translator=translator, **kwargs)
-        tkff.to_file(filename, dtype=ext.strip("."), **kwargs)  # pass dtype?
+        if not translator:
+            translator = TransComponent.find_ffwrite_tk(ext)
 
-    def to_data(self, dtype: str, **kwargs) -> ToolkitModel:
-        """Converts ForceField to toolkit-specific forcefield object.
-        Parameters
-        ----------
-        dtype: str
-            The type of data object to convert to e.g. parmed, MDAnalysis, etc.
-        **kwargs
-            Additional kwargs to pass to the constructor.
-        Returns
-        -------
-        ToolkitModel
-            Toolkit-specific forcefield model
-        """
-        return self._tkFromSchema(dtype=dtype, **kwargs)
+        tkff = self.to_data(translator=translator, **kwargs)
+        tkff.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
-    def _tkFromSchema(
-        self, translator: str = None, dtype: str = None, **kwargs
+    def to_data(
+        self,
+        dtype: Optional[str] = None,
+        translator: Optional[str] = None,
+        **kwargs: Dict[str, Any],
     ) -> ToolkitModel:
         """
-        Helper function that constructs a toolkit-specific forcefield from MMSchema ForceField.
+        Constructs a toolkit-specific forcefield from MMSchema ForceField.
         Which toolkit-specific component is called depends on which package is installed on the system.
         Parameters
         ----------
-        translator: str, optional
-            Translator name e.g. mmic_mda, etc.
-        dtype: str, optional
+        translator: Optional[str], optional
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+        dtype: Optional[str], optional
             Data type e.g. MDAnalysis, parmed, etc.
-        **kwargs
+        **kwargs: Optional[Dict[str, Any]]
             Additional kwargs to pass to the constructors.
         Results
         -------
@@ -256,39 +299,52 @@ class ForceField(ProtoModel):
                 f"Translator {translator} not available. Make sure it is properly installed."
             )
 
-    @classmethod
-    def _tkFromFile(cls, filename: str, dtype: str = None, **kwargs) -> ToolkitModel:
-        """Helper function that constructs a toolkit-specific parameterized molecule from an input file.
-        Which toolkit-specific component is called depends on which package is installed on the system.
-        Parameters
-        ----------
-        filename: str
-            Topology file name. The file should define FF parameters.
-        dtype: str, optional
-            The type of data file object to read e.g. top, psf, etc.
-        **kwargs
-            Additional kwargs to pass to the constructor.
-        Returns
-        -------
-        ToolkitModel
+    def __eq__(self, other):
+        """
+        Checks if two molecules are identical. This is a molecular identity defined
+        by scientific terms, and not programing terms, so it's less rigorous than
+        a programmatic equality or a memory equivalent `is`.
         """
 
-        fileobj = FileOutput(path=filename)
-        dtype = dtype or fileobj.ext
-        translator = TransComponent.find_ffread_tk(dtype)
-
-        if not translator:
-            raise ValueError(
-                f"Could not read file with ext {dtype}. Please install an appropriate TransComponent."
+        if isinstance(other, dict):
+            other = Molecule(**other)
+        elif isinstance(other, Molecule):
+            pass
+        else:
+            raise TypeError(
+                f"Comparison molecule not understood of type '{type(other)}'."
             )
 
-        if importlib.util.find_spec(translator):
-            mod = importlib.import_module(translator)
-            tkff = mod._classes_map.get("ForceField")
+        return self.get_hash() == other.get_hash()
 
-        if not tkff:
-            raise ValueError(
-                f"No ForceField model found while looking in translator: {translator}."
-            )
+    @property
+    def hash_fields(self):
+        return [
+            "nonbonded",
+            "bonds",
+            "angles",
+            "dihedrals",
+            "im_dihedrals",
+            "exclusions",
+            "inclusions",
+        ]
 
-        return tkff.from_file(filename=fileobj.abs_path, dtype=dtype.strip("."))
+    def get_hash(self):
+        """
+        Returns the hash of the force field object.
+        """
+
+        m = hashlib.sha1()
+        concat = ""
+
+        # np.set_printoptions(precision=16)
+        for field in self.hash_fields:
+            data = getattr(self, field)
+            if data is not None:
+                # if field == "nonbonded":
+                #    data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+
+                concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+
+        m.update(concat.encode("utf-8"))
+        return m.hexdigest()
