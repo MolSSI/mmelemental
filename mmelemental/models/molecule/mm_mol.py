@@ -6,14 +6,14 @@ from pathlib import Path
 import hashlib
 import json
 
-# Import MM models
+# MM models
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.base import ToolkitModel
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import Provenance, provenance_stamp
 
-# Import MM components
-from mmelemental.components.trans import TransComponent
+# Generic translator component
+from mmic_translator.components import TransComponent
+from mmic_translator.models.base import ToolkitModel
 
 
 __all__ = ["Molecule"]
@@ -372,7 +372,7 @@ class Molecule(qcelemental.models.Molecule):
         ext = "." + dtype
 
         if not translator:
-            from mmelemental.components.trans.supported import reg_trans
+            from mmic_translator.components.supported import reg_trans
 
             reg_trans = list(reg_trans)
 
