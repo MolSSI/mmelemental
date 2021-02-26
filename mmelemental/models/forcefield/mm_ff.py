@@ -5,13 +5,13 @@ import json
 from typing import Any, List, Dict, Optional
 from qcelemental.models.types import Array
 
-# Import MM models
+# MM models
 from mmelemental.models.base import ProtoModel
-from mmelemental.models.base import ToolkitModel
 from mmelemental.models.util.output import FileOutput
 
-# Import MM components
-from mmelemental.components.trans import TransComponent
+# Generic translator component
+from mmic_translator.models.base import ToolkitModel
+from mmic_translator.components import TransComponent
 
 __all__ = ["ForceField"]
 
