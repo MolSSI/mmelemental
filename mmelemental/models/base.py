@@ -38,3 +38,9 @@ class ProtoModel(models.ProtoModel):
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
+
+    def dict(self, *args, **kwargs):
+        kwargs["by_alias"] = True
+        kwargs["exclude_unset"] = False
+        kwargs["exclude_none"] = True
+        return super().dict(*args, **kwargs)
