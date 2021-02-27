@@ -10,7 +10,7 @@ import numpy
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
 from .nonbonded import NonBonded
-from .bonded import Bonds, Angles
+from .bonded import Bonds, Angles, Dihedrals
 
 # Generic translator component
 from mmic_translator.models.base import ToolkitModel
@@ -21,28 +21,6 @@ mmschema_forcefield_default = "mmschema_forcefield"
 
 
 __all__ = ["ForceField"]
-
-
-class Dihedrals(ProtoModel):
-    angle: Optional[qcelemental.models.types.Array[float]] = Field(
-        None, description="Equilibrium angles. Default unit is degrees."
-    )
-    angle_units: Optional[str] = Field(
-        "degrees", description="Equilibrium angle units."
-    )
-    spring: Optional[qcelemental.models.types.Array[float]] = Field(
-        0, description="Dihedral spring constant. "
-    )
-    spring_units: Optional[str] = Field(
-        "kJ/(mol*degrees**2)", description="Dihedral spring constant unit."
-    )
-    params: Optional[qcelemental.models.types.Array[float]] = Field(
-        None,
-        description="Extra or custom parameters for describing the dihedral potential.",
-    )
-    form: Optional[str] = Field(
-        None, description="Dihedral potential form e.g. harmonic, fourier, etc."
-    )
 
 
 class ImproperDihedrals(ProtoModel):
