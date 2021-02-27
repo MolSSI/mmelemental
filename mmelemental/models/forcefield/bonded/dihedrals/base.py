@@ -1,19 +1,19 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
 import qcelemental
-from .params import BondsParams
+from .di_params import DihedralsParams
 from typing import Optional, Dict, Any
 
-__all__ = ["Bonds"]
+__all__ = ["Dihedrals"]
 
 
-class Bonds(ProtoModel):
-    params: BondsParams = Field(..., description="Bonded parameters model.")
-    lengths: qcelemental.models.types.Array[float] = Field(
-        ..., description="Equilibrium bond lengths. Default unit is Angstroms."
+class Dihedrals(ProtoModel):
+    params: DihedralsParams = Field(..., description="Dihedral parameters model.")
+    angles: qcelemental.models.types.Array[float] = Field(
+        None, description="Equilibrium dihedral angles. Default unit is degrees."
     )
-    lengths_units: Optional[str] = Field(
-        "angstroms", description="Equilibrium bond lengths unit."
+    angles_units: Optional[str] = Field(
+        "degrees", description="Equilibrium dihedral angle units."
     )
 
     # Constructors
@@ -24,9 +24,9 @@ class Bonds(ProtoModel):
         dtype: Optional[str] = None,
         translator: Optional[str] = None,
         **kwargs,
-    ) -> "Bonds":
+    ) -> "Dihedrals":
         """
-        Constructs a Bonds object from a file.
+        Constructs a Dihedrals object from a file.
         Parameters
         ----------
         filename: str
@@ -40,8 +40,8 @@ class Bonds(ProtoModel):
             Any additional keywords to pass to the constructor.
         Returns
         -------
-        Bonds
-            A constructed Bonds object.
+        Dihedrals
+            A constructed Dihedrals object.
         """
 
         fileobj = FileOutput(path=filename)
@@ -57,19 +57,19 @@ class Bonds(ProtoModel):
         return cls(**data)
 
     @classmethod
-    def from_data(cls, data: Any, **kwargs) -> "Bonds":
+    def from_data(cls, data: Any, **kwargs) -> "Dihedrals":
         """
-        Constructs a Bonds object from a data object.
+        Constructs a Dihedrals object from a data object.
         Parameters
         ----------
         data: Any
-            Data to construct Bonds from.
+            Data to construct Dihedrals from.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructors.
         Returns
         -------
-        Bonds
-            A constructed Bonds object.
+        Dihedrals
+            A constructed Dihedrals object.
         """
         if hasattr(data, "to_schema"):
             return data.to_schema(**kwargs)
@@ -83,7 +83,7 @@ class Bonds(ProtoModel):
         translator: Optional[str] = None,
         **kwargs: Dict[str, Any],
     ) -> None:
-        """Writes the Bonds to a file.
+        """Writes the Dihedrals to a file.
         Parameters
         ----------
         filename : str
@@ -120,7 +120,7 @@ class Bonds(ProtoModel):
         **kwargs: Dict[str, Any],
     ) -> "ToolkitModel":
         """
-        Constructs a toolkit-specific data object from MMSchema Bonds.
+        Constructs a toolkit-specific data object from MMSchema Dihedrals.
         Which toolkit-specific component is called depends on which package is installed on the system.
         Parameters
         ----------
@@ -134,7 +134,7 @@ class Bonds(ProtoModel):
         Results
         -------
         ToolkitModel
-            Toolkit-specific Bonds object
+            Toolkit-specific Dihedrals object
         """
         raise NotImplementedError
 
@@ -146,8 +146,8 @@ class Bonds(ProtoModel):
         """
 
         if isinstance(other, dict):
-            other = Bonds(**other)
-        elif isinstance(other, Bonds):
+            other = Dihedrals(**other)
+        elif isinstance(other, Dihedrals):
             pass
         else:
             raise TypeError(f"Comparison not understood of type '{type(other)}'.")
@@ -155,9 +155,9 @@ class Bonds(ProtoModel):
         return self.get_hash() == other.get_hash()
 
     # Validators
-    @validator("lengths")
-    def _lengths_length(cls, v, values):
-        assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
+    @validator("angles")
+    def _angles_length(cls, v, values):
+        assert len(v.shape) == 1, "Dihedral angles must be a 1D array!"
         return v
 
     # Propreties
@@ -188,3 +188,7 @@ class Bonds(ProtoModel):
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
+
+    def dict(self, *args, **kwargs):
+        kwargs["exclude"] = {"provenance"}
+        return super().dict(*args, **kwargs)

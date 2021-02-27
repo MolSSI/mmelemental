@@ -1,3 +1,3 @@
 from .base import *
-from .params import *
-from .harmonic import *
+from .di_params import *
+from . import potentials

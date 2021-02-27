@@ -1,21 +1,21 @@
 from pydantic import Field, root_validator
 from typing import Optional
 import qcelemental
-from .params import BondsParams
+from ..di_params import DihedralsParams
 
 __all__ = ["Harmonic"]
 
 
-class Harmonic(BondsParams):
+class Harmonic(DihedralsParams):
     """ 
-    Linear spring bond model: Energy = 1/2 * spring * (distance - length)**2. "
+    Linear spring dihedral model: Energy = 1/2 * spring * (angle - eq_angle)**2. "
     """
 
     spring: qcelemental.models.types.Array[float] = Field(
-        0, description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
+        ..., description="Dihedral spring constant. Default unit is kJ/(mol*degrees**2)."
     )
     spring_units: Optional[str] = Field(
-        "kJ/(mol*angstrom**2)", description="Bond spring constant unit."
+        "kJ/(mol*degrees**2)", description="Dihedral spring constant unit."
     )
 
     @root_validator
