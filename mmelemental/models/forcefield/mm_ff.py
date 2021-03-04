@@ -1,4 +1,4 @@
-from pydantic import Field, constr
+from pydantic import Field, constr, validator
 import importlib
 import hashlib
 import json
@@ -61,6 +61,19 @@ class ForceField(ProtoModel):
     nonbonded: NonBonded = Field(  # type: ignore
         ..., description="Non-bonded parameters model."
     )
+    charges: Optional[qcelemental.models.types.Array[float]] = Field(
+        None, description="Atomic charges. Default unit is in elementary charge units."
+    )
+    charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
+    masses: Optional[List[float]] = Field(  # type: ignore
+        None,
+        description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
+        "If this is provided, it must be the same length as ``symbols``.",
+    )
+    masses_units: Optional[str] = Field(  # type: ignore
+        "amu",
+        description="Units for atomic masses. Defaults to unified atomic mass unit.",
+    )
     charge_groups: Optional[qcelemental.models.types.Array[int]] = Field(
         None, description="Charge groups per atom. Length of the array must be natoms."
     )
@@ -89,15 +102,6 @@ class ForceField(ProtoModel):
     symbols: Optional[List[str]] = Field(  # type: ignore
         None, description="An ordered (natom,) list of atomic elemental symbols."
     )
-    masses_: Optional[List[float]] = Field(  # type: ignore
-        None,
-        description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
-        "If this is provided, it must be the same length as ``symbols``.",
-    )
-    masses_units: Optional[str] = Field(  # type: ignore
-        "amu",
-        description="Units for atomic masses. Defaults to unified atomic mass unit.",
-    )
     atomic_numbers_: Optional[
         qcelemental.models.types.Array[numpy.int16]
     ] = Field(  # type: ignore
@@ -118,24 +122,21 @@ class ForceField(ProtoModel):
         None,
         description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
     )
+
     class Config(ProtoModel.Config):
         serialize_skip_defaults = True
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
-        fields = {"masses_": "masses", "atomic_numbers_": "atomic_numbers"}
+        fields = {"atomic_numbers_": "atomic_numbers"}
 
         def schema_extra(schema, model):
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
             schema["$schema"] = "http://json-schema.org/draft-04/schema#"
 
-    # Properties
-    @property
-    def masses(self) -> qcelemental.models.types.Array[float]:
-        masses = self.__dict__.get("masses_")
-        if masses is None:
-            masses = numpy.array(
-                [qcelemental.periodictable.to_mass(x) for x in self.symbols]
-            )
-        return masses
+    # Validators
+    @validator("charges")
+    def _charges_length(cls, v, values):
+        assert len(v.shape) == 1, "Atomic charges must be a 1D array!"
+        return v
 
     @property
     def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
