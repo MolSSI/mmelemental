@@ -1,4 +1,4 @@
-name: CI
+name: pytest
 
 on:
   # GitHub has started calling new repo's first branch "main" https://github.com/github/renaming
@@ -58,8 +58,6 @@ jobs:
 
     - name: Install pkg dependencies
       run: |
-        git clone --branch patch1 https://github.com/Andrew-AbiMansour/qcelemental
-        cd qcelemental && pip install . && cd .. && rm -rf qcelemental
         git clone https://github.com/MolSSI/mmic
         cd mmic && pip install . && cd .. && rm -rf mmic
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
