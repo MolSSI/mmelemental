@@ -1,12 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 import qcelemental
-from ..bond_params import BondsParams
+from ..bond_params import BondParams
 
 __all__ = ["Harmonic"]
 
 
-class Harmonic(BondsParams):
+class Harmonic(BondParams):
     """ 
     Linear spring bond model: Energy = 1/2 * spring * (distance - length)**2. "
     """
