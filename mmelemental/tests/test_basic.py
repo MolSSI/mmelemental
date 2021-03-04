@@ -12,11 +12,3 @@ def test_mmelemental_imported():
     import sys
 
     assert "mmelemental" in sys.modules
-
-
-def test_mmelemental_mol_schema():
-    import os
-
-    mol = Molecule.from_file("mmelemental/data/molecules/alanine.json")
-    with FileOutput(path="mol.json", clean=True) as fo:
-        mol.to_file(fo.abs_path)
