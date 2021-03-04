@@ -60,16 +60,8 @@ jobs:
       run: |
         git clone --branch patch1 https://github.com/Andrew-AbiMansour/qcelemental
         cd qcelemental && pip install . && cd .. && rm -rf qcelemental
-        git clone https://github.com/MolSSI/mmic_translator
-        cd mmic_translator && pip install . && cd .. && rm -rf mmic_translator
-        git clone https://github.com/ParmEd/parmed
-        cd parmed && pip install . && cd .. && rm -rf parmed
         git clone https://github.com/MolSSI/mmic
         cd mmic && pip install . && cd .. && rm -rf mmic
-        git clone https://github.com/MolSSI/mmic_mda
-        cd mmic_mda && pip install . && cd .. && rm -rf mmic_mda
-        git clone https://github.com/MolSSI/mmic_parmed
-        cd mmic_parmed && pip install . && cd .. && rm -rf mmic_parmed
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Install package
