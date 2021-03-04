@@ -1,12 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 import qcelemental
-from ..angle_params import AnglesParams
+from ..angle_params import AngleParams
 
 __all__ = ["Harmonic"]
 
 
-class Harmonic(AnglesParams):
+class Harmonic(AngleParams):
     """ 
     Linear spring angle model: Energy = 1/2 * spring * (angle - eq_angle)**2. "
     """
