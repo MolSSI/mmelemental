@@ -17,7 +17,7 @@ class NonBondedParams(Params):
     )
 
     # Validators
-    
+
     @validator("name", always=True)
     def _set_name(cls, v, values):
         if v is not None:
