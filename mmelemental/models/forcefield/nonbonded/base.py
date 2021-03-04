@@ -2,7 +2,7 @@ from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
 import qcelemental
 from .nb_params import NonBondedParams
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, Union
 
 __all__ = ["NonBonded"]
 
@@ -10,13 +10,9 @@ __all__ = ["NonBonded"]
 class NonBonded(ProtoModel):
     """ Model that describes non-bonded interactions between atoms/particles. """
 
-    params: NonBondedParams = Field(
+    params: Union[NonBondedParams, List[NonBondedParams]] = Field(
         ..., description="Non-bonded short potential parameters model."
     )
-    charges: Optional[qcelemental.models.types.Array[float]] = Field(
-        None, description="Atomic charges. Default unit is in elementary charge units."
-    )
-    charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
 
     # Constructors
     @classmethod
@@ -156,16 +152,10 @@ class NonBonded(ProtoModel):
 
         return self.get_hash() == other.get_hash()
 
-    # Validators
-    @validator("charges")
-    def _charges_length(cls, v, values):
-        assert len(v.shape) == 1, "Atomic charges must be a 1D array!"
-        return v
-
     # Propreties
     @property
     def hash_fields(self):
-        return ["charges", "params"]
+        return ["params"]
 
     @property
     def form(self):
