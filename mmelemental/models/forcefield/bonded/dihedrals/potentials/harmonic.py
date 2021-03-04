@@ -7,7 +7,7 @@ __all__ = ["Harmonic"]
 
 
 class Harmonic(DihedralParams):
-    """ 
+    """
     Linear spring dihedral model: Energy = 1/2 * spring * (angle - eq_angle)**2. "
     """
 

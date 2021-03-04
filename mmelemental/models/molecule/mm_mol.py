@@ -60,9 +60,9 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
 
 
 class Molecule(ProtoModel):
-    """A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges, 
-    residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry, 
-    velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively to assist with duplicate 
+    """A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,
+    residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
+    velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively to assist with duplicate
     detection.
     """
 
@@ -307,7 +307,7 @@ class Molecule(ProtoModel):
     # Validators
     @validator("*", pre=True)
     def _empty_must_none(cls, v, values):
-        """ 
+        """
         Makes sure empty lists or tuples are converted to None.
         """
         if isinstance(v, List) or isinstance(v, Tuple):
@@ -554,9 +554,9 @@ class Molecule(ProtoModel):
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
         translator: Optional[str], optional
-            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
-            MMElemental attempts to find an appropriate translator if it is registered 
-            in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor
         Returns
@@ -694,9 +694,9 @@ class Molecule(ProtoModel):
             The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
             file extension if not provided.
         translator: Optional[str], optional
-            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
-            MMElemental attempts to find an appropriate translator if it is registered 
-            in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
         """
@@ -736,9 +736,9 @@ class Molecule(ProtoModel):
         dtype: Optional[str], optional
             The type of data object to convert to e.g. MDAnalysis, rdkit, parmed, etc.
         translator: Optional[str], optional
-            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset, 
-            MMElemental attempts to find an appropriate translator if it is registered 
-            in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
         Returns

@@ -7,7 +7,7 @@ __all__ = ["Gromos96"]
 
 
 class Gromos96(BondParams):
-    """ 
+    """
     GROMOS-96 spring bond model: Energy = 1/4 * spring * (distance**2 - length**2)**2. "
     """
 

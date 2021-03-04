@@ -30,8 +30,8 @@ class Bonds(ProtoModel):
         dtype: Optional[str], optional
             The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.
         translator: Optional[str], optional
-            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor.
         Returns
@@ -88,8 +88,8 @@ class Bonds(ProtoModel):
             The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
             file extension if not provided.
         translator: Optional[str], optional
-            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
         **kwargs: Optional[str, Dict], optional
             Additional kwargs to pass to the constructor.
         """
@@ -121,8 +121,8 @@ class Bonds(ProtoModel):
         Parameters
         ----------
         translator: Optional[str], optional
-            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts 
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class. 
+            Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
         dtype: Optional[str], optional
             Data type e.g. MDAnalysis, parmed, etc.
         **kwargs: Optional[Dict[str, Any]]

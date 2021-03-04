@@ -7,7 +7,7 @@ __all__ = ["Harmonic"]
 
 
 class Harmonic(BondParams):
-    """ 
+    """
     Linear spring bond model: Energy = 1/2 * spring * (distance - length)**2. "
     """
 
