@@ -1,19 +1,16 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
+from mmelemental.models.util import FileOutput
 import qcelemental
-from .angle_params import AnglesParams
-from typing import Optional, Dict, Any
+from .angle_params import AngleParams
+from typing import Optional, Dict, Any, Union, List
 
 __all__ = ["Angles"]
 
 
 class Angles(ProtoModel):
-    params: AnglesParams = Field(..., description="Angles parameters model.")
-    angles: qcelemental.models.types.Array[float] = Field(
-        ..., description="Equilibrium angles. Default unit is degrees."
-    )
-    angles_units: Optional[str] = Field(
-        "degrees", description="Equilibrium angle units."
+    params: Union[AngleParams, List[AngleParams]] = Field(
+        ..., description="Angles parameters model."
     )
 
     # Constructors
@@ -154,16 +151,10 @@ class Angles(ProtoModel):
 
         return self.get_hash() == other.get_hash()
 
-    # Validators
-    @validator("angles")
-    def _lengths_angles(cls, v, values):
-        assert len(v.shape) == 1, "Angles must be a 1D array!"
-        return v
-
     # Propreties
     @property
     def hash_fields(self):
-        return ["angles", "params"]
+        return ["params"]
 
     @property
     def form(self):
