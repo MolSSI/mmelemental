@@ -301,18 +301,18 @@ class ForceField(ProtoModel):
 
     def __eq__(self, other):
         """
-        Checks if two molecules are identical. This is a molecular identity defined
+        Checks if two models are identical. This is a molecular identity defined
         by scientific terms, and not programing terms, so it's less rigorous than
         a programmatic equality or a memory equivalent `is`.
         """
 
         if isinstance(other, dict):
-            other = Molecule(**other)
-        elif isinstance(other, Molecule):
+            other = self.__class__(**other)
+        elif isinstance(other, self.__class__):
             pass
         else:
             raise TypeError(
-                f"Comparison molecule not understood of type '{type(other)}'."
+                f"Comparison between {self.__class__} and {type(other)} is not supported."
             )
 
         return self.get_hash() == other.get_hash()
