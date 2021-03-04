@@ -4,6 +4,8 @@ from pydantic import validator, Field
 from pathlib import Path
 import os
 
+__all__ = ["FileOutput", "CmdOutput", "ComputeOutput"]
+
 
 class CmdOutput(ProtoModel):
     stdout_: str = Field(..., description="Standard output.")

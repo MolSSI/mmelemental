@@ -6,6 +6,8 @@ import os
 from .output import FileOutput
 from pathlib import Path
 
+__all__ = ["FileInput", "CmdInput"]
+
 
 class FileInput(ProtoModel):
     """ A model that represents system files that may or may not exist at the time of object insantiation. """
