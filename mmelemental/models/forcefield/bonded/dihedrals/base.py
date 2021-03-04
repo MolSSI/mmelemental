@@ -1,19 +1,16 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
-import qcelemental
-from .di_params import DihedralsParams
-from typing import Optional, Dict, Any
+from mmelemental.models.util import FileOutput
+from .di_params import DihedralParams
+import hashlib
+from typing import Optional, Dict, Any, Union, List
 
 __all__ = ["Dihedrals"]
 
 
 class Dihedrals(ProtoModel):
-    params: DihedralsParams = Field(..., description="Dihedral parameters model.")
-    angles: qcelemental.models.types.Array[float] = Field(
-        None, description="Equilibrium dihedral angles. Default unit is degrees."
-    )
-    angles_units: Optional[str] = Field(
-        "degrees", description="Equilibrium dihedral angle units."
+    params: Union[DihedralParams, List[DihedralParams]] = Field(
+        ..., description="Dihedral parameters model."
     )
 
     # Constructors
@@ -154,16 +151,10 @@ class Dihedrals(ProtoModel):
 
         return self.get_hash() == other.get_hash()
 
-    # Validators
-    @validator("angles")
-    def _angles_length(cls, v, values):
-        assert len(v.shape) == 1, "Dihedral angles must be a 1D array!"
-        return v
-
-    # Propreties
+    # Properties
     @property
     def hash_fields(self):
-        return ["charges", "params"]
+        return ["params"]
 
     @property
     def form(self):
