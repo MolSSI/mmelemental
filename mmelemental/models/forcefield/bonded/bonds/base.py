@@ -1,19 +1,15 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
 import qcelemental
-from .bond_params import BondsParams
-from typing import Optional, Dict, Any
+from .bond_params import BondParams
+from typing import Optional, Dict, Any, Union, List
 
 __all__ = ["Bonds"]
 
 
 class Bonds(ProtoModel):
-    params: BondsParams = Field(..., description="Bonded parameters model.")
-    lengths: qcelemental.models.types.Array[float] = Field(
-        ..., description="Equilibrium bond lengths. Default unit is Angstroms."
-    )
-    lengths_units: Optional[str] = Field(
-        "angstroms", description="Equilibrium bond lengths unit."
+    params: Union[BondParams, List[BondParams]] = Field(
+        ..., description="Bonded parameters model."
     )
 
     # Constructors
@@ -154,20 +150,17 @@ class Bonds(ProtoModel):
 
         return self.get_hash() == other.get_hash()
 
-    # Validators
-    @validator("lengths")
-    def _lengths_length(cls, v, values):
-        assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
-        return v
-
     # Propreties
     @property
     def hash_fields(self):
-        return ["charges", "params"]
+        return ["params"]
 
     @property
     def form(self):
-        return self.params.__class__.__name__
+        if isinstance(self.params, list):
+            return [param.__class__.__name__ for param in self.params]
+        else:
+            return self.params.__class__.__name__
 
     def get_hash(self):
         """
