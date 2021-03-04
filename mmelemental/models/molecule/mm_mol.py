@@ -14,9 +14,14 @@ from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import Provenance, provenance_stamp, ProtoModel
 
 # Generic translator component
-from mmic_translator.components import TransComponent
-from mmic_translator.models.base import ToolkitModel
+try:
+    from mmic_translator.components import TransComponent
+    from mmic_translator.models.base import ToolkitModel
+except Exception:
+    TransComponent, ToolkitModel = None, "ToolkitModel"
 
+_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+Solve by: pip install mmic_translator"
 
 __all__ = ["Molecule"]
 
@@ -594,6 +599,8 @@ class Molecule(ProtoModel):
         ext = "." + dtype
 
         if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             from mmic_translator.components.supported import reg_trans
 
             reg_trans = list(reg_trans)
@@ -714,6 +721,8 @@ class Molecule(ProtoModel):
             with open(filename, mode) as fp:
                 fp.write(stringified)
         else:  # look for an installed mmic_translator
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             translator = TransComponent.find_molwrite_tk(ext)
 
             if not translator:
@@ -748,6 +757,8 @@ class Molecule(ProtoModel):
         """
 
         if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             if not dtype:
                 raise ValueError(
                     f"Either translator or dtype must be supplied when calling {__name__}."

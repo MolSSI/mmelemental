@@ -13,8 +13,14 @@ from .nonbonded import NonBonded
 from .bonded import Bonds, Angles, Dihedrals
 
 # Generic translator component
-from mmic_translator.models.base import ToolkitModel
-from mmic_translator.components import TransComponent
+try:
+    from mmic_translator.components import TransComponent
+    from mmic_translator.models.base import ToolkitModel
+except Exception:
+    TransComponent, ToolkitModel = None, "ToolkitModel"
+
+_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+Solve by: pip install mmic_translator"
 
 
 mmschema_forcefield_default = "mmschema_forcefield"
@@ -180,6 +186,8 @@ class ForceField(ProtoModel):
         ext = "." + dtype
 
         if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             translator = TransComponent.find_ffread_tk(ext)
 
         if not translator:
@@ -256,6 +264,8 @@ class ForceField(ProtoModel):
             return
 
         if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             translator = TransComponent.find_ffwrite_tk(ext)
 
         if not translator:
@@ -295,6 +305,8 @@ class ForceField(ProtoModel):
                 raise ValueError(
                     f"Either translator or dtype must be supplied when calling {__name__}."
                 )
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
             translator = TransComponent.find_trans(dtype)
 
         if importlib.util.find_spec(translator):
