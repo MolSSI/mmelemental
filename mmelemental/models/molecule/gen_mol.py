@@ -1,9 +1,9 @@
-from mmic_translator.models.base import ToolkitModel
+from mmelemental.models.base import ProtoModel
 
 __all__ = ["ToolkitMol"]
 
 
-class ToolkitMol(ToolkitModel):
+class ToolkitMol(ProtoModel):
     """A generic base class that acts as a wrapper for toolkit molecules
     TODO: Delete this class and move check_name() to wherever it's needed (rdkit?!)"""
 
