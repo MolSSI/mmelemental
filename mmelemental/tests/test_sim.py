@@ -3,22 +3,16 @@ Simulation test for the mmelemental package.
 """
 # import pytest
 import mmelemental
-from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.app.dynamics import DynamicsInput
 from mmelemental.models.app.sim_writer import SimWriterInput
 from mmelemental.components.io.simwriter_component import SimWriterComponent
-
-
-def test_mmelemental_molgro():
-    groFile = FileInput(path="mmelemental/data/molecules/alanine.gro")
-    topFile = FileInput(path="mmelemental/data/molecules/alanine.top")
-
-    return Molecule.from_file(filename=groFile.path, top_file=topFile)
+import os
+from .data import data_dir
 
 
 def test_mmelemental_md():
-    mol = test_mmelemental_molgro()
+    mol = Molecule.from_file(filename=os.path.join(data_dir, "alanine.json"))
     md = DynamicsInput(mol={"mol": mol}, temp=300, press=1.1, temp_method="berendsen")
 
     sim_input = SimWriterInput(
