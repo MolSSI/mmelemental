@@ -1,4 +1,5 @@
 import qcelemental
+import numpy
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator
 import importlib
@@ -6,14 +7,15 @@ from pathlib import Path
 import hashlib
 import json
 
-# Import MM models
-from mmelemental.models.util.output import FileOutput
-from mmelemental.models.base import ToolkitModel
-from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.base import Provenance, provenance_stamp
 
-# Import MM components
-from mmelemental.components.trans import TransComponent
+# MM models
+from mmelemental.models.util.output import FileOutput
+from mmelemental.models.chem.codes import ChemCode
+from mmelemental.models.base import Provenance, provenance_stamp, ProtoModel
+
+# Generic translator component
+from mmic_translator.components import TransComponent
+from mmic_translator.models.base import ToolkitModel
 
 
 __all__ = ["Molecule"]
@@ -24,6 +26,9 @@ VELOCITY_NOISE = 8
 FORCE_NOISE = 8
 MASS_NOISE = 6
 CHARGE_NOISE = 4
+
+
+mmschema_molecule_default = "mmschema_molecule"
 
 
 class Identifiers(qcelemental.models.molecule.Identifiers):
@@ -54,14 +59,11 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
     )
 
 
-mmschema_molecule_default = "mmschema_molecule"
-
-
-class Molecule(qcelemental.models.Molecule):
-    """A representation of a Molecule in MM based on QCSchema. This model contains data for symbols, geometry,
-    connectivity, charges, residues, etc. while also supporting a wide array of I/O and manipulation capabilities.
-    Charges, masses, geometry, velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively
-    to assist with duplicate detection.
+class Molecule(ProtoModel):
+    """A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges, 
+    residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry, 
+    velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively to assist with duplicate 
+    detection.
     """
 
     schema_name: constr(
@@ -72,6 +74,10 @@ class Molecule(qcelemental.models.Molecule):
             f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_molecule_default}."
         ),
     )
+    schema_version: int = Field(  # type: ignore
+        0,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
     symbols: Optional[qcelemental.models.types.Array[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
@@ -79,29 +85,91 @@ class Molecule(qcelemental.models.Molecule):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
+    # Basics
+    name: Optional[str] = Field(  # type: ignore
+        None,
+        description="Common or human-readable name to assign to this molecule. This field can be arbitrary; see "
+        "``identifiers`` for well-defined labels.",
+    )
+    identifiers: Optional[Identifiers] = Field(  # type: ignore
+        None,
+        description="An optional dictionary of additional identifiers by which this molecule can be referenced, "
+        "such as INCHI, canonical SMILES, etc. See the :class:``Identifiers`` model for more details.",
+    )
+    comment: Optional[str] = Field(  # type: ignore
+        None,
+        description="Additional comments for this molecule. Intended for pure human/user consumption and clarity.",
+    )
+    ndim: Optional[int] = Field(  # type: ignore
+        3, description="Number of spatial dimensions."
+    )
+    # Molecular data
+    real_: Optional[qcelemental.models.types.Array[bool]] = Field(  # type: ignore
+        None,
+        description="The ordered array indicating if each atom is real (``True``) or "
+        "ghost/virtual (``False``). Index matches the 0-indexed indices of all other per-atom settings like "
+        "``symbols`` and the first dimension of ``geometry``. If this is not provided, all atoms are assumed "
+        "to be real (``True``). If this is provided, the reality or ghostedness of every atom must be specified.",
+        shape=["nat"],
+    )
+    atom_labels_: Optional[qcelemental.models.types.Array[str]] = Field(  # type: ignore
+        None,
+        description="Additional per-atom labels as an array of strings. Typical use is in "
+        "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
+        "assigned. See the ``comments`` field for general human-consumable text to affix to the molecule.",
+        shape=["nat"],
+    )
+    atomic_numbers_: Optional[
+        qcelemental.models.types.Array[numpy.int16]
+    ] = Field(  # type: ignore
+        None,
+        description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "Values are inferred from the ``symbols`` list if not explicitly set. "
+        "Ghostedness should be indicated through ``real`` field, not zeros here.",
+        shape=["nat"],
+    )
+    mass_numbers_: Optional[
+        qcelemental.models.types.Array[numpy.int16]
+    ] = Field(  # type: ignore
+        None,
+        description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "Values are inferred from the most common isotopes of the ``symbols`` list if not explicitly set. "
+        "If single isotope not (yet) known for an atom, -1 is placeholder.",
+        shape=["nat"],
+    )
+    masses_: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
+        None,
+        description="The ordered array of atomic masses. Index order "
+        "matches the 0-indexed indices of all other per-atom fields like ``symbols`` and ``real``. If "
+        "this is not provided, the mass of each atom is inferred from its most common isotope. If this "
+        "is provided, it must be the same length as ``symbols`` but can accept ``None`` entries for "
+        "standard masses to infer from the same index in the ``symbols`` field.",
+        shape=["nat"],
+    )
     masses_units: Optional[str] = Field(  # type: ignore
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
+    )
+    molecular_charge: float = Field(  # type: ignore
+        0.0,
+        description="The net electrostatic charge of the molecule. Default unit is electron Volt.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "eV", description="Units for molecular charge. Defaults to electron Volt."
     )
     geometry: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
-        description="An ordered (natom,3) array-like for XYZ atomic positions in Angstrom. "
-        "Can also accept arrays which can be mapped to (natom,3) such as a 1-D list of length 3*natom, "
-        "or the serialized version of the array in (3*natom,) shape; all forms will be reshaped to "
-        "(natom,3) for this attribute. Default unit is Angstroms.",
+        description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
     velocities: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
-        description="An ordered (natoms,3) array-like for XYZ atomic velocities in Angstrom/ps. "
-        "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
-        "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
-        "(natoms,3) for this attribute. Default unit is Angstroms/femtoseconds.",
+        description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
+        "Angstroms/femtoseconds.",
     )
     velocities_units: Optional[str] = Field(  # type: ignore
         "angstrom/fs",
@@ -109,27 +177,49 @@ class Molecule(qcelemental.models.Molecule):
     )
     forces: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
-        description="An ordered (natoms,3) array-like for XYZ atomic velocities in kJ/mol*Angstrom. "
-        "Can also accept arrays which can be mapped to (natoms,3) such as a 1-D list of length 3*natoms, "
-        "or the serialized version of the array in (3*natoms,) shape; all forms will be reshaped to "
-        "(natoms,3) for this attribute. Default unit is KiloJoules/mol.Angstroms.",
+        description="An ordered (natoms*ndim,) array for XYZ atomic forces. Default unit is "
+        "KiloJoules/mol.Angstroms.",
+        units="kJ/(mol*angstrom)",
     )
     forces_units: Optional[str] = Field(  # type: ignore
         "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
     )
+    # Topological data
+    connectivity_: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
+        None,
+        description="A list of bonds within the molecule. Each entry is a tuple "
+        "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "Bonds may be freely reordered and inverted.",
+        min_items=1,
+    )
     angles: Optional[List[Tuple[int, int, int]]] = Field(
-        None, description="Bond angles in degrees for three connected atoms."
+        None,
+        description="Bond angles in degrees for three connected atoms. Default unit is in degrees.",
+    )
+    angles_units: Optional[str] = Field(  # type: ignore
+        "degrees", description="Units for bond angles. Defaults to degrees."
     )
     dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(  # type: ignore
         None,
-        description="Dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
+        description="Dihedral/torsion angles in degrees between planes through two sets of three atoms, having "
+        "two atoms in common. Default unit is in degrees.",
     )
-    improper_dihedrals: Optional[
+    dihedrals_units: Optional[str] = Field(  # type: ignore
+        "degrees",
+        description="Units for dihedral/torsional angles. Defaults to degrees.",
+    )
+    im_dihedrals: Optional[
         List[Tuple[int, int, int, int, int]]
     ] = Field(  # type: ignore
         None,
-        description="Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, having two atoms in common.",
+        description="Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, "
+        "having two atoms in common.",
+    )
+    im_dihedrals_units: Optional[str] = Field(  # type: ignore
+        "degrees",
+        description="Units for improper dihedral/torsional angles. Defaults to degrees.",
     )
     residues: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
         None,
@@ -143,30 +233,35 @@ class Molecule(qcelemental.models.Molecule):
         description="A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
         "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
     )
-    segments: Optional[Dict[str, List[int]]] = Field(
+    segments: Optional[Dict[str, List[int]]] = Field(  # type: ignore
         None, description="..."
-    )  # type: ignore
-    names: Optional[List[str]] = Field(  # type: ignore
-        None, description="A list of atomic label names."
     )
-    identifiers: Optional[Identifiers] = Field(  # type: ignore
-        None,
-        description="An optional dictionary of additional identifiers by which this Molecule can be referenced, "
-        "such as INCHI, SMILES, SMARTS, etc. See the :class:``Identifiers`` model for more details.",
-    )
-    connectivity_: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
-        None,
-        description="A list of bonds within the molecule. Each entry is a tuple "
-        "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
-        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
-        "Bonds may be freely reordered and inverted.",
-        min_items=1,
-    )
+    # Extras
     provenance: Provenance = Field(  # type: ignore
         provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
+    extras: Dict[str, Any] = Field(  # type: ignore
+        None,
+        description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
+    )
+
+    class Config(ProtoModel.Config):
+        serialize_skip_defaults = True
+        repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
+        fields = {
+            "masses_": "masses",
+            "real_": "real",
+            "atom_labels_": "atom_labels",
+            "atomic_numbers_": "atomic_numbers",
+            "mass_numbers_": "mass_numbers",
+            "connectivity_": "connectivity",
+        }
+
+        def schema_extra(schema, model):
+            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
+            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
 
     def __init__(self, **kwargs: Any) -> None:
         """
@@ -182,16 +277,14 @@ class Molecule(qcelemental.models.Molecule):
         atomic_numbers = kwargs.get("atomic_numbers")
         if atomic_numbers is not None:
             if kwargs.get("symbols") is None:
-                from qcelemental import periodic_table
 
                 kwargs["symbols"] = [
-                    periodic_table.periodictable.to_E(x) for x in atomic_numbers
+                    qcelemental.periodictable.to_E(x) for x in atomic_numbers
                 ]
 
         # We are pulling out the values *explicitly* so that the pydantic skip_defaults works as expected
         # All attributes set below are equivalent to the default set.
-        # We must always prevent QCElemental.Molecule from doing any validation, so validate=False.
-        super().__init__(orient=False, validate=False, **kwargs)
+        super().__init__(**kwargs)
 
         values = self.__dict__
 
@@ -211,14 +304,121 @@ class Molecule(qcelemental.models.Molecule):
 
             values["name"] = formula_generator(values["symbols"])
 
+    # Validators
     @validator("*", pre=True)
-    def emptyIsNone(cls, v, values):
+    def _empty_must_none(cls, v, values):
         """ 
         Makes sure empty lists or tuples are converted to None.
         """
         if isinstance(v, List) or isinstance(v, Tuple):
             return v if v else None
         return v
+
+    @validator("geometry", "velocities", "forces")
+    def _must_be_3n(cls, v, values, **kwargs):
+        if v is not None:
+            n = len(values["symbols"])
+            try:
+                v.reshape(n, values["ndim"])
+            except (ValueError, AttributeError):
+                raise ValueError("Array must be castable to shape (natom,ndim)!")
+        return v
+
+    @validator("masses_", "real_")
+    def _must_be_n(cls, v, values, **kwargs):
+        n = len(values["symbols"])
+        if len(v) != n:
+            raise ValueError(
+                "Masses and Real must be same number of entries as Symbols"
+            )
+        return v
+
+    @validator("real_")
+    def _populate_real(cls, v, values, **kwargs):
+        # Can't use geometry here since its already been validated and not in values
+        n = len(values["symbols"])
+        if len(v) == 0:
+            v = numpy.array([True for _ in range(n)])
+        return v
+
+    @validator("connectivity_", each_item=True)
+    def _min_zero(cls, v):
+        if v < 0:
+            raise ValueError("Connectivity entries must be greater than 0")
+        return v
+
+    # Properties
+    @property
+    def masses(self) -> qcelemental.models.types.Array[float]:
+        masses = self.__dict__.get("masses_")
+        if masses is None:
+            masses = numpy.array(
+                [qcelemental.periodictable.to_mass(x) for x in self.symbols]
+            )
+        return masses
+
+    @property
+    def real(self) -> qcelemental.models.types.Array[bool]:
+        real = self.__dict__.get("real_")
+        if real is None:
+            real = numpy.array([True for x in self.symbols])
+        return real
+
+    @property
+    def atom_labels(self) -> qcelemental.models.types.Array[str]:
+        atom_labels = self.__dict__.get("atom_labels_")
+        if atom_labels is None:
+            atom_labels = numpy.array(["" for x in self.symbols])
+        return atom_labels
+
+    @property
+    def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
+        atomic_numbers = self.__dict__.get("atomic_numbers_")
+        if atomic_numbers is None:
+            atomic_numbers = numpy.array(
+                [qcelemental.periodictable.to_Z(x) for x in self.symbols]
+            )
+        return atomic_numbers
+
+    @property
+    def mass_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
+        mass_numbers = self.__dict__.get("mass_numbers_")
+        if mass_numbers is None:
+            mass_numbers = numpy.array(
+                [qcelemental.periodictable.to_A(x) for x in self.symbols]
+            )
+        return mass_numbers
+
+    @property
+    def connectivity(self) -> List[Tuple[int, int, float]]:
+        connectivity = self.__dict__.get("connectivity_")
+        # default is None, not []
+        return connectivity
+
+    @property
+    def units(self):
+        return {
+            val.alias: val.field_info.extra.get("units")
+            for key, val in self.__fields__.items()
+            if "units" in val.field_info.extra
+        }
+
+    @property
+    def hash_fields(self):
+        return [
+            "symbols",
+            "masses",
+            "molecular_charge",
+            "real",
+            "geometry",
+            "velocities",
+            "forces",
+            "connectivity",
+        ]
+
+    # Representation -> used by qcelemental's __repr__
+    def __repr_args__(self) -> "ReprArgs":
+        return [("name", self.name), ("hash", self.get_hash()[:7])]
 
     def __eq__(self, other):
         """
@@ -240,7 +440,7 @@ class Molecule(qcelemental.models.Molecule):
 
     def pretty_print(self):
         """Prints the molecule. Not sure yet what this is used for, but I have modified the
-        original implementation in qcelemental.
+        original implementation from qcelemental.
         Returns
         -------
         str
@@ -258,28 +458,50 @@ class Molecule(qcelemental.models.Molecule):
             text += """    {0:8s}{1:4s} """.format(
                 self.symbols[i], "" if self.real[i] else "(Gh)"
             )
-            for j in range(3):
+            for j in range(self.geometry.shape(axis=1)):
                 text += """  {0:17.12f}""".format(self.geometry[i][j])
             text += "\n"
 
         return text
 
-    @property
-    def hash_fields(self):
-        return [
-            "symbols",
-            "masses",
-            "molecular_charge",
-            "molecular_multiplicity",
-            "real",
-            "geometry",
-            "velocities",
-            "forces",
-            "fragments",
-            "fragment_charges",
-            "fragment_multiplicities",
-            "connectivity",
-        ]
+    def get_molecular_formula(self, order: Optional[str] = "alphabetical") -> str:
+        """
+        Returns the molecular formula for a molecule.
+
+        Parameters
+        ----------
+        order: str, optional
+            Sorting order of the formula. Valid choices are "alphabetical" and "hill".
+
+        Returns
+        -------
+        str
+            The molecular formula.
+
+        Examples
+        --------
+
+        >>> methane = qcelemental.models.Molecule('''
+        ... H      0.5288      0.1610      0.9359
+        ... C      0.0000      0.0000      0.0000
+        ... H      0.2051      0.8240     -0.6786
+        ... H      0.3345     -0.9314     -0.4496
+        ... H     -1.0685     -0.0537      0.1921
+        ... ''')
+        >>> methane.get_molecular_formula()
+        CH4
+
+        >>> hcl = qcelemental.models.Molecule('''
+        ... H      0.0000      0.0000      0.0000
+        ... Cl     0.0000      0.0000      1.2000
+        ... ''')
+        >>> hcl.get_molecular_formula()
+        ClH
+
+        """
+        return qcelemental.molutil.molecular_formula_from_symbols(
+            symbols=self.symbols, order=order
+        )
 
     def get_hash(self):
         """
@@ -372,7 +594,7 @@ class Molecule(qcelemental.models.Molecule):
         ext = "." + dtype
 
         if not translator:
-            from mmelemental.components.trans.supported import reg_trans
+            from mmic_translator.components.supported import reg_trans
 
             reg_trans = list(reg_trans)
 
@@ -485,15 +707,20 @@ class Molecule(qcelemental.models.Molecule):
         else:
             ext = "." + dtype
 
-        qcelemental_handle = ext in qcelemental.models.molecule._extension_map
+        mode = kwargs.pop("mode", "w")
 
-        if qcelemental_handle:
-            dtype = qcelemental.models.molecule._extension_map[ext]
-            super().to_file(
-                filename, dtype, **kwargs
-            )  # qcelemental handles serialization
+        if ext == ".json":
+            stringified = self.json(**kwargs)
+            with open(filename, mode) as fp:
+                fp.write(stringified)
         else:  # look for an installed mmic_translator
             translator = TransComponent.find_molwrite_tk(ext)
+
+            if not translator:
+                raise NotImplementedError(
+                    f"File extension {ext} not supported with any installed translators."
+                )
+
             tkmol = self.to_data(translator=translator, **kwargs)
             tkmol.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 

@@ -1,4 +1,4 @@
-from mmelemental.models.base import ToolkitModel
+from mmic_translator.models.base import ToolkitModel
 
 __all__ = ["ToolkitMol"]
 

@@ -1,133 +1,70 @@
-from pydantic import Field
+from pydantic import Field, constr
 import importlib
 import hashlib
 import json
 from typing import Any, List, Dict, Optional
-from qcelemental.models.types import Array
+import qcelemental
+import numpy
 
-# Import MM models
-from mmelemental.models.base import ProtoModel
-from mmelemental.models.base import ToolkitModel
+# MM models
+from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
+from .nonbonded import NonBonded
+from .bonded import Bonds, Angles, Dihedrals
 
-# Import MM components
-from mmelemental.components.trans import TransComponent
+# Generic translator component
+from mmic_translator.models.base import ToolkitModel
+from mmic_translator.components import TransComponent
+
+
+mmschema_forcefield_default = "mmschema_forcefield"
+
 
 __all__ = ["ForceField"]
 
 
-class Bonds(ProtoModel):
-    length: Optional[Array[float]] = Field(
-        None, description="Bond equilibrium lengths. Default unit is Angstroms."
-    )
-    length_units: Optional[str] = Field("angstroms", description="Bond lengths unit.")
-    spring: Optional[Array[float]] = Field(
-        0, description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
-    )
-    spring_units: Optional[str] = Field(
-        "kJ/(mol*angstrom**2)", description="Bond spring constant unit."
-    )
-    params: Optional[Array[float]] = Field(
-        None,
-        description="Extra or custom parameters for describing the bond potential.",
-    )
-    form: Optional[str] = Field(
-        None, description="Bond potential form e.g. harmonic, morse, etc."
-    )
-
-
-class Angles(ProtoModel):
-    angle: Optional[Array[float]] = Field(
-        None, description="Equilibrium angles. Default unit is degrees."
-    )
-    angle_units: Optional[str] = Field(
-        "degrees", description="Equilibrium angle units."
-    )
-    spring: Optional[Array[float]] = Field(0, description="Angle spring constant. ")
-    spring_units: Optional[str] = Field(
-        "kJ/(mol*degrees**2)", description="Angle spring constant unit."
-    )
-    params: Optional[Array[float]] = Field(
-        None,
-        description="Extra or custom parameters for describing the angle potential.",
-    )
-    form: Optional[str] = Field(
-        None, description="Angle potential form e.g. harmonic, quartic, etc."
-    )
-
-
-class Dihedrals(ProtoModel):
-    angle: Optional[Array[float]] = Field(
-        None, description="Equilibrium angles. Default unit is degrees."
-    )
-    angle_units: Optional[str] = Field(
-        "degrees", description="Equilibrium angle units."
-    )
-    spring: Optional[Array[float]] = Field(0, description="Dihedral spring constant. ")
-    spring_units: Optional[str] = Field(
-        "kJ/(mol*degrees**2)", description="Dihedral spring constant unit."
-    )
-    params: Optional[Array[float]] = Field(
-        None,
-        description="Extra or custom parameters for describing the dihedral potential.",
-    )
-    form: Optional[str] = Field(
-        None, description="Dihedral potential form e.g. harmonic, fourier, etc."
-    )
-
-
 class ImproperDihedrals(ProtoModel):
-    improper_dihedrals: Optional[Array[Array[float]]] = Field(
-        None, description="Improper dihedral/torsion parameters."
-    )
-    improper_dihedrals_type: Optional[List[str]] = Field(
+    im_dihedrals: Optional[
+        qcelemental.models.types.Array[qcelemental.models.types.Array[float]]
+    ] = Field(None, description="Improper dihedral/torsion parameters.")
+    im_dihedrals_type: Optional[List[str]] = Field(
         None,
         description="Improper dihedral potential form e.g. harmonic, fourier, etc.",
     )
 
 
-class NonBonded(ProtoModel):
-    epsilon: Optional[Array[float]] = Field(
-        0,
-        description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
-    )
-    epsilon_units: Optional[str] = Field(
-        "kJ/mol", description="The epsilon (well depth) Lennard-Jones unit."
-    )
-    sigma: Optional[Array[float]] = Field(
-        0,
-        description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
-    )
-    sigma_units: Optional[str] = Field(
-        "angstrom", description="The Lennard-Jones sigma unit."
-    )
-    params: Optional[Array[float]] = Field(
-        None, description="Extra or custom non-bonded short potential parameters."
-    )
-    form: Optional[str] = Field(
-        None,
-        description="Non-bonded short potential form e.g. Lennard-Jones, Buckingham, etc.",
-    )
-    charges: Optional[Array[float]] = Field(
-        None, description="Atomic charges. Default unit is in elementary charge units."
-    )
-    charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
-
-
 class ForceField(ProtoModel):
-    bonds: Optional[Bonds] = Field(None, description="2-body covalent bond schema.")
-    angles: Optional[Angles] = Field(None, description="3-body angular bond schema.")
-    dihedrals: Optional[Dihedrals] = Field(
-        None, description="4-body torsional bond schema."
+    schema_name: constr(
+        strip_whitespace=True, regex="^(mmschema_forcefield)$"
+    ) = Field(  # type: ignore
+        mmschema_forcefield_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_forcefield_default}."
+        ),
     )
-    im_dihedrals: Optional[ImproperDihedrals] = Field(
-        None, description="Improper dihedral bond schema."
+    schema_version: int = Field(  # type: ignore
+        0,
+        description="The version number of ``schema_name`` to which this model conforms.",
     )
-    nonbonded: NonBonded = Field(..., description="Non-bonded parameters schema.")
-    charge_groups: Optional[Array[int]] = Field(
+    bonds: Optional[Bonds] = Field(  # type: ignore
+        None, description="2-body covalent bond model."
+    )
+    angles: Optional[Angles] = Field(  # type: ignore
+        None, description="3-body angular bond model."
+    )
+    dihedrals: Optional[Dihedrals] = Field(  # type: ignore
+        None, description="4-body torsional bond model."
+    )
+    im_dihedrals: Optional[ImproperDihedrals] = Field(  # type: ignore
+        None, description="Improper dihedral bond model."
+    )
+    nonbonded: NonBonded = Field(  # type: ignore
+        ..., description="Non-bonded parameters model."
+    )
+    charge_groups: Optional[qcelemental.models.types.Array[int]] = Field(
         None, description="Charge groups per atom. Length of the array must be natoms."
     )
-    exclusions: Optional[str] = Field(
+    exclusions: Optional[str] = Field(  # type: ignore
         None,
         description="Which pairs of bonded atoms to exclude from non-bonded calculations. \
     	The rules to apply in choosing bonded exclusions are specifed in the configuration file using the exclude parameter. The \
@@ -137,19 +74,79 @@ class ForceField(ProtoModel):
     	With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of \
     	3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.",
     )
-    inclusions: Optional[str] = Field(
+    inclusions: Optional[str] = Field(  # type: ignore
         None,
         description="Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.",
     )
-    name: Optional[str] = Field(
+    name: Optional[str] = Field(  # type: ignore
         None, description="Forcefield name e.g. charmm27, amber99, etc."
     )
-    types: Optional[List[str]] = Field(
+    types: Optional[List[str]] = Field(  # type: ignore
         None,
         description="Atom types e.g. HH31. The type names are associated with the atomic \
         elements defined in other objects e.g. see the :class:``Molecule`` model.",
     )
+    symbols: Optional[List[str]] = Field(  # type: ignore
+        None, description="An ordered (natom,) list of atomic elemental symbols."
+    )
+    masses_: Optional[List[float]] = Field(  # type: ignore
+        None,
+        description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
+        "If this is provided, it must be the same length as ``symbols``.",
+    )
+    masses_units: Optional[str] = Field(  # type: ignore
+        "amu",
+        description="Units for atomic masses. Defaults to unified atomic mass unit.",
+    )
+    atomic_numbers_: Optional[
+        qcelemental.models.types.Array[numpy.int16]
+    ] = Field(  # type: ignore
+        None,
+        description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "Values are inferred from the ``symbols`` list if not explicitly set. "
+        "Ghostedness should be indicated through ``real`` field, not zeros here.",
+        shape=["nat"],
+    )
+    # Extras
+    provenance: Provenance = Field(  # type: ignore
+        provenance_stamp(__name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
+        "provided, and manipulated.",
+    )
+    extras: Dict[str, Any] = Field(  # type: ignore
+        None,
+        description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
+    )
+    class Config(ProtoModel.Config):
+        serialize_skip_defaults = True
+        repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
+        fields = {"masses_": "masses", "atomic_numbers_": "atomic_numbers"}
 
+        def schema_extra(schema, model):
+            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
+            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
+
+    # Properties
+    @property
+    def masses(self) -> qcelemental.models.types.Array[float]:
+        masses = self.__dict__.get("masses_")
+        if masses is None:
+            masses = numpy.array(
+                [qcelemental.periodictable.to_mass(x) for x in self.symbols]
+            )
+        return masses
+
+    @property
+    def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
+        atomic_numbers = self.__dict__.get("atomic_numbers_")
+        if atomic_numbers is None:
+            atomic_numbers = numpy.array(
+                [qcelemental.periodictable.to_Z(x) for x in self.symbols]
+            )
+        return atomic_numbers
+
+    # Constructors
     @classmethod
     def from_file(
         cls,
@@ -247,8 +244,23 @@ class ForceField(ProtoModel):
         else:
             ext = "." + dtype
 
+        mode = kwargs.pop("mode", "w")
+
+        if ext == ".json":
+            stringified = self.json(**kwargs)
+
+            with open(filename, mode) as fp:
+                fp.write(stringified)
+
+            return
+
         if not translator:
             translator = TransComponent.find_ffwrite_tk(ext)
+
+        if not translator:
+            raise NotImplementedError(
+                f"File extension {ext} not supported with any installed translators."
+            )
 
         tkff = self.to_data(translator=translator, **kwargs)
         tkff.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?

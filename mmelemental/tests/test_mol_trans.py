@@ -6,6 +6,7 @@ import sys
 import os
 import parmed
 import mmelemental
+import mmic_translator
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.chem.codes import ChemCode
@@ -16,9 +17,9 @@ from mmelemental.components.io.constructor_component import (
 )
 
 
-translators = mmelemental.components.trans.TransComponent.installed()
 data_dir = os.path.join("mmelemental", "data", "molecules")
 
+translators = mmic_translator.components.TransComponent.installed()
 
 def pytest_generate_tests(metafunc):
     if "translator" in metafunc.fixturenames:
@@ -40,16 +41,8 @@ def test_mmelemental_moldata(translator):
 def test_mmelemental_moltop(translator):
     topFile = os.path.join(data_dir, "alanine.top")
     groFile = os.path.join(data_dir, "alanine.gro")
-
-    import importlib
-    from pathlib import Path
-
-    mod = importlib.import_module(translator)
-
-    if Path(topFile).suffix in mod.ffread_ext_maps:
-        mm_mol = Molecule.from_file(groFile, topFile, translator=translator)
-        assert mm_mol.connectivity is not None
-
+    mm_mol = Molecule.from_file(groFile, topFile, translator=translator)
+    assert mm_mol.connectivity is not None
 
 @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
 def test_mmelemental_codes():
@@ -71,7 +64,7 @@ def test_mmelemental_mol_tofile(translator):
         mol = Molecule.from_file(pdbFile, translator=translator)
 
         mol.to_file("mol.pdb")
-        mol.to_file("mol.json", indent=2)
+        mol.to_file("mol.json") #, indent=2)
         # mol.to_file("mol.gro") -> broken in mmic_parmed, why?!
         # mol.to_file("rdkit.xyz")
         # mol.to_file('rdkit.smiles')
