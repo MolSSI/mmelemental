@@ -30,22 +30,10 @@ class Microstate(ProtoModel):
         "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
     )
-    pot_energy: Optional[Array[float]] = Field(
-        None,
-        description="Total system potential energy. Default unit is KiloJoules/mol.",
-    )
-    pot_energy_units: Optional[str] = Field(
-        "kJ/mol", description="Potential energy units. Defaults to KiloJoules/mol."
-    )
-    observables: Optional[Dict[str, Any]] = Field(
-        None,
-        description="Observables or physical variables not accounted in the schema \
-            e.g. ligand scores used in docking simulations.",
-    )
 
 
 class Ensemble(ProtoModel):
-    mol: Optional[Union[List[Molecule], Molecule]] = Field(
+    mol: Optional[Dict[str, List[Molecule]]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
