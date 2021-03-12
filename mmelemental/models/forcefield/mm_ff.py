@@ -71,7 +71,7 @@ class ForceField(ProtoModel):
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
     charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
-    masses: Optional[List[float]] = Field(  # type: ignore
+    masses: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
         description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
         "If this is provided, it must be the same length as ``symbols``.",
