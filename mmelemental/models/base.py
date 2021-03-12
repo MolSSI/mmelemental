@@ -44,3 +44,7 @@ class ProtoModel(models.ProtoModel):
         kwargs["exclude_unset"] = False
         kwargs["exclude_none"] = True
         return super().dict(*args, **kwargs)
+
+    @classmethod
+    def get_units(cls):
+        return {val.name: val.default for key, val in cls.__fields__.items() if val.name.endswith("_units")}
