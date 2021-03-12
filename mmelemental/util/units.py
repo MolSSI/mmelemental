@@ -19,7 +19,7 @@ def convert(quant: Any, from_units: str, to_units: str):
         Units to convert to.
     Returns
     --------
-    Any
+    numpy.ndarray, or float, or int
         Converted quantity.
     """
     ureg = UnitRegistry()
