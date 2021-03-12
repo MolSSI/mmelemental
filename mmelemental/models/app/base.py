@@ -1,5 +1,7 @@
 from mmelemental.models.base import ProtoModel
 from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models.collect.sm_ensem import Ensemble
+from mmelemental.models.collect.mm_traj import Trajectory
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field
@@ -87,4 +89,40 @@ class SimInput(ProtoModel):
 class SimOutput(ProtoModel):
     """ Basic model for molecular simulation output."""
 
-    ...
+    simInput: SimInput = Field(
+        ..., description="Simulation input used to generate the output."
+    )
+    ensemble: Ensemble = Field(
+        None,
+        description="Ensemble output for a series of microstates of molecules. "
+        "See the :class:``Ensemble`` class.",
+    )
+    trajectory: Trajectory = Field(
+        None,
+        description="Trajectory output representing a series of snapshots of the system at "
+        "different timesteps. See the :class:``Trajectory`` class.",
+    )
+    observables: Optional[Dict[str, List[float]]] = Field(
+        None,
+        description="Physical observables such as RMSD, energy, etc. E.g. observables={'RMSD':[...]}.",
+    )
+    observables_units: Optional[Dict[str, str]] = Field(
+        None,
+        description="Physical observables units. E.g. observables_units={'RMSD':'angstrom'}.",
+    )
+    pot_energy: Optional[List[float]] = Field(
+        None,
+        description="Total system potential energy. Default unit is KiloJoules/mol.",
+    )
+    pot_energy_units: Optional[str] = Field(
+        "kJ/mol", description="Potential energy units. Defaults to KiloJoules/mol."
+    )
+    observables: Optional[Dict[str, List[float]]] = Field(
+        None,
+        description="Observables or physical variables not accounted for in the schema. "
+        "e.g. ligand scores used in docking simulations.",
+    )
+    observables_units: Optional[Dict[str, str]] = Field(
+        None,
+        description="Units observables. Any unit supported by pint is allowed.",
+    )
