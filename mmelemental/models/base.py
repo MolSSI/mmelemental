@@ -47,4 +47,8 @@ class ProtoModel(models.ProtoModel):
 
     @classmethod
     def get_units(cls):
-        return {val.name: val.default for key, val in cls.__fields__.items() if val.name.endswith("_units")}
+        return {
+            val.name: val.default
+            for key, val in cls.__fields__.items()
+            if val.name.endswith("_units")
+        }

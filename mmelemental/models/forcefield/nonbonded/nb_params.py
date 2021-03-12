@@ -8,16 +8,13 @@ __all__ = ["NonBondedParams"]
 
 
 class NonBondedParams(Params):
-    _path_name = os.path.join(
-        pathlib.Path(__file__).parent.absolute(), "potentials", "*.py"
-    )
+
     name: Optional[str] = Field(None, description="Name or form of the potential.")
     _path_name = os.path.join(
         pathlib.Path(__file__).parent.absolute(), "potentials", "*.py"
     )
 
     # Validators
-
     @validator("name", always=True)
     def _set_name(cls, v, values):
         if v is not None:
