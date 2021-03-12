@@ -9,14 +9,14 @@ __all__ = ["LennardJones"]
 class LennardJones(NonBondedParams):
 
     epsilon: qcelemental.models.types.Array[float] = Field(
-        0,
+        ...,
         description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
     )
     epsilon_units: Optional[str] = Field(
         "kJ/mol", description="The epsilon (well depth) Lennard-Jones unit."
     )
     sigma: qcelemental.models.types.Array[float] = Field(
-        0,
+        ...,
         description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
     )
     sigma_units: Optional[str] = Field(
