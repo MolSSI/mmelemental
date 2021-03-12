@@ -262,13 +262,11 @@ class Molecule(ProtoModel):
             "atomic_numbers_": "atomic_numbers",
             "mass_numbers_": "mass_numbers",
             "connectivity_": "connectivity",
-        }
-
-        def schema_extra(schema, model):
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
-            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
+        }
+        schema_extra = "http://json-schema.org/draft-04/schema#"
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
         """
         Initializes the molecule object from dictionary-like values.
         Parameters
@@ -294,8 +292,6 @@ class Molecule(ProtoModel):
         values = self.__dict__
 
         if values.get("symbols") is not None:
-            import numpy
-
             values["symbols"] = numpy.core.defchararray.title(
                 self.symbols
             )  # Title case for consistency
@@ -346,10 +342,15 @@ class Molecule(ProtoModel):
             v = numpy.array([True for _ in range(n)])
         return v
 
-    @validator("connectivity_", each_item=True)
-    def _min_zero(cls, v):
-        if v < 0:
-            raise ValueError("Connectivity entries must be greater than 0")
+    @validator("geometry")
+    def _valid_dims(cls, v, values, **kwargs):
+        n = len(values["symbols"])
+        try:
+            v = v.reshape(n, values["ndim"])
+        except (ValueError, AttributeError):
+            raise ValueError(
+                f"Geometry must be castable to shape (Natoms,{values['ndim']})!"
+            )
         return v
 
     # Properties
