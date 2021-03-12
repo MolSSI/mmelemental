@@ -1,6 +1,5 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.base import ProtoModel
-import qcelemental
 from .bond_params import BondParams
 from typing import Optional, Dict, Any, Union, List
 
