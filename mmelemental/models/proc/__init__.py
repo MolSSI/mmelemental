@@ -1,2 +1,2 @@
-from . import base, dynamics, optim
+from . import base, dynamics
 from .base import *
