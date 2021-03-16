@@ -15,15 +15,40 @@ class TrajReaderInput(ProtoModel):
         ..., description="Topology input filename."
     )
 
+class TrajInput(ProtoModel):
+    geometry: Optional[int] = Field(
+        ..., description="Atomic positions of length natoms. Default unit is Angstroms."
+    )
+    geometry_units: Optional[str] = Field(
+        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+    )
+    velocities: Optional[int] = Field(
+        None,
+        description="Atomic velocities of length natoms. Default unit is Angstroms/femotoseconds.",
+    )
+    velocities_units: Optional[str] = Field(
+        "angstrom/fs",
+        description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+    )
+    forces: Optional[int] = Field(
+        None, description="Atomic forces of length natoms. KiloJoules/mol.Angstroms."
+    )
+    forces_units: Optional[str] = Field(
+        "kJ/(mol*angstrom)",
+        description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms.",
+    )
+    freq: Optional[int] = Field(
+        None,
+        description="Every number of steps the geometry, velocities, and/or forces are sampled.",
+    )
 
 class Frame(Microstate):
-    timestep: float = Field(
+    timestep: Optional[float] = Field(
         None, description="Timestep size. Default unit is femtoseconds."
     )
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
-
 
 class Trajectory(ProtoModel):
     mol: Optional[Union[List[Molecule], Molecule]] = Field(
