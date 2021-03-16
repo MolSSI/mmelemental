@@ -1,11 +1,11 @@
-from mmelemental.models.app.base import SimInput
+from mmelemental.models.proc.base import ProcInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from pydantic import Field
 from typing import Tuple, Union
 from qcelemental.models.types import Array
 
 
-class DynamicsInput(SimInput):
+class DynamicsInput(ProcInput):
     """ Molecular dynamics parameter input schema."""
 
     # Velocity fields
