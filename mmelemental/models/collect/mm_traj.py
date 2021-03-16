@@ -15,6 +15,7 @@ class TrajReaderInput(ProtoModel):
         ..., description="Topology input filename."
     )
 
+
 class TrajInput(ProtoModel):
     geometry: Optional[int] = Field(
         ..., description="Atomic positions of length natoms. Default unit is Angstroms."
@@ -42,6 +43,7 @@ class TrajInput(ProtoModel):
         description="Every number of steps the geometry, velocities, and/or forces are sampled.",
     )
 
+
 class Frame(Microstate):
     timestep: Optional[float] = Field(
         None, description="Timestep size. Default unit is femtoseconds."
@@ -49,6 +51,7 @@ class Frame(Microstate):
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
+
 
 class Trajectory(ProtoModel):
     mol: Optional[Union[List[Molecule], Molecule]] = Field(
