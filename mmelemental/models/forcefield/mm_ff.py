@@ -2,9 +2,10 @@ from pydantic import Field, constr, validator
 import importlib
 import hashlib
 import json
-from typing import Any, List, Dict, Optional
+from typing import Any, List, Dict, Optional, Union
 import qcelemental
 import numpy
+from pathlib import Path
 
 # MM models
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
@@ -52,19 +53,19 @@ class ForceField(ProtoModel):
         0,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    bonds: Optional[Bonds] = Field(  # type: ignore
+    bonds: Optional[Union[Bonds, List[Bonds]]] = Field(  # type: ignore
         None, description="2-body covalent bond model."
     )
-    angles: Optional[Angles] = Field(  # type: ignore
+    angles: Optional[Union[Angles, List[Angles]]] = Field(  # type: ignore
         None, description="3-body angular bond model."
     )
-    dihedrals: Optional[Dihedrals] = Field(  # type: ignore
+    dihedrals: Optional[Union[Dihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="4-body torsional bond model."
     )
-    im_dihedrals: Optional[ImproperDihedrals] = Field(  # type: ignore
+    im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="Improper dihedral bond model."
     )
-    nonbonded: NonBonded = Field(  # type: ignore
+    nonbonded: Union[NonBonded, List[NonBonded]] = Field(  # type: ignore
         ..., description="Non-bonded parameters model."
     )
     charges: Optional[qcelemental.models.types.Array[float]] = Field(
@@ -181,32 +182,63 @@ class ForceField(ProtoModel):
             A constructed ForceField object.
         """
 
-        fileobj = FileOutput(path=filename)
+        file_ext = Path(filename).suffix if filename else None
+
+        if file_ext in qcelemental.models.molecule._extension_map:
+
+            import json
+
+            if dtype is None:
+                dtype = qcelemental.models.molecule._extension_map[file_ext]
+
+            # Raw string type, read and pass through
+            if dtype == "json":
+                with open(filename, "r") as infile:
+                    data = json.load(infile)
+                dtype = "dict"
+            else:
+                raise KeyError(f"Data type not supported: {dtype}.")
+
+            return cls.from_data(data, dtype=dtype, **kwargs)
+
+        fileobj = FileOutput(path=filename) if filename else None
+
         dtype = dtype or fileobj.ext.strip(".")
         ext = "." + dtype
 
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
-            translator = TransComponent.find_ffread_tk(ext)
+            from mmic_translator.components.supported import reg_trans
 
-        if not translator:
-            raise ValueError(
-                f"Could not read file with ext {dtype}. Please install an appropriate TransComponent."
-            )
+            reg_trans = list(reg_trans)
 
-        if importlib.util.find_spec(translator):
+            while not translator:
+                translator = TransComponent.find_molread_tk(ext, trans=reg_trans)
+                if not translator:
+                    raise ValueError(
+                        f"Could not read xyz file with ext {ext}. Please install an appropriate translator."
+                    )
+                # Make sure we can import the translator module
+                if importlib.util.find_spec(translator):
+                    mod = importlib.import_module(translator)
+
+        elif importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
-            tkff_class = mod._classes_map.get("ForceField")
+
+        tkff_class = mod._classes_map.get("ForceField")
 
         if not tkff_class:
             raise ValueError(
-                f"No ForceField model found while looking in translator: {translator}."
+                f"No Molecule model found while looking in translator: {translator}."
             )
 
-        tkff = tkff_class.from_file(filename=fileobj.abs_path, dtype=dtype)
+        tkff = tkff_class.from_file(
+            filename=fileobj.abs_path if fileobj else None,
+            dtype=dtype,
+        )
 
-        return cls.from_data(tkff, dtype=tkff.dtype)
+        return cls.from_data(tkff, dtype=tkff.dtype, **kwargs)
 
     @classmethod
     def from_data(cls, data: Any, **kwargs) -> "ForceField":
@@ -223,6 +255,11 @@ class ForceField(ProtoModel):
         ForceField
             A constructed ForceField object.
         """
+        if isinstance(data, dict):
+            kwargs.pop("dtype", None)  # remove dtype if supplied
+            kwargs.update(data)
+            return cls(**kwargs)
+
         return data.to_schema(**kwargs)
 
     def to_file(
