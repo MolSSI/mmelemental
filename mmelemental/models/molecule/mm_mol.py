@@ -681,6 +681,7 @@ class Molecule(ProtoModel):
                     f"Failed in interpreting {data} as a valid code. Exception: {e}"
                 )
         elif isinstance(data, dict):
+            kwargs.pop("dtype", None)  # remove dtype if supplied
             kwargs.update(data)
             return cls(**kwargs)
 
