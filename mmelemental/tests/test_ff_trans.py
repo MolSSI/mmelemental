@@ -5,7 +5,7 @@ import pytest
 from mmelemental.models.forcefield import ForceField
 import sys
 import os
-from .data import data_dir
+from .data import data_ff_dir
 
 try:
     import mmic_translator
@@ -26,7 +26,7 @@ def test_mmelemental_imported():
 
 
 def test_mmelemental_moldata(translator):
-    topFile = os.path.join(data_dir, "alanine.top")
+    topFile = os.path.join(data_ff_dir, "alanine.top")
 
     mm_ff = ForceField.from_file(topFile, translator=translator)
     assert isinstance(mm_ff, ForceField)
