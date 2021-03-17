@@ -14,7 +14,7 @@ from mmelemental.components.io.constructor_component import (
     ForceFieldConstructorComponent,
 )
 
-from .data import data_dir
+from .data import data_mol_dir, data_ff_dir
 
 try:
     import mmic_translator
@@ -30,22 +30,22 @@ def pytest_generate_tests(metafunc):
 
 
 def test_mmelemental_moldata(translator):
-    groFile = os.path.join(data_dir, "alanine.gro")
+    groFile = os.path.join(data_mol_dir, "alanine.gro")
 
     mm_mol = Molecule.from_file(groFile, translator=translator)
     assert isinstance(mm_mol, Molecule)
 
 
 def test_mmelemental_moltop(translator):
-    topFile = os.path.join(data_dir, "alanine.top")
-    groFile = os.path.join(data_dir, "alanine.gro")
+    topFile = os.path.join(data_ff_dir, "alanine.top")
+    groFile = os.path.join(data_mol_dir, "alanine.gro")
     mm_mol = Molecule.from_file(groFile, topFile, translator=translator)
     assert mm_mol.connectivity is not None
 
 
 def test_mmelemental_mol_tofile(translator):
     for ext in ["pdb", "gro"]:
-        pdbFile = os.path.join(data_dir, f"alanine.{ext}")
+        pdbFile = os.path.join(data_mol_dir, f"alanine.{ext}")
 
         mol = Molecule.from_file(pdbFile, translator=translator)
 
