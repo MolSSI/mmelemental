@@ -1,12 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 import qcelemental
-from ..nb_params import NonBondedParams
+from mmelemental.models.base import ProtoModel
 
 __all__ = ["LennardJones"]
 
 
-class LennardJones(NonBondedParams):
+class LennardJones(ProtoModel):
 
     epsilon: qcelemental.models.types.Array[float] = Field(
         ...,
@@ -23,7 +23,7 @@ class LennardJones(NonBondedParams):
         "angstrom", description="The Lennard-Jones sigma unit."
     )
 
-    @root_validator
+    @root_validator(allow_reuse=True)
     def _valid_length(cls, values):
         assert len(values["epsilon"].shape) == 1, "epsilon must be a 1D array!"
         assert len(values["sigma"].shape) == 1, "sigma must be a 1D array!"
@@ -31,3 +31,7 @@ class LennardJones(NonBondedParams):
             values["sigma"]
         ), "epsilon and sigma must be of equal length!"
         return values
+
+    def dict(self, *args, **kwargs):
+        kwargs["exclude"] = {"provenance"}
+        return super().dict(*args, **kwargs)

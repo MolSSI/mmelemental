@@ -1,12 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 import qcelemental
-from ..nb_params import NonBondedParams
+from mmelemental.models.base import ProtoModel
 
 __all__ = ["EAM"]
 
 
-class EAM(NonBondedParams):
+class EAM(ProtoModel):
 
     embed: qcelemental.models.types.Array[float] = Field(
         ..., description="Embedding energy term. Default unit is kJ/mol."
@@ -24,7 +24,7 @@ class EAM(NonBondedParams):
         ..., description="Atomic electron density."
     )
 
-    @root_validator
+    @root_validator(allow_reuse=True)
     def _valid_length(cls, values):
         assert len(values["embed"].shape) == 1, "embed must be a 1D array!"
         assert len(values["density"].shape) == 1, "density must be a 1D array!"
@@ -33,3 +33,7 @@ class EAM(NonBondedParams):
             values["density"]
         ), "embed and density must be of equal length!"
         return values
+
+    def dict(self, *args, **kwargs):
+        kwargs["exclude"] = {"provenance"}
+        return super().dict(*args, **kwargs)

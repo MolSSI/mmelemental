@@ -1,12 +1,12 @@
-from pydantic import Field, root_validator
+from pydantic import Field, validator
 from typing import Optional
 import qcelemental
-from ..bond_params import BondParams
+from mmelemental.models.base import ProtoModel
 
 __all__ = ["Gromos96"]
 
 
-class Gromos96(BondParams):
+class Gromos96(ProtoModel):
     """
     GROMOS-96 spring bond model: Energy = 1/4 * spring * (distance**2 - length**2)**2. "
     """
@@ -18,9 +18,11 @@ class Gromos96(BondParams):
         "kJ/(mol*angstrom**2)", description="Bond spring constant unit."
     )
 
-    @root_validator
-    def _valid_length(cls, values):
-        assert (
-            len(values["spring"].shape) == 1
-        ), "Bond spring constants must be a 1D array!"
-        return values
+    @validator("spring", allow_reuse=True)
+    def _valid_length(cls, v):
+        assert len(v.shape) == 1, "Bond spring constants must be a 1D array!"
+        return v
+
+    def dict(self, *args, **kwargs):
+        kwargs["exclude"] = {"provenance"}
+        return super().dict(*args, **kwargs)
