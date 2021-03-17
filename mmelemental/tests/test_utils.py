@@ -6,9 +6,9 @@ from mmelemental.models.util.input import FileInput, OpenBabelInput, GrepInput
 from mmelemental.models.chem.codes import ChemCode
 
 # Test input file
-from .data import data_dir
+from .data import data_mol_dir
 
-receptor = os.path.join(data_dir, "alanine.pdb")
+receptor = os.path.join(data_mol_dir, "alanine.pdb")
 
 
 def test_obabel():

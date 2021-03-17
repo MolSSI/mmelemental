@@ -6,12 +6,12 @@ import mmelemental
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.proc.dynamics import DynamicsInput
 import os
-from .data import data_dir
+from .data import data_mol_dir
 
 
 def test_mmelemental_md():
-    protein = Molecule.from_file(filename=os.path.join(data_dir, "alanine.json"))
-    solvent = Molecule.from_file(filename=os.path.join(data_dir, "water.json"))
+    protein = Molecule.from_file(filename=os.path.join(data_mol_dir, "alanine.json"))
+    solvent = Molecule.from_file(filename=os.path.join(data_mol_dir, "water.json"))
     md = DynamicsInput(
         mol={"protein": protein, "solvent": solvent},
         forcefield={"protein": "charmm27", "solvent": "spc"},
