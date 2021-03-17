@@ -4,6 +4,9 @@ import pytest
 import os
 
 natoms = 10
+nbonds = natoms - 1
+nangles = natoms - 2
+ndihedrals = natoms - 3
 
 
 def rewrite(filename):
@@ -26,7 +29,7 @@ def test_nonbonded():
     lj = ff.nonbonded.potentials.LennardJones(
         epsilon=numpy.random.rand(natoms), sigma=numpy.random.rand(natoms)
     )
-    nonbonded = ff.nonbonded.NonBonded(params=lj)
+    nonbonded = ff.nonbonded.NonBonded(params=lj, form="LennardJones")
     assert nonbonded.form == "LennardJones"
     return nonbonded
 
@@ -34,26 +37,23 @@ def test_nonbonded():
 ############################################
 ######## BONDS #############################
 def test_bonds_linear():
-    linear = ff.bonded.bonds.potentials.Harmonic(
-        spring=numpy.random.rand(natoms), lengths=numpy.random.rand(natoms)
+    print(ff.bonded.Bonds.supported_potentials())
+    linear = ff.bonded.bonds.potentials.Harmonic(spring=numpy.random.rand(nbonds))
+    bonds = ff.bonded.Bonds(
+        params=linear, lengths=numpy.random.rand(nbonds), form="Harmonic"
     )
-    bonds = ff.bonded.Bonds(params=linear)
     assert bonds.form == "Harmonic"
     return bonds
 
 
-def test_bonds_hybrid():
-    natoms_by_2 = int(natoms / 2)
-    lengths = numpy.random.rand(natoms)
-    linear = ff.bonded.bonds.potentials.Harmonic(
-        spring=numpy.random.rand(natoms_by_2), lengths=lengths[:natoms_by_2]
-    )
+def test_bonds_gromos96():
+    lengths = numpy.random.rand(nbonds)
     gromos = ff.bonded.bonds.potentials.Gromos96(
-        spring=numpy.random.rand(natoms_by_2), lengths=lengths[natoms_by_2:]
+        spring=numpy.random.rand(nbonds),
     )
 
-    bonds = ff.bonded.Bonds(params=[linear, gromos])
-    assert bonds.form == ["Harmonic", "Gromos96"]
+    bonds = ff.bonded.Bonds(params=gromos, lengths=lengths, form="Gromos96")
+    assert bonds.form == "Gromos96"
     return bonds
 
 
@@ -61,11 +61,14 @@ def test_bonds_hybrid():
 ####### ANGLES ############################
 def test_angles():
     linear = ff.bonded.angles.potentials.Harmonic(
-        spring=numpy.random.rand(natoms),
-        angles=rand_angles(natoms),
-        angles_units="radians",
+        spring=numpy.random.rand(nangles),
     )
-    angles = ff.bonded.Angles(params=linear)
+    angles = ff.bonded.Angles(
+        params=linear,
+        angles=rand_angles(nangles),
+        angles_units="radians",
+        form="Harmonic",
+    )
     assert angles.form == "Harmonic"
     return angles
 
@@ -74,11 +77,14 @@ def test_angles():
 ####### DIHEDRALS #########################
 def test_dihedrals():
     linear = ff.bonded.dihedrals.potentials.Harmonic(
-        spring=numpy.random.rand(natoms),
-        angles=rand_angles(natoms),
-        angles_units="radians",
+        spring=numpy.random.rand(ndihedrals),
     )
-    dihedrals = ff.bonded.Dihedrals(params=linear)
+    dihedrals = ff.bonded.Dihedrals(
+        params=linear,
+        angles=rand_angles(ndihedrals),
+        angles_units="radians",
+        form="Harmonic",
+    )
     assert dihedrals.form == "Harmonic"
     return dihedrals
 
@@ -102,7 +108,7 @@ def test_forcefield():
 
 def test_forcefield_hybrid():
     nonbonded = test_nonbonded()
-    bonds = test_bonds_hybrid()
+    bonds = [test_bonds_linear(), test_bonds_gromos96()]
     angles = test_angles()
     dihedrals = test_dihedrals()
     mm_ff = ff.ForceField(
