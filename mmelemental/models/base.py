@@ -47,6 +47,7 @@ class ProtoModel(models.ProtoModel):
 
     @classmethod
     def get_units(cls):
+        """ Returns model default units i.e. any Field name ending with _units. """
         return {
             val.name: val.default
             for key, val in cls.__fields__.items()
