@@ -22,7 +22,10 @@ def convert(quant: Any, from_units: str, to_units: str):
     numpy.ndarray, or float, or int
         Converted quantity.
     """
-    ureg = UnitRegistry()
-    uquant = ureg.Quantity(quant, from_units)
-    cquant, _ = uquant.to(to_units).to_tuple()
+    if quant is not None:
+        ureg = UnitRegistry()
+        uquant = ureg.Quantity(quant, from_units)
+        cquant, _ = uquant.to(to_units).to_tuple()
+    else:
+        cquant = None
     return cquant
