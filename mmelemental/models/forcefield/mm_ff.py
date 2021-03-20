@@ -53,6 +53,12 @@ class ForceField(ProtoModel):
         0,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
+    symbols: Optional[List[str]] = Field(  # type: ignore
+        ..., description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols."
+    )
+    nonbonded: Union[NonBonded, List[NonBonded]] = Field(  # type: ignore
+        ..., description="Non-bonded parameters model."
+    )
     bonds: Optional[Union[Bonds, List[Bonds]]] = Field(  # type: ignore
         None, description="2-body covalent bond model."
     )
@@ -64,9 +70,6 @@ class ForceField(ProtoModel):
     )
     im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="Improper dihedral bond model."
-    )
-    nonbonded: Union[NonBonded, List[NonBonded]] = Field(  # type: ignore
-        ..., description="Non-bonded parameters model."
     )
     charges: Optional[qcelemental.models.types.Array[float]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
@@ -105,9 +108,6 @@ class ForceField(ProtoModel):
         None,
         description="Atom types e.g. HH31. The type names are associated with the atomic \
         elements defined in other objects e.g. see the :class:``Molecule`` model.",
-    )
-    symbols: Optional[List[str]] = Field(  # type: ignore
-        None, description="An ordered (natom,) list of atomic elemental symbols."
     )
     atomic_numbers_: Optional[
         qcelemental.models.types.Array[numpy.int16]
