@@ -37,16 +37,17 @@ def test_nonbonded():
 ############################################
 ######## BONDS #############################
 def test_bonds_linear():
-    print(ff.bonded.Bonds.supported_potentials())
+    indices = [(i, i+1 , 1.0) for i in range(nbonds)]
     linear = ff.bonded.bonds.potentials.Harmonic(spring=numpy.random.rand(nbonds))
     bonds = ff.bonded.Bonds(
-        params=linear, lengths=numpy.random.rand(nbonds), form="Harmonic"
+        params=linear, lengths=numpy.random.rand(nbonds), form="Harmonic", indices=indices
     )
     assert bonds.form == "Harmonic"
     return bonds
 
 
 def test_bonds_gromos96():
+    indices = [(i, i+1 , 1.0) for i in range(nbonds)]
     lengths = numpy.random.rand(nbonds)
     gromos = ff.bonded.bonds.potentials.Gromos96(
         spring=numpy.random.rand(nbonds),
@@ -60,6 +61,7 @@ def test_bonds_gromos96():
 ###########################################
 ####### ANGLES ############################
 def test_angles():
+    indices = [(i, i+1 , i+2) for i in range(nangles)]
     linear = ff.bonded.angles.potentials.Harmonic(
         spring=numpy.random.rand(nangles),
     )
@@ -76,6 +78,7 @@ def test_angles():
 ###########################################
 ####### DIHEDRALS #########################
 def test_dihedrals():
+    indices = [(i, i+1 , i+2, i+3) for i in range(ndihedrals)]
     linear = ff.bonded.dihedrals.potentials.Harmonic(
         spring=numpy.random.rand(ndihedrals),
     )
@@ -100,10 +103,11 @@ def test_forcefield():
         angles=angles,
         dihedrals=dihedrals,
         charges=numpy.random.rand(natoms),
+        symbols=["H" for _ in range(natoms)]
     )
-    mm_ff.to_file("forcefield.json")
-    rewrite("forcefield.json")
-    os.remove("forcefield.json")
+    mm_ff.to_file("forcefield-single.json")
+    rewrite("forcefield-single.json")
+    os.remove("forcefield-single.json")
 
 
 def test_forcefield_hybrid():
@@ -117,6 +121,8 @@ def test_forcefield_hybrid():
         angles=angles,
         dihedrals=dihedrals,
         charges=numpy.random.rand(natoms),
+        symbols=["H" for _ in range(natoms)]
     )
     mm_ff.to_file("forcefield.json")
     rewrite("forcefield.json")
+    os.remove("forcefield.json")
