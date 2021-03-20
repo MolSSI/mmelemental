@@ -126,6 +126,7 @@ class Params(ProtoModel):
         if isinstance(v, dict):
             v_class = cls.supported_potentials().get(values.get("form"))
             v = v_class(**v)
+            values["params"] = v
         assert v.__class__.__name__ == values.get(
             "form"
         ), f"Params type: {v.__class__.__name__} != form: {values.get('form')}."
