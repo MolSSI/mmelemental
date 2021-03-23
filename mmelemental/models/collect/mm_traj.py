@@ -6,7 +6,7 @@ from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel
 from .sm_ensem import Microstate
 
-__all__ = ["Trajectory", "Frame"]
+__all__ = ["Trajectory", "Frame", "TrajInput"]
 
 
 class TrajReaderInput(ProtoModel):
