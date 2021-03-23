@@ -5,7 +5,7 @@ from mmelemental.models.collect.mm_traj import Trajectory, TrajInput
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
 from pydantic import Field, validator
-from typing import Tuple, List, Union, Dict, Optional
+from typing import Tuple, List, Union, Dict, Optional, Any
 
 __all__ = ["ProcInput", "ProcOutput"]
 
@@ -14,9 +14,25 @@ class ProcInput(ProtoModel):
     """ Basic model for molecular simulation input parameters."""
 
     # Generic fields
-    engine: str = Field(
+    engine: Optional[str] = Field(
         None,
-        description="Engine name e.g. OpenMM.",
+        description="Engine name to use in the procedure e.g. OpenMM.",
+    )
+    engine_version: Optional[str] = Field(
+        None, description="Supported engine version. e.g. >= 3.4.0."
+    )
+    component: Optional[str] = Field(
+        None,
+        description="Component name to use in the procedure e.g. mmic_openmm.",
+    )
+    schema_version: Optional[str] = Field(
+        None, description="Supported schema version. e.g. >= 1.2.0."
+    )  # we need this? yah, but non-MMSchemas
+    schema_name: Optional[str] = Field(
+        "MMSchema", description="Schema name."
+    )
+    kwargs: Optional[Dict[str, Any]] = Field(
+        None, description="Additional keyword arguments to pass to the constructors."
     )
 
     # System fields
@@ -63,9 +79,21 @@ class ProcInput(ProtoModel):
 class ProcOutput(ProtoModel):
     """ Basic model for molecular simulation output."""
 
-    procInput: ProcInput = Field(
-        ..., description="Simulation input used to generate the output."
+    component: str = Field(
+        None,
+        description="Component name used in the procedure e.g. mmic_openmm.",
     )
+    engine: Optional[str] = Field(
+        None,
+        description="Engine name used in the procedure e.g. OpenMM.",
+    )
+    engine_version: Optional[str] = Field(
+        None, description="Engine version used in the procedure e.g. >= 3.4.0."
+    )
+    warning: Optional[List[str]] = Field(
+        None, description="Warning messages generated from the conversion."
+    )
+
     mol: Optional[Dict[str, Molecule]] = Field(
         None,
         description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
