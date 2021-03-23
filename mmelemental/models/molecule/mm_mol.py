@@ -22,7 +22,8 @@ FORCE_NOISE = 8
 MASS_NOISE = 6
 CHARGE_NOISE = 4
 
-
+_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+Solve by: pip install mmic_translator"
 mmschema_molecule_default = "mmschema_molecule"
 
 
@@ -595,9 +596,6 @@ class Molecule(ProtoModel):
         except Exception:
             TransComponent = None
 
-        _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
-        Solve by: pip install mmic_translator"
-
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
@@ -722,6 +720,11 @@ class Molecule(ProtoModel):
             with open(filename, mode) as fp:
                 fp.write(stringified)
         else:  # look for an installed mmic_translator
+            try:
+                from mmic_translator.components import TransComponent
+            except Exception:
+                TransComponent = None
+
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
             translator = TransComponent.find_molwrite_tk(ext)
@@ -756,6 +759,10 @@ class Molecule(ProtoModel):
         ToolkitModel
             Toolkit-specific molecule model
         """
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
 
         if not translator:
             if not TransComponent:
@@ -766,12 +773,7 @@ class Molecule(ProtoModel):
                 )
             translator = TransComponent.find_trans(dtype)
 
-        if translator == "qcelemental":
-            qmol = qcelemental.models.molecule.Molecule.to_data(
-                data, orient=False, validate=False, **kwargs
-            )
-            return Molecule(orient=orient, validate=validate, **qmol.to_dict())
-        elif importlib.util.find_spec(translator):
+        if importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
             tkmol = mod._classes_map.get("Molecule")
 
