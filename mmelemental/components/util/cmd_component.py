@@ -1,12 +1,12 @@
 from qcengine.util import execute
 from mmelemental.models.util.output import FileOutput
-from mmic.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints import SpecificComponent
 from typing import Any, Dict, List, Tuple, Optional, Union
 from mmelemental.models.util.output import CmdOutput
 from mmelemental.models.util.input import CmdInput
 
 
-class CmdComponent(GenericComponent):
+class CmdComponent(SpecificComponent):
     """ Cmd process: build_input() -> run() -> parse_output() -> [clean()] """
 
     @classmethod

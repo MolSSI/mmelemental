@@ -1,10 +1,10 @@
-from mmic.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints import SpecificComponent
 from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.output.sim import Frame, TrajReaderInput
 
 
-class SingleFrameComponent(GenericComponent):
+class SingleFrameComponent(SpecificComponent):
     """ Class for constructing Trajectory that reads a single frame from file(s). """
 
     @classmethod

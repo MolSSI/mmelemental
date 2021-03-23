@@ -1,5 +1,5 @@
 from mmelemental.models.base import ProtoModel
-from mmic.components.blueprints.generic_component import GenericComponent
+from mmic.components.blueprints import SpecificComponent
 from typing import Any, Dict, List, Optional, Tuple
 
 from mmelemental.models.molecule.mm_mol import Molecule
@@ -8,7 +8,7 @@ from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.util.input import FileInput
 
 
-class MolConstructorComponent(GenericComponent):
+class MolConstructorComponent(SpecificComponent):
     """ Class for constructing Molecule from ChemCode or FileInput. """
 
     @classmethod
@@ -53,7 +53,7 @@ class MolConstructorComponent(GenericComponent):
             )
 
 
-class ForceFieldConstructorComponent(GenericComponent):
+class ForceFieldConstructorComponent(SpecificComponent):
     """ Class for constructing ForceField object from FileInput. """
 
     @classmethod
