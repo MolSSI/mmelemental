@@ -13,16 +13,6 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import Provenance, provenance_stamp, ProtoModel
 
-# Generic translator component
-try:
-    from mmic_translator.components import TransComponent
-    from mmic_translator.models.base import ToolkitModel
-except Exception:
-    TransComponent, ToolkitModel = None, "ToolkitModel"
-
-_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
-Solve by: pip install mmic_translator"
-
 __all__ = ["Molecule"]
 
 # Rounding quantities for hashing
@@ -599,6 +589,15 @@ class Molecule(ProtoModel):
         dtype = dtype or fileobj.ext.strip(".")
         ext = "." + dtype
 
+        # Generic translator component
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+
+        _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+        Solve by: pip install mmic_translator"
+
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
@@ -740,7 +739,7 @@ class Molecule(ProtoModel):
         dtype: Optional[str] = None,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
-    ) -> ToolkitModel:
+    ) -> "ToolkitModel":
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
         Parameters
         ----------
