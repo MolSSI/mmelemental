@@ -4,7 +4,7 @@ Simulation test for the mmelemental package.
 # import pytest
 import mmelemental
 from mmelemental.models.molecule.mm_mol import Molecule
-from mmelemental.models.proc.dynamics import DynamicsInput
+from mmelemental.models.proc import ProcInput
 import os
 from .data import data_mol_dir
 
@@ -12,12 +12,11 @@ from .data import data_mol_dir
 def test_mmelemental_md():
     protein = Molecule.from_file(filename=os.path.join(data_mol_dir, "alanine.json"))
     solvent = Molecule.from_file(filename=os.path.join(data_mol_dir, "water.json"))
-    md = DynamicsInput(
-        mol={"protein": protein, "solvent": solvent},
-        forcefield={"protein": "charmm27", "solvent": "spc"},
-        temp=300,
-        press=1.1,
-        temp_method="berendsen",
+    proc = ProcInput(
+        engine="some_engine",
+        engine_version="1.0.0",
+        component="mmic_pkg",
+        schema_version=0,
     )
 
     # file = SimWriterComponent.compute(sim_input)
