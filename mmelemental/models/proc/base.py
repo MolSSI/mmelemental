@@ -4,11 +4,12 @@ from mmelemental.models.collect.sm_ensem import Ensemble
 from mmelemental.models.collect.mm_traj import Trajectory, TrajInput
 from mmelemental.models.solvent.implicit import Solvent
 from mmelemental.models.forcefield import ForceField
-from pydantic import Field, validator
+from pydantic import Field, validator, constr
 from typing import Tuple, List, Union, Dict, Optional, Any
 
 __all__ = ["ProcInput", "ProcOutput"]
 
+mmschema_proc_input_default = "mmschema_proc_input"
 
 class ProcInput(ProtoModel):
     """ Basic model for molecular simulation input parameters."""
@@ -25,54 +26,21 @@ class ProcInput(ProtoModel):
         None,
         description="Component name to use in the procedure e.g. mmic_openmm.",
     )
-    schema_version: Optional[str] = Field(
-        None, description="Supported schema version. e.g. >= 1.2.0."
-    )  # we need this? yah, but non-MMSchemas
-    schema_name: Optional[str] = Field("MMSchema", description="Schema name.")
+    schema_name: constr(
+        strip_whitespace=True, regex="^(mmschema_proc_input)$"
+    ) = Field(  # type: ignore
+        mmschema_proc_input_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_proc_input_default}."
+        ),
+    )
+    schema_version: int = Field(  # type: ignore
+        0,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
     kwargs: Optional[Dict[str, Any]] = Field(
         None, description="Additional keyword arguments to pass to the constructors."
     )
-
-    # System fields
-    mol: Dict[str, Molecule] = Field(
-        None,
-        description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
-        "Example: mol = {'ligand': Molecule, 'receptor': Molecule, 'solvent': Molecule}.",
-    )
-    forcefield: Optional[Union[Dict[str, ForceField], Dict[str, str]]] = Field(
-        None,
-        description='Forcefield object(s) or name(s) for every Molecule defined in "mol".',
-    )
-    cell: Optional[Tuple[Tuple[float], Tuple[float]]] = Field(
-        None,
-        description="Cell dimensions in the form: ((xmin, ymin, ...), (xmax, ymax, ...))",
-    )
-    boundary: Tuple[str] = Field(
-        None,
-        description="Boundary conditions in all dimensions e.g. (periodic, periodic, periodic) imposes periodic boundaries in 3D.",
-    )
-
-    # I/O fields
-    trajectory: Optional[Dict[str, TrajInput]] = Field(
-        None,
-        description="Trajectories to write for quantity 'key' every 'value' steps. E.g. {'geometry': 10, 'velocities': 100, 'forces': 50} "
-        "produces 3 trajectory objects storing positions every 10 steps, velocities, every 100 steps, and forces every 50 steps. A comma "
-        "seperator is used to indicate multiple variables stored in the same trajectory e.g. {'geometry,y,z': 1} produces a single trajectory object which stores the x, y, and z positions "
-        "every step.",
-    )
-
-    @validator("forcefield")
-    def _valid_ff(cls, v, values, **kwargs):
-        for name in values["mol"]:
-            if name not in v:
-                raise ValueError(f"{name} does not have a defined force field.")
-        assert len(v) == len(values["mol"]), (
-            "Every molecule should have a single force field definition. "
-            + f"{len(values['mol'])} molecules defined using {len(v)} force fields."
-        )
-
-        return v
-
 
 class ProcOutput(ProtoModel):
     """ Basic model for molecular simulation output."""
