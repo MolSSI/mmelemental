@@ -54,7 +54,8 @@ class ForceField(ProtoModel):
         description="The version number of ``schema_name`` to which this model conforms.",
     )
     symbols: Optional[List[str]] = Field(  # type: ignore
-        ..., description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols."
+        ...,
+        description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols.",
     )
     nonbonded: Union[NonBonded, List[NonBonded]] = Field(  # type: ignore
         ..., description="Non-bonded parameters model."

@@ -28,9 +28,7 @@ class ProcInput(ProtoModel):
     schema_version: Optional[str] = Field(
         None, description="Supported schema version. e.g. >= 1.2.0."
     )  # we need this? yah, but non-MMSchemas
-    schema_name: Optional[str] = Field(
-        "MMSchema", description="Schema name."
-    )
+    schema_name: Optional[str] = Field("MMSchema", description="Schema name.")
     kwargs: Optional[Dict[str, Any]] = Field(
         None, description="Additional keyword arguments to pass to the constructors."
     )
