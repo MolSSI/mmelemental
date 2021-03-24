@@ -11,6 +11,7 @@ __all__ = ["ProcInput", "ProcOutput"]
 
 mmschema_proc_input_default = "mmschema_proc_input"
 
+
 class ProcInput(ProtoModel):
     """ Basic model for molecular simulation input parameters."""
 
@@ -41,6 +42,7 @@ class ProcInput(ProtoModel):
     kwargs: Optional[Dict[str, Any]] = Field(
         None, description="Additional keyword arguments to pass to the constructors."
     )
+
 
 class ProcOutput(ProtoModel):
     """ Basic model for molecular simulation output."""
