@@ -1,3 +1,2 @@
 pydantic>=1.7
 qcelemental>=0.18.0
-qcengine>=0.17.0
