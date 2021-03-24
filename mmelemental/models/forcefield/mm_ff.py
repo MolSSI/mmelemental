@@ -13,16 +13,8 @@ from mmelemental.models.util.output import FileOutput
 from .nonbonded import NonBonded
 from .bonded import Bonds, Angles, Dihedrals
 
-# Generic translator component
-try:
-    from mmic_translator.components import TransComponent
-    from mmic_translator.models.base import ToolkitModel
-except Exception:
-    TransComponent, ToolkitModel = None, "ToolkitModel"
-
 _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
 Solve by: pip install mmic_translator"
-
 
 mmschema_forcefield_default = "mmschema_forcefield"
 
@@ -102,13 +94,19 @@ class ForceField(ProtoModel):
         None,
         description="Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.",
     )
+    # switch_width="1.0 * angstrom",
+    # cutoff="9.0 * angstrom" ,
+    # method="cutoff",
     name: Optional[str] = Field(  # type: ignore
         None, description="Forcefield name e.g. charmm27, amber99, etc."
     )
-    types: Optional[List[str]] = Field(  # type: ignore
+    defs: Optional[List[str]] = Field(  # type: ignore
         None,
-        description="Atom types e.g. HH31. The type names are associated with the atomic \
-        elements defined in other objects e.g. see the :class:``Molecule`` model.",
+        description="Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. "
+        "The type names are associated with the atomic elements defined in other objects e.g. see the :class:``Molecule`` model.",
+    )
+    combination_rule: Optional[str] = Field(
+        "Lorentz-Berthelot", description="Combination rule for the force field."
     )
     atomic_numbers_: Optional[
         qcelemental.models.types.Array[numpy.int16]
@@ -185,13 +183,10 @@ class ForceField(ProtoModel):
 
         file_ext = Path(filename).suffix if filename else None
 
-        if file_ext in qcelemental.models.molecule._extension_map:
-
+        if file_ext in [".json"]:
             import json
 
-            if dtype is None:
-                dtype = qcelemental.models.molecule._extension_map[file_ext]
-
+            dtype = file_ext.strip(".")
             # Raw string type, read and pass through
             if dtype == "json":
                 with open(filename, "r") as infile:
@@ -207,6 +202,12 @@ class ForceField(ProtoModel):
         dtype = dtype or fileobj.ext.strip(".")
         ext = "." + dtype
 
+        # Generic translator component
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
@@ -215,10 +216,10 @@ class ForceField(ProtoModel):
             reg_trans = list(reg_trans)
 
             while not translator:
-                translator = TransComponent.find_molread_tk(ext, trans=reg_trans)
+                translator = TransComponent.find_ffread_tk(ext, trans=reg_trans)
                 if not translator:
                     raise ValueError(
-                        f"Could not read xyz file with ext {ext}. Please install an appropriate translator."
+                        f"Could not read top file with ext {ext}. Please install an appropriate translator."
                     )
                 # Make sure we can import the translator module
                 if importlib.util.find_spec(translator):
@@ -301,6 +302,12 @@ class ForceField(ProtoModel):
 
             return
 
+        # Generic translator component
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
@@ -319,7 +326,7 @@ class ForceField(ProtoModel):
         dtype: Optional[str] = None,
         translator: Optional[str] = None,
         **kwargs: Dict[str, Any],
-    ) -> ToolkitModel:
+    ) -> "ToolkitModel":
         """
         Constructs a toolkit-specific forcefield from MMSchema ForceField.
         Which toolkit-specific component is called depends on which package is installed on the system.
@@ -364,7 +371,7 @@ class ForceField(ProtoModel):
 
     def __eq__(self, other):
         """
-        Checks if two models are identical. This is a molecular identity defined
+        Checks if two models are identical. This is a forcefield identity defined
         by scientific terms, and not programing terms, so it's less rigorous than
         a programmatic equality or a memory equivalent `is`.
         """
