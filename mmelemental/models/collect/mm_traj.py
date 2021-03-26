@@ -54,24 +54,13 @@ class Frame(Microstate):
 
 
 class Trajectory(ProtoModel):
-    mol: Optional[Union[List[Molecule], Molecule]] = Field(
+    top: Optional[List[Molecule]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
     frames: List[Frame] = Field(
         None, description="A list of :class:``Frame`` objects of length nframes."
     )
-    _formats: Dict[str, Tuple[str]] = {
-        "dcd": ("mdanalysis", "mdtraj", "pytraj", "loos"),
-        "netcdf3": ("mdanalysis", "mdtraj", "pytraj", "loos", "parmed"),
-        "netcdf4": ("mdanalysis", "mdtraj", "pytraj", "loos", "parmed"),
-        "trr": ("mdanalysis", "mdtraj", "pytraj", "loos"),
-        "xtc": ("mdanalysis", "mdtraj", "pytraj", "loos"),
-    }
-
-    @property
-    def formats(self) -> Dict[str, Tuple[str]]:
-        return self._formats
 
     # Constructors
     @classmethod
