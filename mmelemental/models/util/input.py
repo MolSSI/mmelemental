@@ -1,4 +1,4 @@
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 from mmelemental.models.base import ProtoModel
 from pydantic import validator, Field
 import os
@@ -55,22 +55,19 @@ class FileInput(ProtoModel):
 
 
 class CmdInput(ProtoModel):
-    fileInput: Union[FileInput, List[FileInput]] = Field(
+    file_input: List[str] = Field(
         ...,
-        description="FileInput object or list of FileInut objects. See the :class: ``FileInput``.",
+        description="Input file path(s) or name(s).",
     )
-    fileOutput: Optional[Union[FileOutput, List[FileOutput]]] = Field(
+    file_output: Optional[List[str]] = Field(
         None,
-        description="FileOutput object or list of FileOutput objects. See the :class: ``FileOutput``.",
+        description="Output file path(s) or name(s).",
     )
-    args: Optional[List[str]] = Field(
+    flags: Optional[List[str]] = Field(None, description="List of command-line flags.")
+    kwargs: Optional[Dict[str, str]] = Field(
         None, description="List of additional command-line arguments."
     )
 
 
 class OpenBabelInput(CmdInput):
     outputExt: str = Field(..., description="File output extension.")
-
-
-class GrepInput(CmdInput):
-    pattern: str = Field(..., description="Pattern to search for in input file.")
