@@ -232,7 +232,7 @@ class ForceField(ProtoModel):
 
         if not tkff_class:
             raise ValueError(
-                f"No Molecule model found while looking in translator: {translator}."
+                f"No ForceField model found while looking in translator: {translator}."
             )
 
         tkff = tkff_class.from_file(
