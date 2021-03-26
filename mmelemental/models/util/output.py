@@ -1,36 +1,10 @@
 from mmelemental.models.base import ProtoModel
-from typing import Optional
+from typing import Optional, Union, List
 from pydantic import validator, Field
 from pathlib import Path
 import os
 
-__all__ = ["FileOutput", "CmdOutput", "ComputeOutput"]
-
-
-class CmdOutput(ProtoModel):
-    stdout_: str = Field(..., description="Standard output.")
-    stderr_: Optional[str] = Field(None, description="Standard error.")
-    log_: Optional[str] = Field(None, description="Logging output")
-
-    class Config(ProtoModel.Config):
-        fields = {"stdout_": "stdout", "stderr_": "stderr", "log_": "log"}
-
-    @property
-    def stdout(self):
-        return self.stdout_
-
-    @property
-    def stderr(self):
-        return self.stderr_
-
-    @property
-    def log(self):
-        return self.log_
-
-    def dict(self, *args, **kwargs):
-        kwargs["by_alias"] = True
-        kwargs["exclude_unset"] = True
-        return super().dict(*args, **kwargs)
+__all__ = ["FileOutput", "ComputeOutput"]
 
 
 class FileOutput(ProtoModel):
@@ -95,7 +69,7 @@ class FileOutput(ProtoModel):
 
 
 class ComputeOutput(ProtoModel):
-    cmdout: Optional[CmdOutput] = Field(
+    cmdout: "CmdOutput" = Field(
         None,
         description="Command-line output class which provides stdout, stderr, and log info.",
     )
