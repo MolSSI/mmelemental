@@ -54,7 +54,7 @@ class Frame(Microstate):
 
 
 class Trajectory(ProtoModel):
-    top: Optional[List[Molecule]] = Field(
+    top: Optional[Union[Molecule, List[Molecule]]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
     )
