@@ -537,6 +537,7 @@ class Molecule(ProtoModel):
         filename: str,
         top_filename: Optional[str] = None,
         dtype: Optional[str] = None,
+        *,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> "Molecule":
@@ -545,7 +546,7 @@ class Molecule(ProtoModel):
         Parameters
         ----------
         filename : str
-            The atomic positions filename to read
+            The molecular structure filename to read
         top_filename: str, optional
             The topology i.e. connectivity filename to read
         dtype : str, optional
@@ -688,6 +689,7 @@ class Molecule(ProtoModel):
         self,
         filename: str,
         dtype: Optional[str] = None,
+        *,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> None:
@@ -740,6 +742,7 @@ class Molecule(ProtoModel):
     def to_data(
         self,
         dtype: Optional[str] = None,
+        *,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> "ToolkitModel":
