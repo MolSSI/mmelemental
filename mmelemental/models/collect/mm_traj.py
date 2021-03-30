@@ -109,7 +109,9 @@ class Trajectory(ProtoModel):
 
         if file_ext in [".json"]:
             if not all_frames:
-                raise ValueError(f"Single frame cannot be read from {file_ext} file. Use all_frames=True instead.")
+                raise ValueError(
+                    f"Single frame cannot be read from {file_ext} file. Use all_frames=True instead."
+                )
 
             if top_filename:
                 raise TypeError(

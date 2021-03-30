@@ -4,6 +4,7 @@ import os
 from mmelemental.models.util.input import GrepInput
 from mmelemental.models.util.output import CmdOutput
 
+
 class GrepInput(CmdInput):
     pattern: str = Field(..., description="Pattern to search for in input file.")
 
