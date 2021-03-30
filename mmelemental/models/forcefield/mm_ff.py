@@ -334,12 +334,11 @@ class ForceField(ProtoModel):
         ToolkitModel
             Toolkit-specific ForceField object
         """
-
         try:
             from mmic_translator.components import TransComponent
         except Exception:
             TransComponent = None
-            
+
         if not translator:
             if not dtype:
                 raise ValueError(
