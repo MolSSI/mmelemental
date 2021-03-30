@@ -4,9 +4,16 @@ from mmelemental.models.util.input import FileInput
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel
+from mmelemental.models.util.output import FileOutput
+from pathlib import Path
+import importlib
+
 from .sm_ensem import Microstate
 
 __all__ = ["Trajectory", "Frame", "TrajInput"]
+
+_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+Solve by: pip install mmic_translator"
 
 
 class TrajReaderInput(ProtoModel):
@@ -25,7 +32,7 @@ class TrajInput(ProtoModel):
     )
     velocities: Optional[int] = Field(
         None,
-        description="Atomic velocities of length natoms. Default unit is Angstroms/femotoseconds.",
+        description="Atomic velocities of length natoms. Default unit is Angstroms/femtoseconds.",
     )
     velocities_units: Optional[str] = Field(
         "angstrom/fs",
@@ -66,10 +73,11 @@ class Trajectory(ProtoModel):
     @classmethod
     def from_file(
         cls,
-        traj: Union[FileInput, str],
-        top: Union[FileInput, str] = None,
+        traj_filename: str,
+        top_filename: Optional[str] = None,
         dtype: str = None,
         *,
+        translator: Optional[str] = None,
         all_frames: bool = False,
         **kwargs,
     ) -> "Trajectory":
@@ -77,35 +85,104 @@ class Trajectory(ProtoModel):
         Constructs a Trajectory object from an input file.
         Parameters
         ----------
-        traj: FileInput or str
-            Trajectory file to construct object from
-        top: FileInput or str, optional
-            Topology file to read
+        traj_filename : str
+            The atomic positions filename to read
+        top_filename: str, optional
+            The topology i.e. connectivity filename to read
         dtype : str, optional
             The type of file to interpret. If not set, mmelemental attempts to discover the file type.
+        translator: Optional[str], optional
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
         all_frames: bool, optional
-            Reads all frames at once.
-        **kwargs: Dict[str, Any]
-            Additional kwargs to pass to the constructors. kwargs take precedence over data.
+            Reads all frames in memory.
+        **kwargs: Dict[str, Any], optional
+            Additional kwargs to pass to the constructors.
         Returns
         -------
         Trajectory
             A constructed Trajectory class.
         """
-        traj_input = TrajectoryReaderInput(traj=traj, top=top)
+        file_ext = Path(traj_filename).suffix
+        dtype = dtype or file_ext.strip(".")
 
-        if all_frames:
-            from mmelemental.components.io.trajectory_component import (
-                MultiFrameComponent,
+        if file_ext in [".json"]:
+            if not all_frames:
+                raise ValueError(f"Single frame cannot be read from {file_ext} file. Use all_frames=True instead.")
+
+            if top_filename:
+                raise TypeError(
+                    "Molecule topology must be supplied in a single JSON (or similar) file."
+                )
+
+            import json
+
+            # Raw string type, read and pass through
+            if dtype == "json":
+                with open(traj_filename, "r") as infile:
+                    data = json.load(infile)
+                dtype = "dict"
+            else:
+                raise KeyError(f"Data type not supported: {dtype}.")
+
+            return cls.from_data(data, dtype=dtype, **kwargs)
+
+        fileobj = FileOutput(path=traj_filename)
+        top_fileobj = FileOutput(path=top_filename) if top_filename else None
+
+        # Generic translator component
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+
+        if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
+            from mmic_translator.components.supported import reg_trans
+
+            reg_trans = list(reg_trans)
+
+            while not translator:
+                translator = TransComponent.find_trajread_tk(file_ext, trans=reg_trans)
+                if not translator:
+                    raise ValueError(
+                        f"Could not read traj file with ext {file_ext}. Please install an appropriate translator."
+                    )
+                # Make sure we can import the translator module
+                if importlib.util.find_spec(translator):
+                    mod = importlib.import_module(translator)
+
+                # If top if supplied, make sure the translator supports the top file extension
+                if top_fileobj:
+                    top_ext = top_fileobj.ext
+                    if top_ext not in mod.ffread_ext_maps:
+                        reg_trans.remove(translator)
+                        translator = None
+                    if not len(reg_trans):
+                        raise ValueError(
+                            f"Could not read traj and top files with exts {file_ext} and {top_ext}. \
+                            Please install an appropriate translator."
+                        )
+        elif importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+
+        tktraj_class = mod._classes_map.get("Trajectory")
+
+        if not tktraj_class:
+            raise ValueError(
+                f"No Trajectory model found while looking in translator: {translator}."
             )
 
-            return MultiFrameComponent.compute(traj_input)
-        else:
-            from mmelemental.components.io.trajectory_component import (
-                SingleFrameComponent,
-            )
+        tk_traj = tktraj_class.from_file(
+            filename=fileobj.abs_path if fileobj else None,
+            top_filename=top_fileobj.abs_path if top_fileobj else None,
+            dtype=dtype,
+            all_frames=all_frames,
+        )
 
-            return SingleFrameComponent.compute(traj_input)
+        return cls.from_data(tk_traj, dtype=tk_traj.dtype, **kwargs)
 
     @classmethod
     def from_data(
@@ -127,25 +204,21 @@ class Trajectory(ProtoModel):
         Trajectory
             A constructed Trajectory class.
         """
-        if not dtype:
-            if data.__class__.__name__ == "Universe":
-                from mmelemental.components.mda_component import UniverseToTrajectory
+        if isinstance(data, dict):
+            kwargs.pop("dtype", None)  # remove dtype if supplied
+            kwargs.update(data)
+            return cls(**kwargs)
 
-                return UniverseToTrajectory.compute(data)
-            else:
-                raise NotImplementedError(
-                    f"Data type {dtype} not supported by mmelemental."
-                )
-        elif dtype == "mdanalysis":
-            from mmelemental.components.mda_component import UniverseToTrajectory
+        return data.to_schema(**kwargs)
 
-            return UniverseToTrajectory.compute(data)
-        else:
-            raise NotImplementedError(
-                f"Data type {dtype} not supported by mmelemental."
-            )
-
-    def to_file(self, filename: str, dtype: Optional[str] = None) -> None:
+    def to_file(
+        self,
+        filename: str,
+        dtype: Optional[str] = None,
+        *,
+        translator: Optional[str] = None,
+        **kwargs: Optional[Dict[str, Any]],
+    ) -> None:
         """Writes the Trajectory to a file.
         Parameters
         ----------
@@ -153,8 +226,47 @@ class Trajectory(ProtoModel):
             The filename to write to
         dtype : str, optional
             The type of file to write, attempts to infer dtype from the filename if not provided.
+        translator: Optional[str], optional
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
+        **kwargs: Optional[Dict[str, Any]], optional
+            Additional kwargs to pass to the constructor.
         """
-        raise NotImplementedError(f"Data type {dtype} not available.")
+        if not dtype:
+            from pathlib import Path
+
+            ext = Path(filename).suffix
+        else:
+            ext = "." + dtype
+
+        mode = kwargs.pop("mode", "w")
+
+        if ext == ".json":
+            stringified = self.json(**kwargs)
+            with open(filename, mode) as fp:
+                fp.write(stringified)
+        elif ext == ".yaml" or ext == ".yml":
+            stringified = self.yaml(**kwargs)
+            with open(filename, mode) as fp:
+                fp.write(stringified)
+        else:  # look for an installed mmic_translator
+            try:
+                from mmic_translator.components import TransComponent
+            except Exception:
+                TransComponent = None
+
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
+            translator = TransComponent.find_molwrite_tk(ext)
+
+            if not translator:
+                raise NotImplementedError(
+                    f"File extension {ext} not supported with any installed translators."
+                )
+
+            tk_traj = self.to_data(translator=translator, **kwargs)
+            tk_traj.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
     def to_data(self, dtype: str):
         """ Converts Trajectory to toolkit-specific trajectory object. """
