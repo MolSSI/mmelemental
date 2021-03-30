@@ -108,7 +108,7 @@ class ForceField(ProtoModel):
     combination_rule: Optional[str] = Field(
         "Lorentz-Berthelot", description="Combination rule for the force field."
     )
-    atomic_numbers_: Optional[
+    atomic_numbers: Optional[
         qcelemental.models.types.Array[numpy.int16]
     ] = Field(  # type: ignore
         None,
@@ -132,7 +132,6 @@ class ForceField(ProtoModel):
     class Config(ProtoModel.Config):
         serialize_skip_defaults = True
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
-        fields = {"atomic_numbers_": "atomic_numbers"}
 
         def schema_extra(schema, model):
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
@@ -143,15 +142,6 @@ class ForceField(ProtoModel):
     def _charges_length(cls, v, values):
         assert len(v.shape) == 1, "Atomic charges must be a 1D array!"
         return v
-
-    @property
-    def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
-        atomic_numbers = self.__dict__.get("atomic_numbers_")
-        if atomic_numbers is None:
-            atomic_numbers = numpy.array(
-                [qcelemental.periodictable.to_Z(x) for x in self.symbols]
-            )
-        return atomic_numbers
 
     # Constructors
     @classmethod
@@ -345,6 +335,11 @@ class ForceField(ProtoModel):
             Toolkit-specific ForceField object
         """
 
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+            
         if not translator:
             if not dtype:
                 raise ValueError(
