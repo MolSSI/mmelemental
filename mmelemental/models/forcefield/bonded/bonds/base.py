@@ -16,7 +16,7 @@ class Bonds(Params):
         "angstroms", description="Equilibrium bond lengths unit."
     )
     indices: List[Tuple[int, int, float]] = Field(  # type: ignore, need to make this field non-optional?
-        None,
+        ...,
         description="Particle indices for each bond and the bond order: (index1, index2, order).",
         min_items=1,
     )
