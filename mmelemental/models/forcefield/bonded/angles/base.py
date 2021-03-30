@@ -1,7 +1,7 @@
 from pydantic import Field, constr, validator
 from mmelemental.models.forcefield.params import Params
 import qcelemental
-from typing import Optional, Dict, Any, Union, List
+from typing import Optional, Dict, Any, Union, Tuple, List
 import os
 import pathlib
 
@@ -15,6 +15,11 @@ class Angles(Params):
     )
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium angle units."
+    )
+    indices: List[Tuple[int, int, int]] = Field(  # type: ignore, need to make this field non-optional?
+        ...,
+        description="Particle indices for each angle.",
+        min_items=1,
     )
 
     # Validators
