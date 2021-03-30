@@ -56,7 +56,9 @@ def test_bonds_gromos96():
         spring=numpy.random.rand(nbonds),
     )
 
-    bonds = ff.bonded.Bonds(params=gromos, lengths=lengths, form="Gromos96")
+    bonds = ff.bonded.Bonds(
+        params=gromos, lengths=lengths, indices=indices, form="Gromos96"
+    )
     assert bonds.form == "Gromos96"
     return bonds
 
@@ -72,6 +74,7 @@ def test_angles():
         params=linear,
         angles=rand_angles(nangles),
         angles_units="radians",
+        indices=indices,
         form="Harmonic",
     )
     assert angles.form == "Harmonic"
@@ -89,6 +92,7 @@ def test_dihedrals():
         params=linear,
         angles=rand_angles(ndihedrals),
         angles_units="radians",
+        indices=indices,
         form="Harmonic",
     )
     assert dihedrals.form == "Harmonic"
