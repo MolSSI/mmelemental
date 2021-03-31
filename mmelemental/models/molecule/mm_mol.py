@@ -217,20 +217,16 @@ class Molecule(ProtoModel):
         "degrees",
         description="Units for improper dihedral/torsional angles. Defaults to degrees.",
     )
-    residues: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
+    substructs: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
         None,
-        description="A list of (residue_name, residue_num) of connected atoms constituting the building block (monomer) "
-        "of a polymer. Order follows atomic indices from 0 till Natoms-1. Residue number starts from 1."
-        "\n"
-        "E.g. ('ALA', 1) means atom 0 belongs to aminoacid alanine with residue number 1.",
+        description="A list of (name, num) of connected atoms constituting the building block (e.g. monomer) "
+        "of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [('ALA', 4), ...] "
+        "means atom1 belongs to aminoacid alanine with residue number 4.",
     )
     chains: Optional[Dict[str, List[int]]] = Field(  # type: ignore
         None,
-        description="A sequence of connected residues (i.e. polymers) forming a subunit that is not bonded to any "
+        description="A sequence of connected substructures forming a subunit that is not bonded to any "
         "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
-    )
-    segments: Optional[Dict[str, List[int]]] = Field(  # type: ignore
-        None, description="..."
     )
     # Extras
     provenance: Provenance = Field(  # type: ignore

@@ -2,7 +2,7 @@ from pydantic import Field, constr, validator
 import importlib
 import hashlib
 import json
-from typing import Any, List, Dict, Optional, Union
+from typing import Any, List, Dict, Tuple, Optional, Union
 import qcelemental
 import numpy
 from pathlib import Path
@@ -97,13 +97,18 @@ class ForceField(ProtoModel):
     # switch_width="1.0 * angstrom",
     # cutoff="9.0 * angstrom" ,
     # method="cutoff",
-    name: Optional[str] = Field(  # type: ignore
-        None, description="Forcefield name e.g. charmm27, amber99, etc."
+    identifier: Optional[str] = Field(  # type: ignore
+        None, description="Forcefield unique identifier e.g. charmm27, amber99, etc."
     )
     defs: Optional[List[str]] = Field(  # type: ignore
         None,
         description="Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. "
         "The type names are associated with the atomic elements defined in other objects e.g. see the :class:``Molecule`` model.",
+    )
+    substructs: Optional[List[Tuple[str, int]]] = Field(
+        None,
+        description="A list of substructure names the particles belong to. E.g. [('ALA', 1), ('ACE', 2)] means atom1 belong to residue ALA (alanine) "
+        "with residue number 1, while atom2 belongs to residue ACE (acetyl) with residue number 2."
     )
     combination_rule: Optional[str] = Field(
         "Lorentz-Berthelot", description="Combination rule for the force field."
