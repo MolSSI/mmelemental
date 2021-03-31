@@ -59,7 +59,7 @@
     "angles_units": "degrees",
     "dihedrals_units": "degrees",
     "im_dihedrals_units": "degrees",
-    "residues": [
+    "substructs": [
         [
             "SOL",
             1
