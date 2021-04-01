@@ -12,7 +12,7 @@ mmschema_proc_input_default = "mmschema_proc_input"
 
 
 class ProcInput(ProtoModel):
-    """ Basic model for molecular simulation input parameters."""
+    """ Basic input model for procedures."""
 
     # Generic fields
     engine: Optional[str] = Field(
@@ -44,7 +44,7 @@ class ProcInput(ProtoModel):
 
 
 class ProcOutput(ProtoModel):
-    """ Basic model for molecular simulation output."""
+    """ Basic output model for procedures."""
 
     component: str = Field(
         None,
@@ -60,38 +60,6 @@ class ProcOutput(ProtoModel):
     warnings: Optional[List[str]] = Field(
         None, description="Warning messages generated from the conversion."
     )
-    stdout: str = Field(..., description="Standard output.")
+    stdout: str = Field(None, description="Standard output.")
     stderr: Optional[str] = Field(None, description="Standard error.")
     log: Optional[str] = Field(None, description="Logging output.")
-    mol: Optional[Dict[str, Molecule]] = Field(
-        None,
-        description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
-        "Example: mol = {'ligand': Molecule, 'receptor': Molecule, 'solvent': Molecule}.",
-    )
-    forcefield: Optional[Union[Dict[str, ForceField], Dict[str, str]]] = Field(
-        None,
-        description='Forcefield object(s) or name(s) for every Molecule defined in "mol".',
-    )
-    ensemble: Optional[Dict[str, Ensemble]] = Field(
-        None,
-        description="Ensemble output for a series of microstates of molecules. "
-        "See the :class:``Ensemble`` class.",
-    )
-    trajectory: Optional[Dict[str, Trajectory]] = Field(
-        None,
-        description="Trajectory output representing a series of snapshots of the system at "
-        "different timesteps. See the :class:``Trajectory`` class.",
-    )
-    trajectory_units: Optional[Dict[str, str]] = Field(
-        None,
-        description="Trajectory units. Any unit supported by pint is allowed.",
-    )
-    observable: Optional[Dict[str, List[float]]] = Field(
-        None,
-        description="Stores any observable or physical variable not accounted for in the schema. "
-        "e.g. ligand scores used in docking simulations.",
-    )
-    observable_units: Optional[Dict[str, str]] = Field(
-        None,
-        description="Observable units. Any unit supported by pint is allowed.",
-    )
