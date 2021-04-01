@@ -566,8 +566,6 @@ class Molecule(ProtoModel):
                     "Molecule topology must be supplied in a single JSON (or similar) file."
                 )
 
-            import json
-
             if dtype is None:
                 dtype = qcelemental.models.molecule._extension_map[file_ext]
 

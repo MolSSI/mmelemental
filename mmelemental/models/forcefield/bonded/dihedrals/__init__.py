@@ -1,2 +1,4 @@
 from .base import *
-from . import potentials
+from . import base, potentials
+
+__all__ = base.__all__

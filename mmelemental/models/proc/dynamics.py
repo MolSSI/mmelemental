@@ -1,8 +1,8 @@
 from mmelemental.models.proc.base import ProcInput
-from mmelemental.models.molecule.mm_mol import Molecule
 from pydantic import Field
-from typing import Tuple, Union
 from qcelemental.models.types import Array
+
+__all__ = ["DynamicsInput"]
 
 
 class DynamicsInput(ProcInput):

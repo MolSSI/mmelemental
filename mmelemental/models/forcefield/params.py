@@ -4,9 +4,7 @@ from mmelemental.models.util.output import FileOutput
 from typing import Any, Optional, Dict
 import ast
 import glob
-import os
 import pathlib
-import importlib
 from importlib.machinery import SourceFileLoader
 
 
@@ -51,7 +49,6 @@ class Params(ProtoModel):
 
         fileobj = FileOutput(path=filename)
         dtype = dtype or fileobj.ext.strip(".")
-        ext = "." + dtype
 
         if translator:
             raise NotImplementedError
@@ -83,9 +80,7 @@ class Params(ProtoModel):
             Additional kwargs to pass to the constructor.
         """
         if not dtype:
-            from pathlib import Path
-
-            ext = Path(filename).suffix
+            ext = pathlib.Path(filename).suffix
         else:
             ext = "." + dtype
 

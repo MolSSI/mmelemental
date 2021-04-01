@@ -1,11 +1,10 @@
 from mmelemental.models.base import ProtoModel
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.collect.sm_ensem import Ensemble
-from mmelemental.models.collect.mm_traj import Trajectory, TrajInput
-from mmelemental.models.solvent.implicit import Solvent
+from mmelemental.models.collect.mm_traj import Trajectory
 from mmelemental.models.forcefield import ForceField
-from pydantic import Field, validator, constr
-from typing import Tuple, List, Union, Dict, Optional, Any
+from pydantic import Field, constr
+from typing import List, Union, Dict, Optional, Any
 
 __all__ = ["ProcInput", "ProcOutput"]
 

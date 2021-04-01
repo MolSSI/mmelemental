@@ -1,5 +1,5 @@
 from pydantic import Field
-from typing import Union, Optional, List, Dict, Any
+from typing import Optional, List, Dict
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel

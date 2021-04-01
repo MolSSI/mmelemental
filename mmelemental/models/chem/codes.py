@@ -2,7 +2,8 @@ from mmelemental.models.base import ProtoModel
 from pydantic import Field, ValidationError
 from mmelemental.util.decorators import require
 from typing import Optional
-import os
+
+__all__ = ["ChemCode"]
 
 
 class ChemCode(ProtoModel):

@@ -179,7 +179,6 @@ class ForceField(ProtoModel):
         file_ext = Path(filename).suffix if filename else None
 
         if file_ext in [".json"]:
-            import json
 
             dtype = file_ext.strip(".")
             # Raw string type, read and pass through

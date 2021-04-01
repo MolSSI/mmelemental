@@ -1,7 +1,6 @@
 from pydantic import Field
-from typing import Union, Optional, Tuple, List, Dict, Any
+from typing import Union, Optional, List, Dict, Any
 from mmelemental.models.util.input import FileInput
-from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel
 from mmelemental.models.util.output import FileOutput

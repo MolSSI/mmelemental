@@ -2,8 +2,6 @@ from typing import List, Optional, Union, Dict
 from mmelemental.models.base import ProtoModel
 from pydantic import validator, Field
 import os
-
-from .output import FileOutput
 from pathlib import Path
 
 __all__ = ["FileInput", "CmdInput"]

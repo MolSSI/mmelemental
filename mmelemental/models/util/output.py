@@ -1,5 +1,5 @@
 from mmelemental.models.base import ProtoModel
-from typing import Optional, Union, List
+from typing import Optional
 from pydantic import validator, Field
 from pathlib import Path
 import os
