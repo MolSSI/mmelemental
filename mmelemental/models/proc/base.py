@@ -57,10 +57,12 @@ class ProcOutput(ProtoModel):
     engine_version: Optional[str] = Field(
         None, description="Engine version used in the procedure e.g. >= 3.4.0."
     )
-    warning: Optional[List[str]] = Field(
+    warnings: Optional[List[str]] = Field(
         None, description="Warning messages generated from the conversion."
     )
-
+    stdout: str = Field(..., description="Standard output.")
+    stderr: Optional[str] = Field(None, description="Standard error.")
+    log: Optional[str] = Field(None, description="Logging output.")
     mol: Optional[Dict[str, Molecule]] = Field(
         None,
         description="Molecular mechanics molecule object(s). See the :class:``Molecule`` class. "
