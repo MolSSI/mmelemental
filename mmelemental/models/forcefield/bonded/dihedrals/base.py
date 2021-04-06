@@ -16,14 +16,28 @@ class Dihedrals(Params):
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium dihedral angle units."
     )
-    indices: List[Tuple[int, int, int, int]] = Field(  # type: ignore, need to make this field non-optional?
+    indices: List[Tuple[int, int, int, int]] = Field(  # type: ignore
         ...,
         description="Particle indices for each dihedral angle.",
         min_items=1,
     )
+    weights: Optional[qcelemental.models.types.Array[float]] = Field(
+        None,
+        description="Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.",
+    )
 
     # Validators
     @validator("angles")
-    def _angles_length(cls, v, values):
+    def _angles_shape(cls, v, values):
         assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
+        return v
+
+    @validator("weights")
+    def _valid_weights(cls, v):
+        import numpy
+
+        unique_weights = numpy.unique(v)
+        assert numpy.all(
+            [weight in (0, 0.5, 1) for weight in unique_weights]
+        ), "Weight factor can be 0, 0.5, or 1."
         return v
