@@ -86,7 +86,8 @@ def test_angles():
 def test_dihedrals():
     indices = [(i, i + 1, i + 2, i + 3) for i in range(ndihedrals)]
     linear = ff.bonded.dihedrals.potentials.Harmonic(
-        spring=numpy.random.rand(ndihedrals),
+        energy=numpy.random.rand(ndihedrals),
+        periodicity=numpy.random.randint(ndihedrals),
     )
     dihedrals = ff.bonded.Dihedrals(
         params=linear,
