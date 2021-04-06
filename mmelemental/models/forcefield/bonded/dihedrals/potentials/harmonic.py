@@ -8,21 +8,39 @@ __all__ = ["Harmonic"]
 
 class Harmonic(ProtoModel):
     """
-    Linear spring dihedral model: Energy = 1/2 * spring * (angle - eq_angle)**2. "
+    Simple periodic dihedral potential: Energy = energy * (1 + sign * cos(periodicity * angle)).
     """
 
-    spring: qcelemental.models.types.Array[float] = Field(
+    energy: qcelemental.models.types.Array[float] = Field(
         ...,
-        description="Dihedral spring constant. Default unit is kJ/(mol*degrees**2).",
+        description="Dihedral energy constant. Default unit is kJ/mol.",
     )
-    spring_units: Optional[str] = Field(
-        "kJ/(mol*degrees**2)", description="Dihedral spring constant unit."
+    energy_units: Optional[str] = Field(
+        "kJ/mol", description="Dihedral energy constant unit."
+    )
+    periodicity: qcelemental.models.types.Array[int] = Field(
+        ...,
+        description="Dihedral periodicity term, must be >= 0.",
+    )
+    sign: Optional[int] = Field(
+        1,
+        description="Multiplication factor for the cosine term. Must be either -1 or +1.",
     )
 
-    @validator("spring", allow_reuse=True)
-    def _valid_length(cls, v):
-        assert len(v.shape) == 1, "Bond spring constants must be a 1D array!"
+    @validator("energy", allow_reuse=True)
+    def _valid_shape(cls, v):
+        assert len(v.shape) == 1, "Dihedral energy constant must be a 1D array!"
         return v
+
+    @validator("sign", allow_reuse=True)
+    def _valid_sign(cls, v):
+        assert v == 1 or v == -1, "Dihedral sign term can be either +1 or -1."
+        return
+
+    @validator("periodicity", allow_reuse=True, each_item=True)
+    def _valid_periodicity(cls, v):
+        assert v >= 0, "Dihedral periodicity must be >= 0."
+        return
 
     def dict(self, *args, **kwargs):
         kwargs["exclude"] = {"provenance"}
