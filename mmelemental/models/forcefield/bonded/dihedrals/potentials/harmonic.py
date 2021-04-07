@@ -37,10 +37,10 @@ class Harmonic(ProtoModel):
         assert v == 1 or v == -1, "Dihedral sign term can be either +1 or -1."
         return
 
-    @validator("periodicity", allow_reuse=True, each_item=True)
+    @validator("periodicity", allow_reuse=True)
     def _valid_periodicity(cls, v):
-        assert v >= 0, "Dihedral periodicity must be >= 0."
-        return
+        assert (v >= 0).all(), "Dihedral periodicity must be >= 0."
+        return v
 
     def dict(self, *args, **kwargs):
         kwargs["exclude"] = {"provenance"}
