@@ -345,9 +345,12 @@ class Molecule(ProtoModel):
     def masses(self) -> qcelemental.models.types.Array[float]:
         masses = self.__dict__.get("masses_")
         if masses is None:
-            masses = numpy.array(
-                [qcelemental.periodictable.to_mass(x) for x in self.symbols]
-            )
+            try:
+                masses = numpy.array(
+                    [qcelemental.periodictable.to_mass(x) for x in self.symbols]
+                )
+            except Exception:
+                masses = None
         return masses
 
     @property
@@ -368,9 +371,12 @@ class Molecule(ProtoModel):
     def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
         atomic_numbers = self.__dict__.get("atomic_numbers_")
         if atomic_numbers is None:
-            atomic_numbers = numpy.array(
-                [qcelemental.periodictable.to_Z(x) for x in self.symbols]
-            )
+            try:
+                atomic_numbers = numpy.array(
+                    [qcelemental.periodictable.to_Z(x) for x in self.symbols]
+                )
+            except Exception:
+                atomic_numbers = None
         return atomic_numbers
 
     @property
