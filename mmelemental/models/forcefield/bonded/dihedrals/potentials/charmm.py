@@ -20,7 +20,7 @@ class Charmm(ProtoModel):
     )
     periodicity: qcelemental.models.types.Array[int] = Field(
         ...,
-        description="Dihedral periodicity term, must be >= 0.",
+        description="Dihedral periodicity factor, must be >= 0.",
     )
     phase: qcelemental.models.types.Array[float] = Field(
         ...,
@@ -35,10 +35,10 @@ class Charmm(ProtoModel):
         assert len(v.shape) == 1, "Dihedral energy constant must be a 1D array!"
         return v
 
-    @validator("periodicity", allow_reuse=True, each_item=True)
+    @validator("periodicity", allow_reuse=True)
     def _valid_periodicity(cls, v):
-        assert v >= 0, "Dihedral periodicity must be >= 0."
-        return
+        assert (v >= 0).all(), "Dihedral periodicity must be >= 0."
+        return v
 
     def dict(self, *args, **kwargs):
         kwargs["exclude"] = {"provenance"}
