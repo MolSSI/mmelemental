@@ -21,7 +21,7 @@ def require(tk_name):
 
 
 def deprecated(func):
-    @wraps(func)
+    @functools.wraps(func)
     def func_inner(*args, **kwargs):
         warnings.warn(
             f"{func.__name__} is deprecated and will be removed in the future",
