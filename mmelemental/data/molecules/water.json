@@ -43,7 +43,6 @@
         0.89
     ],
     "geometry_units": "angstrom",
-    "forces_units": "kJ/(mol*angstrom)",
     "connectivity": [
         [
             0,
@@ -56,9 +55,6 @@
             1.0
         ]
     ],
-    "angles_units": "degrees",
-    "dihedrals_units": "degrees",
-    "im_dihedrals_units": "degrees",
     "substructs": [
         [
             "SOL",
