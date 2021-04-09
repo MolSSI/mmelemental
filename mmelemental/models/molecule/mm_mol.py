@@ -175,7 +175,6 @@ class Molecule(ProtoModel):
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic forces. Default unit is "
         "KiloJoules/mol.Angstroms.",
-        units="kJ/(mol*angstrom)",
     )
     forces_units: Optional[str] = Field(  # type: ignore
         "kJ/(mol*angstrom)",
