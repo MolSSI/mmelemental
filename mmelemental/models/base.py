@@ -41,7 +41,7 @@ class ProtoModel(models.ProtoModel):
 
     def dict(self, *args, **kwargs):
         kwargs["by_alias"] = True
-        kwargs["exclude_unset"] = False
+        kwargs["exclude_unset"] = True
         kwargs["exclude_none"] = True
         return super().dict(*args, **kwargs)
 
