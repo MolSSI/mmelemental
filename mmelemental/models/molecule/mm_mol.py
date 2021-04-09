@@ -153,7 +153,7 @@ class Molecule(ProtoModel):
         description="The net electrostatic charge of the molecule. Default unit is electron Volt.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
-        "eV", description="Units for molecular charge. Defaults to electron Volt."
+        "e", description="Units for molecular charge. Defaults to electron Volt."
     )
     geometry: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
@@ -204,17 +204,6 @@ class Molecule(ProtoModel):
     dihedrals_units: Optional[str] = Field(  # type: ignore
         "degrees",
         description="Units for dihedral/torsional angles. Defaults to degrees.",
-    )
-    im_dihedrals: Optional[
-        List[Tuple[int, int, int, int, int]]
-    ] = Field(  # type: ignore
-        None,
-        description="Improper dihedral/torsion angles in degrees between planes through two sets of three atoms, "
-        "having two atoms in common.",
-    )
-    im_dihedrals_units: Optional[str] = Field(  # type: ignore
-        "degrees",
-        description="Units for improper dihedral/torsional angles. Defaults to degrees.",
     )
     substructs: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
         None,
