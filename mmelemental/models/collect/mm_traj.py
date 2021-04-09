@@ -2,11 +2,11 @@ from pydantic import Field
 from typing import Union, Optional, List, Dict, Any
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
-from mmelemental.models.base import ProtoModel
+from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
 from pathlib import Path
 import importlib
-
+import functools
 from .sm_ensem import Microstate
 
 __all__ = ["Trajectory", "Frame", "TrajInput"]
@@ -48,6 +48,11 @@ class TrajInput(ProtoModel):
         None,
         description="Every number of steps the geometry, velocities, and/or forces are sampled.",
     )
+    provenance: Provenance = Field(
+        default_factory=functools.partial(provenance_stamp, __name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
+        "provided, and manipulated.",
+    )
 
 
 class Frame(Microstate):
@@ -66,6 +71,11 @@ class Trajectory(ProtoModel):
     )
     frames: List[Frame] = Field(
         None, description="A list of :class:``Frame`` objects of length nframes."
+    )
+    provenance: Provenance = Field(
+        default_factory=functools.partial(provenance_stamp, __name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
+        "provided, and manipulated.",
     )
 
     # Constructors

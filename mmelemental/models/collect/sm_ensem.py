@@ -2,8 +2,8 @@ from pydantic import Field
 from typing import Optional, List, Dict
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
-from mmelemental.models.base import ProtoModel
-
+from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
+import functools
 
 __all__ = ["Microstate", "Ensemble"]
 
@@ -41,4 +41,9 @@ class Ensemble(ProtoModel):
         None,
         description="Similar to Molecule but without the connectivity. Provides improved efficiency over the \
             latter. See :class:``Microstate``.",
+    )
+    provenance: Provenance = Field(
+        default_factory=functools.partial(provenance_stamp, __name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
+        "provided, and manipulated.",
     )
