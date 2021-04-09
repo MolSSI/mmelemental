@@ -9,10 +9,6 @@ from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 
 from mmelemental.models.molecule.io_mol import MolInput, MolOutput
-from mmelemental.components.io.constructor_component import (
-    MolConstructorComponent,
-    ForceFieldConstructorComponent,
-)
 
 from mm_data import data_mol_dir, data_ff_dir
 
