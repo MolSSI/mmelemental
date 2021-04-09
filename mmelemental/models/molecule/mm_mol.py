@@ -6,7 +6,7 @@ import importlib
 from pathlib import Path
 import hashlib
 import json
-
+import functools
 
 # MM models
 from mmelemental.models.util.output import FileOutput
@@ -228,9 +228,9 @@ class Molecule(ProtoModel):
         "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
     )
     # Extras
-    provenance: Provenance = Field(  # type: ignore
-        provenance_stamp(__name__),
-        description="The provenance information about how this object (and its attributes) were generated, "
+    provenance: Provenance = Field(
+        default_factory=functools.partial(provenance_stamp, __name__),
+        description="The provenance information about how this Molecule (and its attributes) were generated, "
         "provided, and manipulated.",
     )
     extras: Dict[str, Any] = Field(  # type: ignore
