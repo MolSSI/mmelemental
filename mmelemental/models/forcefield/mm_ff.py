@@ -45,7 +45,15 @@ class ForceField(ProtoModel):
         0,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    symbols: Optional[List[str]] = Field(  # type: ignore
+    name: Optional[str] = Field(  # type: ignore
+        None,
+        description="Common or human-readable name to assign to this model. This field can be arbitrary.",
+    )
+    comment: Optional[str] = Field(  # type: ignore
+        None,
+        description="Additional comments for this model. Intended for pure human/user consumption and clarity.",
+    )
+    symbols: List[str] = Field(  # type: ignore
         ...,
         description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols.",
     )
@@ -141,6 +149,45 @@ class ForceField(ProtoModel):
         def schema_extra(schema, model):
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
             schema["$schema"] = "http://json-schema.org/draft-04/schema#"
+
+    def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
+        """
+        Initializes the molecule object from dictionary-like values.
+        Parameters
+        ----------
+        **kwargs : Any
+            The values of the Molecule object attributes.
+        """
+        kwargs["schema_name"] = kwargs.pop("schema_name", "mmschema_forcefield")
+        kwargs["schema_version"] = kwargs.pop("schema_version", 0)
+
+        atomic_numbers = kwargs.get("atomic_numbers")
+        if atomic_numbers is not None:
+            if kwargs.get("symbols") is None:
+
+                kwargs["symbols"] = [
+                    qcelemental.periodictable.to_E(x) for x in atomic_numbers
+                ]
+
+        # We are pulling out the values *explicitly* so that the pydantic skip_defaults works as expected
+        # All attributes set below are equivalent to the default set.
+        super().__init__(**kwargs)
+
+        values = self.__dict__
+
+        if not values.get("name"):
+            from qcelemental.molparse.to_string import formula_generator
+
+            values["name"] = formula_generator(values["symbols"])
+
+    # Representation -> used by qcelemental's __repr__
+    def __repr_args__(self) -> "ReprArgs":
+        forms = [
+            form.__class__.__name__
+            for form in (self.nonbonded, self.bonds, self.angles, self.dihedrals)
+            if form
+        ]
+        return [("name", self.name), ("form", forms), ("hash", self.get_hash()[:7])]
 
     # Validators
     @validator("charges")
@@ -388,6 +435,9 @@ class ForceField(ProtoModel):
     @property
     def hash_fields(self):
         return [
+            "symbols",
+            "masses",
+            "atomic_numbers",
             "nonbonded",
             "bonds",
             "angles",
@@ -409,10 +459,9 @@ class ForceField(ProtoModel):
         for field in self.hash_fields:
             data = getattr(self, field)
             if data is not None:
-                # if field == "nonbonded":
-                #    data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
-
-                concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                if field == "symbols":
+                    # data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+                    concat += json.dumps(data, default=lambda x: x.ravel().tolist())
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
