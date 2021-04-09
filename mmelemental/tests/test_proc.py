@@ -6,7 +6,7 @@ import mmelemental
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.proc import ProcInput
 import os
-from .data import data_mol_dir
+from mm_data import data_mol_dir
 
 
 def test_mmelemental_md():

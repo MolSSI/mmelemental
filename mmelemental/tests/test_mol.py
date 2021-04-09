@@ -2,7 +2,7 @@ import pytest
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.mm_mol import Molecule
 import os
-from .data import data_mol_dir
+from mm_data import data_mol_dir
 
 
 @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")

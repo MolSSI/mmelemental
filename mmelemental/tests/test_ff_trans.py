@@ -5,7 +5,7 @@ import pytest
 from mmelemental.models.forcefield import ForceField
 import sys
 import os
-from .data import data_ff_dir
+from mm_data import data_ff_dir
 
 try:
     import mmic_translator

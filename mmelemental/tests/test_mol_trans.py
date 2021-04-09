@@ -14,7 +14,7 @@ from mmelemental.components.io.constructor_component import (
     ForceFieldConstructorComponent,
 )
 
-from .data import data_mol_dir, data_ff_dir
+from mm_data import data_mol_dir, data_ff_dir
 
 try:
     import mmic_translator
