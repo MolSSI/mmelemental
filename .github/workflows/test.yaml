@@ -60,6 +60,8 @@ jobs:
       run: |
         git clone https://github.com/MolSSI/mmic
         cd mmic && pip install . && cd .. && rm -rf mmic
+        git clone https://github.com/MolSSI/mm_data
+        cd mm_data && pip install . && cd .. && rm -rf mm_data
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Install package
