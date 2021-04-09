@@ -33,12 +33,6 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
 
 
 class ProtoModel(models.ProtoModel):
-    provenance: Provenance = Field(
-        provenance_stamp(__name__),
-        description="The provenance information about how this object (and its attributes) were generated, "
-        "provided, and manipulated.",
-    )
-
     def dict(self, *args, **kwargs):
         kwargs["by_alias"] = True
         kwargs["exclude_unset"] = True
