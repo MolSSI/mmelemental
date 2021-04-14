@@ -74,7 +74,7 @@ class Molecule(ProtoModel):
         0,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    symbols: Optional[qcelemental.models.types.Array[str]] = Field(  # type: ignore
+    symbols: Optional[List[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
@@ -266,11 +266,7 @@ class Molecule(ProtoModel):
 
         values = self.__dict__
 
-        if values.get("symbols") is not None:
-            values["symbols"] = numpy.core.defchararray.title(
-                self.symbols
-            )  # Title case for consistency
-        else:
+        if values.get("symbols") is None:
             raise ValueError(
                 "Either symbols or atomic_numbers must be supplied for a unique definition of a Molecule."
             )
@@ -577,7 +573,6 @@ class Molecule(ProtoModel):
         top_fileobj = FileOutput(path=top_filename) if top_filename else None
 
         dtype = dtype or fileobj.ext.strip(".")
-        ext = "." + dtype
 
         # Generic translator component
         try:
@@ -588,30 +583,30 @@ class Molecule(ProtoModel):
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
-            from mmic_translator.components.supported import reg_trans
-
-            reg_trans = list(reg_trans)
+            inst_trans = TransComponent.installed_comps()
 
             while not translator:
-                translator = TransComponent.find_molread_tk(ext, trans=reg_trans)
+                translator = TransComponent.find_molread_tk(
+                    fileobj.ext, trans=inst_trans
+                )
                 if not translator:
                     raise ValueError(
-                        f"Could not read xyz file with ext {ext}. Please install an appropriate translator."
+                        f"There is no installed translator for reading file {filename}. Please install an appropriate translator."
                     )
-                # Make sure we can import the translator module
-                if importlib.util.find_spec(translator):
-                    mod = importlib.import_module(translator)
+
+                # We should be able to always import the translator
+                mod = importlib.import_module(translator)
 
                 # If top if supplied, make sure the translator supports the top file extension
                 if top_fileobj:
                     top_ext = top_fileobj.ext
                     if top_ext not in mod.ffread_ext_maps:
-                        reg_trans.remove(translator)
+                        inst_trans.remove(translator)
                         translator = None
-                    if not len(reg_trans):
+                    if len(inst_trans) == 0:
                         raise ValueError(
-                            f"Could not read xyz and top files with exts {ext} and {top_ext}. \
-                            Please install an appropriate translator."
+                            f"There is no installed translator for concurrently reading files {filename} and {top_filename}.\n"
+                            + "Please install an appropriate translator."
                         )
         elif importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
