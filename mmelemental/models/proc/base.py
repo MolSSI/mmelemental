@@ -20,7 +20,7 @@ class ProcInput(ProtoModel):
         description="Engine name to use in the procedure e.g. OpenMM.",
     )
     engine_version: Optional[str] = Field(
-        None, description="Supported engine version. e.g. >= 3.4.0."
+        None, description="Supported engine version. e.g. '>=3.4.0'."
     )
     component: Optional[str] = Field(
         None,
