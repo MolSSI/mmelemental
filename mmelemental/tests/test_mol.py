@@ -1,8 +1,7 @@
 import pytest
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.molecule.mm_mol import Molecule
-import os
-from mm_data import data_mol_dir
+import mm_data import mols
 
 
 @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
@@ -13,6 +12,6 @@ def test_mmelemental_codes():
 
 
 def test_mmelemental_json():
-    jsonFile = os.path.join(data_mol_dir, "alanine.json")
+    jsonFile = mm_data["alanine.json"]
     mm_mol = Molecule.from_file(jsonFile)
     assert isinstance(mm_mol, Molecule)
