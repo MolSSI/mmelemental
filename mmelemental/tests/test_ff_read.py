@@ -1,9 +1,8 @@
 from mmelemental.models import forcefield as ff
 import glob
-import os
-from mm_data import data_ff_dir
+import mm_data
 
-json_files = glob.glob(os.path.join(data_ff_dir, "*.json"))
+json_files = mm_data.ffs["forcefield-single.json"]
 
 
 def pytest_generate_tests(metafunc):
