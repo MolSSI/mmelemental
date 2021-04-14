@@ -5,13 +5,12 @@ Simulation test for the mmelemental package.
 import mmelemental
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.proc import ProcInput
-import os
-from mm_data import data_mol_dir
+import mm_data
 
 
 def test_mmelemental_md():
-    protein = Molecule.from_file(filename=os.path.join(data_mol_dir, "alanine.json"))
-    solvent = Molecule.from_file(filename=os.path.join(data_mol_dir, "water.json"))
+    protein = Molecule.from_file(filename=mm_data.mols["alanine.json"])
+    solvent = Molecule.from_file(filename=mm_data.mols["water.json"])
     proc = ProcInput(
         engine="some_engine",
         engine_version="1.0.0",
