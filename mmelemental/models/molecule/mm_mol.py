@@ -171,15 +171,6 @@ class Molecule(ProtoModel):
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
-    forces: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
-        None,
-        description="An ordered (natoms*ndim,) array for XYZ atomic forces. Default unit is "
-        "KiloJoules/mol.Angstroms.",
-    )
-    forces_units: Optional[str] = Field(  # type: ignore
-        "kJ/(mol*angstrom)",
-        description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
-    )
     # Topological data
     connectivity_: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
         None,
@@ -188,22 +179,6 @@ class Molecule(ProtoModel):
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Bonds may be freely reordered and inverted.",
         min_items=1,
-    )
-    angles: Optional[List[Tuple[int, int, int]]] = Field(
-        None,
-        description="Bond angles in degrees for three connected atoms. Default unit is in degrees.",
-    )
-    angles_units: Optional[str] = Field(  # type: ignore
-        "degrees", description="Units for bond angles. Defaults to degrees."
-    )
-    dihedrals: Optional[List[Tuple[int, int, int, int, int]]] = Field(  # type: ignore
-        None,
-        description="Dihedral/torsion angles in degrees between planes through two sets of three atoms, having "
-        "two atoms in common. Default unit is in degrees.",
-    )
-    dihedrals_units: Optional[str] = Field(  # type: ignore
-        "degrees",
-        description="Units for dihedral/torsional angles. Defaults to degrees.",
     )
     substructs: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
         None,
@@ -286,7 +261,7 @@ class Molecule(ProtoModel):
             return v if v else None
         return v
 
-    @validator("geometry", "velocities", "forces")
+    @validator("geometry", "velocities")
     def _must_be_3n(cls, v, values, **kwargs):
         if v is not None:
             n = len(values["symbols"])
@@ -395,7 +370,6 @@ class Molecule(ProtoModel):
             "real",
             "geometry",
             "velocities",
-            "forces",
             "connectivity",
         ]
 
