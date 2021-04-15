@@ -137,7 +137,7 @@ class Molecule(ProtoModel):
     )
     masses_: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
         None,
-        description="The ordered array of atomic masses. Index order "
+        description="The ordered array of particle masses. Index order "
         "matches the 0-indexed indices of all other per-atom fields like ``symbols`` and ``real``. If "
         "this is not provided, the mass of each atom is inferred from its most common isotope. If this "
         "is provided, it must be the same length as ``symbols`` but can accept ``None`` entries for "
