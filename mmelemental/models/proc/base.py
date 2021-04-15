@@ -57,7 +57,7 @@ class ProcOutput(ProtoModel):
     engine_version: Optional[str] = Field(
         None, description="Engine version used in the procedure e.g. >= 3.4.0."
     )
-    warnings: Optional[List[str]] = Field(
+    warnings: Optional[str] = Field(
         None, description="Warning messages generated from the conversion."
     )
     stdout: str = Field(None, description="Standard output.")
