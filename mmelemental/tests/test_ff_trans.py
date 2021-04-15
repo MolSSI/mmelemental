@@ -9,7 +9,7 @@ import mm_data
 try:
     import mmic_translator
 
-    translators = mmic_translator.components.TransComponent.installed()
+    translators = mmic_translator.components.TransComponent.installed_comps()
 except Exception:
     translators = []
 
