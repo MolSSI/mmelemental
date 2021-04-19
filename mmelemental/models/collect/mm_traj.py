@@ -1,5 +1,6 @@
 from pydantic import Field
 from typing import Union, Optional, List, Dict, Any
+from mmelemental.types import Array
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
@@ -9,36 +10,37 @@ import importlib
 import functools
 from .sm_ensem import Microstate
 
-__all__ = ["Trajectory", "Frame", "TrajInput"]
+
+__all__ = ["Trajectory", "TrajInput"]
 
 _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
 Solve by: pip install mmic_translator"
 
-
-class TrajReaderInput(ProtoModel):
-    traj: Union[FileInput, str] = Field(..., description="Trajectory input filename.")
-    top: Optional[Union[FileInput, str]] = Field(
-        ..., description="Topology input filename."
-    )
+# Rounding quantities for hashing
+GEOMETRY_NOISE = 8
+VELOCITY_NOISE = 8
+FORCE_NOISE = 8
+MASS_NOISE = 6
+CHARGE_NOISE = 4
 
 
 class TrajInput(ProtoModel):
-    geometry: Optional[int] = Field(
-        ..., description="Atomic positions of length natoms. Default unit is Angstroms."
+    geometry_freq: Optional[int] = Field(
+        None, description="Every number of steps geometry are saved."
     )
     geometry_units: Optional[str] = Field(
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[int] = Field(
+    velocities_freq: Optional[int] = Field(
         None,
-        description="Atomic velocities of length natoms. Default unit is Angstroms/femtoseconds.",
+        description="Save velocities every 'velocities_freq' steps.",
     )
     velocities_units: Optional[str] = Field(
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
-    forces: Optional[int] = Field(
-        None, description="Atomic forces of length natoms. KiloJoules/mol.Angstroms."
+    forces_freq: Optional[int] = Field(
+        None, description="Every number of steps velocities are saved."
     )
     forces_units: Optional[str] = Field(
         "kJ/(mol*angstrom)",
@@ -46,32 +48,57 @@ class TrajInput(ProtoModel):
     )
     freq: Optional[int] = Field(
         None,
-        description="Every number of steps the geometry, velocities, and/or forces are sampled.",
-    )
-    provenance: Provenance = Field(
-        default_factory=functools.partial(provenance_stamp, __name__),
-        description="The provenance information about how this object (and its attributes) were generated, "
-        "provided, and manipulated.",
-    )
-
-
-class Frame(Microstate):
-    timestep: Optional[float] = Field(
-        None, description="Timestep size. Default unit is femtoseconds."
-    )
-    timestep_units: Optional[str] = Field(
-        "fs", description="Timestep size units. Defaults to femtoseconds."
+        description="Every number of steps geometry, velocities, and/or forces are saved.",
     )
 
 
 class Trajectory(ProtoModel):
-    top: Optional[Union[Molecule, List[Molecule]]] = Field(
+    # Definition fields
+    timestep: Union[Array[float], float] = Field(
+        ..., description="Timestep size. Default unit is femtoseconds."
+    )
+    timestep_units: Optional[str] = Field(
+        "fs", description="Timestep size units. Defaults to femtoseconds."
+    )
+    natoms: int = Field(  # type: ignore
+        ..., description="Number of atoms."
+    )
+    ndim: Optional[int] = Field(  # type: ignore
+        3, description="Number of spatial dimensions."
+    )
+    # For time-dependent topologies or for loading a single static topology
+    top: Optional[List[Molecule]] = Field(
         None,
-        description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
+        description=Molecule.__doc__,
     )
-    frames: List[Frame] = Field(
-        None, description="A list of :class:``Frame`` objects of length nframes."
+    # Particle dynamical fields
+    geometry: Optional[Array[float]] = Field(  # type: ignore
+        None,
+        description="An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
+    geometry_units: Optional[str] = Field(  # type: ignore
+        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+    )
+    velocities: Optional[Array[float]] = Field(  # type: ignore
+        None,
+        description="An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is "
+        "Angstroms/femtoseconds.",
+    )
+    velocities_units: Optional[str] = Field(  # type: ignore
+        "angstrom/fs",
+        description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+    )
+    forces: Optional[Array[float]] = Field(  # type: ignore
+        None,
+        description="An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is "
+        "kJ/mol*angstrom.",
+    )
+    forces_units: Optional[str] = Field(  # type: ignore
+        "kJ/mol*angstrom",
+        description="Units for atomic forces. Defaults to kJ/mol*angstrom.",
+    )
+
+    # Extra fields
     provenance: Provenance = Field(
         default_factory=functools.partial(provenance_stamp, __name__),
         description="The provenance information about how this object (and its attributes) were generated, "
@@ -282,3 +309,25 @@ class Trajectory(ProtoModel):
     def to_data(self, dtype: str):
         """ Converts Trajectory to toolkit-specific trajectory object. """
         raise NotImplementedError(f"Data type {dtype} not available.")
+
+    @property
+    def nframes(self):
+        raise NotImplementedError
+
+    def get_geometry(self, frame: int):
+        """ Returns geometry at a specific snapshot/frame.
+        Parameters
+        ----------
+        frame: int
+            Frame number ranges from 0 ... nframes-1
+        Returns
+        -------
+        Array[float]
+            Geometry 1D numpy array of length natoms * ndim
+
+        """
+        if self.geometry is not None:
+            nfree = self.ndim * self.natoms
+            return self.geometry[frame * nfree: (frame+1) * nfree]
+        else:
+            return self.top[frame].geometry
