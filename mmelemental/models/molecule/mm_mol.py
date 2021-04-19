@@ -12,18 +12,18 @@ import functools
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import Provenance, provenance_stamp, ProtoModel
+from mmelemental.types import Array
 
 __all__ = ["Molecule"]
 
 # Rounding quantities for hashing
 GEOMETRY_NOISE = 8
 VELOCITY_NOISE = 8
-FORCE_NOISE = 8
 MASS_NOISE = 6
 CHARGE_NOISE = 4
 
-_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
-Solve by: pip install mmic_translator"
+_trans_nfound_msg = "MMElemental translation requires mmic & mmic_translator. \
+Solve by: pip install mmic mmic_translator"
 mmschema_molecule_default = "mmschema_molecule"
 
 
@@ -58,8 +58,7 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
 class Molecule(ProtoModel):
     """A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,
     residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
-    velocities, and forces are truncated to 4, 6, 8, 8, and 8 decimal places respectively to assist with duplicate
-    detection.
+    and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.
     """
 
     schema_name: constr(
@@ -100,7 +99,7 @@ class Molecule(ProtoModel):
         3, description="Number of spatial dimensions."
     )
     # Molecular data
-    real_: Optional[qcelemental.models.types.Array[bool]] = Field(  # type: ignore
+    real_: Optional[Array[bool]] = Field(  # type: ignore
         None,
         description="The ordered array indicating if each atom is real (``True``) or "
         "ghost/virtual (``False``). Index matches the 0-indexed indices of all other per-atom settings like "
@@ -108,7 +107,7 @@ class Molecule(ProtoModel):
         "to be real (``True``). If this is provided, the reality or ghostedness of every atom must be specified.",
         shape=["nat"],
     )
-    atom_labels_: Optional[qcelemental.models.types.Array[str]] = Field(  # type: ignore
+    atom_labels_: Optional[List[str]] = Field(  # type: ignore
         None,
         description="Additional per-atom labels as an array of strings. Typical use is in "
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
@@ -116,7 +115,7 @@ class Molecule(ProtoModel):
         shape=["nat"],
     )
     atomic_numbers_: Optional[
-        qcelemental.models.types.Array[numpy.int16]
+        Array[numpy.int16]
     ] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
@@ -126,7 +125,7 @@ class Molecule(ProtoModel):
         shape=["nat"],
     )
     mass_numbers_: Optional[
-        qcelemental.models.types.Array[numpy.int16]
+        Array[numpy.int16]
     ] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
@@ -135,7 +134,7 @@ class Molecule(ProtoModel):
         "If single isotope not (yet) known for an atom, -1 is placeholder.",
         shape=["nat"],
     )
-    masses_: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
+    masses_: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="The ordered array of particle masses. Index order "
         "matches the 0-indexed indices of all other per-atom fields like ``symbols`` and ``real``. If "
@@ -155,14 +154,14 @@ class Molecule(ProtoModel):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to electron Volt."
     )
-    geometry: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
+    geometry: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
+    velocities: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
         "Angstroms/femtoseconds.",
@@ -301,7 +300,7 @@ class Molecule(ProtoModel):
 
     # Properties
     @property
-    def masses(self) -> qcelemental.models.types.Array[float]:
+    def masses(self) -> Array[float]:
         masses = self.__dict__.get("masses_")
         if masses is None:
             try:
@@ -313,21 +312,21 @@ class Molecule(ProtoModel):
         return masses
 
     @property
-    def real(self) -> qcelemental.models.types.Array[bool]:
+    def real(self) -> Array[bool]:
         real = self.__dict__.get("real_")
         if real is None:
             real = numpy.array([True for x in self.symbols])
         return real
 
     @property
-    def atom_labels(self) -> qcelemental.models.types.Array[str]:
+    def atom_labels(self) -> Array[str]:
         atom_labels = self.__dict__.get("atom_labels_")
         if atom_labels is None:
             atom_labels = numpy.array(["" for x in self.symbols])
         return atom_labels
 
     @property
-    def atomic_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
+    def atomic_numbers(self) -> Array[numpy.int16]:
         atomic_numbers = self.__dict__.get("atomic_numbers_")
         if atomic_numbers is None:
             try:
@@ -339,7 +338,7 @@ class Molecule(ProtoModel):
         return atomic_numbers
 
     @property
-    def mass_numbers(self) -> qcelemental.models.types.Array[numpy.int16]:
+    def mass_numbers(self) -> Array[numpy.int16]:
         mass_numbers = self.__dict__.get("mass_numbers_")
         if mass_numbers is None:
             mass_numbers = numpy.array(
@@ -476,8 +475,6 @@ class Molecule(ProtoModel):
                     data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
                 elif field == "velocities":
                     data = qcelemental.models.molecule.float_prep(data, VELOCITY_NOISE)
-                elif field == "forces":
-                    data = qcelemental.models.molecule.float_prep(data, FORCE_NOISE)
                 elif field == "fragment_charges":
                     data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
                 elif field == "molecular_charge":
@@ -625,16 +622,21 @@ class Molecule(ProtoModel):
         if isinstance(data, str):
             if not dtype:
                 raise ValueError(
-                    "You must supply dtype for proper interpretation of symbolic data. See the :class:``Identifiers`` class."
+                    "You must supply dtype for proper interpretation of symbolic data e.g. MDAnalysis, smiles, etc."
                 )
+            code = ChemCode(code=data, dtype=dtype)
+            symbols = list(code.code)  # this is garbage, must be replaced
+            return Molecule(identifiers={dtype: data}, symbols=symbols)
+
             try:
-                code = ChemCode(code=data, dtype=dtype)
-                symbols = list(code.code)  # this is garbage, must be replaced
-                return Molecule(identifiers={dtype: data}, symbols=symbols)
+                import mmic_molconv
             except Exception as e:
-                raise ValueError(
-                    f"Failed in interpreting {data} as a valid code. Exception: {e}"
-                )
+                raise ValueError(f"Failed in importing mmic_molconv. Exception: {e}")
+
+            return mmic_molconv.RunComponent.compute(
+                {"data": data, "kwargs": kwargs}
+            ).molecule
+
         elif isinstance(data, dict):
             kwargs.pop("dtype", None)  # remove dtype if supplied
             kwargs.update(data)
