@@ -60,9 +60,7 @@ class Trajectory(ProtoModel):
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
-    natoms: int = Field(  # type: ignore
-        ..., description="Number of atoms."
-    )
+    natoms: int = Field(..., description="Number of atoms.")  # type: ignore
     ndim: Optional[int] = Field(  # type: ignore
         3, description="Number of spatial dimensions."
     )
@@ -315,7 +313,7 @@ class Trajectory(ProtoModel):
         raise NotImplementedError
 
     def get_geometry(self, frame: int):
-        """ Returns geometry at a specific snapshot/frame.
+        """Returns geometry at a specific snapshot/frame.
         Parameters
         ----------
         frame: int
@@ -328,6 +326,6 @@ class Trajectory(ProtoModel):
         """
         if self.geometry is not None:
             nfree = self.ndim * self.natoms
-            return self.geometry[frame * nfree: (frame+1) * nfree]
+            return self.geometry[frame * nfree : (frame + 1) * nfree]
         else:
             return self.top[frame].geometry

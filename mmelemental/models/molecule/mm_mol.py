@@ -114,9 +114,7 @@ class Molecule(ProtoModel):
         "assigned. See the ``comments`` field for general human-consumable text to affix to the molecule.",
         shape=["nat"],
     )
-    atomic_numbers_: Optional[
-        Array[numpy.int16]
-    ] = Field(  # type: ignore
+    atomic_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
@@ -124,9 +122,7 @@ class Molecule(ProtoModel):
         "Ghostedness should be indicated through ``real`` field, not zeros here.",
         shape=["nat"],
     )
-    mass_numbers_: Optional[
-        Array[numpy.int16]
-    ] = Field(  # type: ignore
+    mass_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
