@@ -6,8 +6,9 @@ MMElemental
 
 A python package which provides data models for Molecular Mechanics based on the [MMSchema](https://mm-portal.netlify.app/mmschema) specification.
 
-![image](mmelemental/data/imgs/mmelemental.png)
-
+<p align="center">
+<img src="mmelemental/data/imgs/mmelemental.png" width="170">
+</p>
 
 ### Copyright
 Copyright (c) 2021, MolSSI
