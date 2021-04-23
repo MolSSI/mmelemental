@@ -62,7 +62,7 @@ class Molecule(ProtoModel):
     """
 
     schema_name: constr(
-        strip_whitespace=True, regex="^(mmschema_molecule)$"
+        strip_whitespace=True, regex=mmschema_molecule_default
     ) = Field(  # type: ignore
         mmschema_molecule_default,
         description=(
