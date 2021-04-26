@@ -6,7 +6,6 @@ import importlib
 from pathlib import Path
 import hashlib
 import json
-import functools
 
 # MM models
 from mmelemental.models.util.output import FileOutput
@@ -61,6 +60,7 @@ class Molecule(ProtoModel):
     and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.
     """
 
+    # Basic fields
     schema_name: constr(
         strip_whitespace=True, regex=mmschema_molecule_default
     ) = Field(  # type: ignore
@@ -80,7 +80,6 @@ class Molecule(ProtoModel):
         "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
         "indicated by the matching the 0-indexed indices in ``real`` field.",
     )
-    # Basics
     name: Optional[str] = Field(  # type: ignore
         None,
         description="Common or human-readable name to assign to this molecule. This field can be arbitrary; see "
@@ -112,7 +111,6 @@ class Molecule(ProtoModel):
         description="Additional per-atom labels as an array of strings. Typical use is in "
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
         "assigned. See the ``comments`` field for general human-consumable text to affix to the molecule.",
-        shape=["nat"],
     )
     atomic_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
@@ -120,7 +118,6 @@ class Molecule(ProtoModel):
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the ``symbols`` list if not explicitly set. "
         "Ghostedness should be indicated through ``real`` field, not zeros here.",
-        shape=["nat"],
     )
     mass_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
@@ -128,7 +125,6 @@ class Molecule(ProtoModel):
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the most common isotopes of the ``symbols`` list if not explicitly set. "
         "If single isotope not (yet) known for an atom, -1 is placeholder.",
-        shape=["nat"],
     )
     masses_: Optional[Array[float]] = Field(  # type: ignore
         None,
@@ -137,7 +133,6 @@ class Molecule(ProtoModel):
         "this is not provided, the mass of each atom is inferred from its most common isotope. If this "
         "is provided, it must be the same length as ``symbols`` but can accept ``None`` entries for "
         "standard masses to infer from the same index in the ``symbols`` field.",
-        shape=["nat"],
     )
     masses_units: Optional[str] = Field(  # type: ignore
         "amu",
@@ -145,10 +140,10 @@ class Molecule(ProtoModel):
     )
     molecular_charge: float = Field(  # type: ignore
         0.0,
-        description="The net electrostatic charge of the molecule. Default unit is electron Volt.",
+        description="The net electrostatic charge of the molecule. Default unit is elementary charge.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
-        "e", description="Units for molecular charge. Defaults to electron Volt."
+        "e", description="Units for molecular charge. Defaults to elementary charge."
     )
     geometry: Optional[Array[float]] = Field(  # type: ignore
         None,
@@ -167,7 +162,7 @@ class Molecule(ProtoModel):
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
     # Topological data
-    connectivity_: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
+    connectivity: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
         None,
         description="A list of bonds within the molecule. Each entry is a tuple "
         "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
@@ -188,8 +183,8 @@ class Molecule(ProtoModel):
     )
     # Extras
     provenance: Provenance = Field(
-        default_factory=functools.partial(provenance_stamp, __name__),
-        description="The provenance information about how this Molecule (and its attributes) were generated, "
+        provenance_stamp(__name__),
+        description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
     extras: Dict[str, Any] = Field(  # type: ignore
@@ -198,7 +193,6 @@ class Molecule(ProtoModel):
     )
 
     class Config(ProtoModel.Config):
-        serialize_skip_defaults = True
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
         fields = {
             "masses_": "masses",
@@ -206,7 +200,6 @@ class Molecule(ProtoModel):
             "atom_labels_": "atom_labels",
             "atomic_numbers_": "atomic_numbers",
             "mass_numbers_": "mass_numbers",
-            "connectivity_": "connectivity",
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
         }
         schema_extra = "http://json-schema.org/draft-04/schema#"
@@ -219,9 +212,6 @@ class Molecule(ProtoModel):
         **kwargs : Any
             The values of the Molecule object attributes.
         """
-        kwargs["schema_name"] = kwargs.pop("schema_name", "mmschema_molecule")
-        kwargs["schema_version"] = kwargs.pop("schema_version", 0)
-
         atomic_numbers = kwargs.get("atomic_numbers")
         if atomic_numbers is not None:
             if kwargs.get("symbols") is None:
@@ -343,20 +333,6 @@ class Molecule(ProtoModel):
         return mass_numbers
 
     @property
-    def connectivity(self) -> List[Tuple[int, int, float]]:
-        connectivity = self.__dict__.get("connectivity_")
-        # default is None, not []
-        return connectivity
-
-    @property
-    def units(self):
-        return {
-            val.alias: val.field_info.extra.get("units")
-            for key, val in self.__fields__.items()
-            if "units" in val.field_info.extra
-        }
-
-    @property
     def hash_fields(self):
         return [
             "symbols",
@@ -471,8 +447,6 @@ class Molecule(ProtoModel):
                     data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
                 elif field == "velocities":
                     data = qcelemental.models.molecule.float_prep(data, VELOCITY_NOISE)
-                elif field == "fragment_charges":
-                    data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
                 elif field == "molecular_charge":
                     data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
                 elif field == "masses":
