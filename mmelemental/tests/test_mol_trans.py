@@ -7,15 +7,12 @@ import os
 import mmelemental
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
-
-from mmelemental.models.molecule.io_mol import MolInput, MolOutput
-
 import mm_data
 
 try:
     import mmic_translator
 
-    translators = mmic_translator.components.TransComponent.installed()
+    translators = mmic_translator.components.TransComponent.installed_comps()
 except Exception:
     translators = []
 
@@ -26,7 +23,7 @@ def pytest_generate_tests(metafunc):
 
 
 def test_mmelemental_moldata(translator):
-    groFile = mm_data.mol["alanine.gro"]
+    groFile = mm_data.mols["alanine.gro"]
 
     mm_mol = Molecule.from_file(groFile, translator=translator)
     assert isinstance(mm_mol, Molecule)
@@ -50,5 +47,5 @@ def test_mmelemental_mol_tofile(translator):
 
         os.remove("mol.pdb")
         os.remove("mol.json")
-        os.rmove("mol.gro")
+        os.remove("mol.gro")
     return mol
