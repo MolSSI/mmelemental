@@ -139,11 +139,10 @@ class ForceField(ProtoModel):
     )
     extras: Dict[str, Any] = Field(  # type: ignore
         None,
-        description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
+        description="Additional information to bundle with the object. Use for schema development and scratch space.",
     )
 
     class Config(ProtoModel.Config):
-        serialize_skip_defaults = True
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
 
         def schema_extra(schema, model):
