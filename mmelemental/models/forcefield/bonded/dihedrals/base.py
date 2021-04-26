@@ -10,12 +10,12 @@ __all__ = ["Dihedrals"]
 
 class Dihedrals(Params):
     _path = os.path.join(pathlib.Path(__file__).parent.absolute(), "potentials", "*.py")
-    angles: qcelemental.models.types.Array[float] = Field(
-        None, description="Equilibrium dihedral angles. Default unit is degrees."
-    )
-    angles_units: Optional[str] = Field(
-        "degrees", description="Equilibrium dihedral angle units."
-    )
+    # angles: qcelemental.models.types.Array[float] = Field(
+    #    None, description="Equilibrium dihedral angles. Default unit is degrees."
+    # )
+    # angles_units: Optional[str] = Field(
+    #    "degrees", description="Equilibrium dihedral angle units."
+    # )
     indices: List[Tuple[int, int, int, int]] = Field(  # type: ignore
         ...,
         description="Particle indices for each dihedral angle.",
@@ -27,7 +27,7 @@ class Dihedrals(Params):
     )
 
     # Validators
-    @validator("angles")
+    # @validator("angles")
     def _angles_shape(cls, v, values):
         assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
         return v
