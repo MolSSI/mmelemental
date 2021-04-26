@@ -60,7 +60,7 @@ jobs:
       run: |
         git clone https://github.com/MolSSI/mm_data
         cd mm_data && pip install . && cd .. && rm -rf mm_data
-        git clone https://github.com/MolSSI/cmselemental
+        git clone https://github.com/MolSSI/cmselemental --branch dev
         cd cmselemental && pip install . && cd .. && rm -rf cmselemental
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
