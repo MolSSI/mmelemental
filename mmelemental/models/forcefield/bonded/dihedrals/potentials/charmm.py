@@ -1,6 +1,6 @@
-from pydantic import Field, validator
+from pydantic import Field, validator, root_validator
 from typing import Optional
-import qcelemental
+from cmselemental.types import Array
 from mmelemental.models.base import ProtoModel
 
 __all__ = ["Charmm"]
@@ -11,18 +11,18 @@ class Charmm(ProtoModel):
     Charmm-style dihedral potential: Energy = energy * (1 + cos(periodicity * angle - phase)).
     """
 
-    energy: qcelemental.models.types.Array[float] = Field(
+    energy: Array[float] = Field(
         ...,
         description="Dihedral energy constant. Default unit is kJ/mol.",
     )
     energy_units: Optional[str] = Field(
         "kJ/mol", description="Dihedral energy constant unit."
     )
-    periodicity: qcelemental.models.types.Array[int] = Field(
+    periodicity: Array[int] = Field(
         ...,
         description="Dihedral periodicity factor, must be >= 0.",
     )
-    phase: qcelemental.models.types.Array[float] = Field(
+    phase: Array[float] = Field(
         ...,
         description="Dihedral phase angle. Default unit is degrees.",
     )
@@ -40,6 +40,12 @@ class Charmm(ProtoModel):
         assert (v >= 0).all(), "Dihedral periodicity must be >= 0."
         return v
 
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)
+    @root_validator(allow_reuse=True)
+    def _valid_arrays(cls, values):
+        energy_shape = values["energy"].shape
+        periodicity_shape = values["periodicity"].shape
+        phase_shape = values["phase"].shape
+        assert (
+            energy_shape == periodicity_shape == phase_shape
+        ), f"Energy ({energy_shape}), periodocity ({periodicity_shape}), and phase ({phase_shape}) must have the same shape."
+        return values

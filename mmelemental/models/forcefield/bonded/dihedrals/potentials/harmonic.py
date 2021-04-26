@@ -1,6 +1,6 @@
 from pydantic import Field, validator
 from typing import Optional
-import qcelemental
+from cmselemental.types import Array
 from mmelemental.models.base import ProtoModel
 
 __all__ = ["Harmonic"]
@@ -11,14 +11,14 @@ class Harmonic(ProtoModel):
     Simple periodic dihedral potential: Energy = energy * (1 + sign * cos(periodicity * angle)).
     """
 
-    energy: qcelemental.models.types.Array[float] = Field(
+    energy: Array[float] = Field(
         ...,
         description="Dihedral energy constant. Default unit is kJ/mol.",
     )
     energy_units: Optional[str] = Field(
         "kJ/mol", description="Dihedral energy constant unit."
     )
-    periodicity: qcelemental.models.types.Array[int] = Field(
+    periodicity: Array[int] = Field(
         ...,
         description="Dihedral periodicity term, must be >= 0.",
     )
@@ -41,7 +41,3 @@ class Harmonic(ProtoModel):
     def _valid_periodicity(cls, v):
         assert (v >= 0).all(), "Dihedral periodicity must be >= 0."
         return v
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)
