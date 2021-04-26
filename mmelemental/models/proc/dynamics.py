@@ -6,7 +6,7 @@ __all__ = ["DynamicsInput"]
 
 
 class DynamicsInput(ProcInput):
-    """ Molecular dynamics parameter input schema."""
+    """Molecular dynamics parameter input schema."""
 
     # Velocity fields
     gen_vel: Array[bool] = Field(

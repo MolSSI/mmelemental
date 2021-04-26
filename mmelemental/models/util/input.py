@@ -8,7 +8,7 @@ __all__ = ["FileInput", "CmdInput"]
 
 
 class FileInput(ProtoModel):
-    """ A model that represents system files that may or may not exist at the time of object insantiation. """
+    """A model that represents system files that may or may not exist at the time of object insantiation."""
 
     path: str = Field(..., description="File path, relative or absolute.")
     dtype: Optional[str] = Field(

@@ -12,7 +12,7 @@ mmschema_proc_input_default = "mmschema_proc_input"
 
 
 class ProcInput(ProtoModel):
-    """ Basic input model for procedures."""
+    """Basic input model for procedures."""
 
     # Generic fields
     engine: Optional[str] = Field(
@@ -44,7 +44,7 @@ class ProcInput(ProtoModel):
 
 
 class ProcOutput(ProtoModel):
-    """ Basic output model for procedures."""
+    """Basic output model for procedures."""
 
     component: str = Field(
         None,

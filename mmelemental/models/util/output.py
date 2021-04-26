@@ -8,7 +8,7 @@ __all__ = ["FileOutput", "ComputeOutput"]
 
 
 class FileOutput(ProtoModel):
-    """ Model for writing output to files. No file is created if "write" method is not invoked. """
+    """Model for writing output to files. No file is created if "write" method is not invoked."""
 
     path: str = Field(..., description="Output filename path. ")
     clean: bool = Field(

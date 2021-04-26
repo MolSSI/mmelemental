@@ -11,7 +11,7 @@ except ImportError:  # pragma: no cover
 
 
 class Bond:
-    """ RDKit-based bond order: {0: unspecified, 1: single, etc., up to 21} """
+    """RDKit-based bond order: {0: unspecified, 1: single, etc., up to 21}"""
 
     orders = list(Chem.BondType.values.values())
 

@@ -9,7 +9,7 @@ from importlib.machinery import SourceFileLoader
 
 
 class Params(ProtoModel):
-    """ Superclass for different FF sucblasses e.g. Bonds, Angles, etc. """
+    """Superclass for different FF sucblasses e.g. Bonds, Angles, etc."""
 
     _path = None
     form: str = Field(
@@ -159,7 +159,7 @@ class Params(ProtoModel):
 
     @classmethod
     def supported_potentials(cls) -> Dict[str, "Params"]:
-        """ Returns a dictionary for all available Params subclasses available in cls._path. """
+        """Returns a dictionary for all available Params subclasses available in cls._path."""
         files = glob.glob(cls._path)
         classes = {}
         for sfile in files:

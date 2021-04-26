@@ -12,7 +12,7 @@ class ToolkitMol(ProtoModel):
 
     @staticmethod
     def check_name(name) -> str:
-        """ Returns atom name of langth 4 characters. """
+        """Returns atom name of langth 4 characters."""
         assert len(name) <= 4
 
         if len(name) != 4:
