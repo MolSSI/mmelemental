@@ -1,13 +1,15 @@
-from pydantic import Field
+from pydantic import Field, validator, constr
 from typing import Union, Optional, List, Dict, Any
 from mmelemental.types import Array
 from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
+import qcelemental
 from pathlib import Path
 import importlib
 import functools
+import hashlib
 from .sm_ensem import Microstate
 
 
@@ -20,8 +22,9 @@ Solve by: pip install mmic_translator"
 GEOMETRY_NOISE = 8
 VELOCITY_NOISE = 8
 FORCE_NOISE = 8
-MASS_NOISE = 6
-CHARGE_NOISE = 4
+TIMESTEP_NOISE = 6
+
+mmschema_trajectory_default = "mmschema_trajectory"
 
 
 class TrajInput(ProtoModel):
@@ -53,6 +56,29 @@ class TrajInput(ProtoModel):
 
 
 class Trajectory(ProtoModel):
+    """
+    Representation of trajectories in classical mechanics.
+    By default, this model loads a single frame in memory.
+    """
+
+    # Basic field
+    schema_name: constr(
+        strip_whitespace=True, regex=mmschema_trajectory_default
+    ) = Field(  # type: ignore
+        mmschema_trajectory_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_trajectory_default}."
+        ),
+    )
+    schema_version: Optional[int] = Field(  # type: ignore
+        0,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
+    name: Optional[str] = Field(  # type: ignore
+        "my_trajectory",
+        description="Common or human-readable name to assign to this molecule. This field can be arbitrary; see "
+        "``identifiers`` for well-defined labels.",
+    )
     # Definition fields
     timestep: Union[Array[float], float] = Field(
         ..., description="Timestep size. Default unit is femtoseconds."
@@ -60,19 +86,25 @@ class Trajectory(ProtoModel):
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
-    natoms: int = Field(..., description="Number of atoms.")  # type: ignore
+    nframes_: Optional[int] = Field(1, description="Number of frames.")  # type: ignore
     ndim: Optional[int] = Field(  # type: ignore
         3, description="Number of spatial dimensions."
     )
-    # For time-dependent topologies or for loading a single static topology
-    top: Optional[List[Molecule]] = Field(
+    # For storing topological data or time-dependent topologies (e.g. reactive ffs)
+    top: Optional[Union[Molecule, List[Molecule]]] = Field(  # type: ignore
         None,
-        description=Molecule.__doc__,
+        description="top",  # Molecule.__doc__,
     )
     # Particle dynamical fields
     geometry: Optional[Array[float]] = Field(  # type: ignore
         None,
-        description="An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom.",
+        description="An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. "
+        "Storage is sequential in each dimension:\n"
+        "[\n"
+        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
+        "   ...,\n"
+        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "]",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
@@ -95,13 +127,88 @@ class Trajectory(ProtoModel):
         "kJ/mol*angstrom",
         description="Units for atomic forces. Defaults to kJ/mol*angstrom.",
     )
-
-    # Extra fields
     provenance: Provenance = Field(
-        default_factory=functools.partial(provenance_stamp, __name__),
+        provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
+    extras: Dict[str, Any] = Field(  # type: ignore
+        None,
+        description="Additional information to bundle with this object. Use for schema development and scratch space.",
+    )
+
+    class Config(ProtoModel.Config):
+        repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
+        fields = {
+            "nframes_": "nframes",
+            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
+        }
+
+        def schema_extra(schema, model):
+            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
+            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
+
+    def __repr_args__(self) -> "ReprArgs":
+        return [("name", self.name), ("hash", self.get_hash()[:7])]
+
+    # Properties
+    @property
+    def hash_fields(self):
+        return [
+            "geometry",
+            "geometry_units",
+            "velocities",
+            "velocities_units",
+            "forces",
+            "forces_units",
+            "top",
+            "timestep",
+            "timestep_units",
+            "nframes",
+            "ndim",
+        ]
+
+    @property
+    def nframes(self):
+        return self.nframes_
+
+    def get_geometry(self, frame: int):
+        """Returns geometry at a specific snapshot/frame.
+        Parameters
+        ----------
+        frame: int
+            Frame number ranges from 0 ... nframes-1
+        Returns
+        -------
+        Array[float]
+            Geometry 1D numpy array of length natoms * ndim
+
+        """
+        if self.geometry is not None:
+            nfree = self.ndim * self.natoms
+            return self.geometry[frame * nfree : (frame + 1) * nfree]
+        else:
+            return self.top[frame].geometry
+
+    # Helper methods
+    def get_hash(self):
+        """
+        Returns the hash of a single frame in a trajectory.
+        """
+
+        m = hashlib.sha1()
+        concat = ""
+
+        ...
+
+        m.update(concat.encode("utf-8"))
+        return m.hexdigest()
+
+    # Validators
+    @validator("geometry")
+    def _valid_geometry(cls, v, values):
+        assert not values.get("top")
+        return v
 
     # Constructors
     @classmethod
@@ -305,27 +412,5 @@ class Trajectory(ProtoModel):
             tk_traj.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
     def to_data(self, dtype: str):
-        """ Converts Trajectory to toolkit-specific trajectory object. """
+        """Converts Trajectory to toolkit-specific trajectory object."""
         raise NotImplementedError(f"Data type {dtype} not available.")
-
-    @property
-    def nframes(self):
-        raise NotImplementedError
-
-    def get_geometry(self, frame: int):
-        """Returns geometry at a specific snapshot/frame.
-        Parameters
-        ----------
-        frame: int
-            Frame number ranges from 0 ... nframes-1
-        Returns
-        -------
-        Array[float]
-            Geometry 1D numpy array of length natoms * ndim
-
-        """
-        if self.geometry is not None:
-            nfree = self.ndim * self.natoms
-            return self.geometry[frame * nfree : (frame + 1) * nfree]
-        else:
-            return self.top[frame].geometry
