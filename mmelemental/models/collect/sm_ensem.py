@@ -1,11 +1,13 @@
-from pydantic import Field
-from typing import Optional, List, Dict
+from pydantic import Field, constr
+from typing import Optional, List, Dict, Any
 from qcelemental.models.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 import functools
 
 __all__ = ["Microstate", "Ensemble"]
+
+mmschema_ensemble_default = "mmschema_ensemble"
 
 
 class Microstate(ProtoModel):
@@ -33,17 +35,43 @@ class Microstate(ProtoModel):
 
 
 class Ensemble(ProtoModel):
-    mol: Optional[Dict[str, List[Molecule]]] = Field(
+    """A representation of ensembles in statistical mechanics. Useful for storing output
+    from molecular docking, coarse-graining, etc.
+    """
+
+    schema_name: constr(
+        strip_whitespace=True, regex=mmschema_ensemble_default
+    ) = Field(  # type: ignore
+        mmschema_ensemble_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_ensemble_default}."
+        ),
+    )
+    schema_version: int = Field(  # type: ignore
+        0,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
+    mols: Optional[Dict[str, List[Molecule]]] = Field(
         None,
         description="Single or multiple :class:``Molecule`` object(s) representing the molecular topology.",
+        # + Molecule.__doc__,
     )
     states: Optional[Dict[str, List[Microstate]]] = Field(
         None,
         description="Similar to Molecule but without the connectivity. Provides improved efficiency over the \
             latter. See :class:``Microstate``.",
     )
+    scores: List[float] = Field(
+        ...,
+        description="A list of scores for each state. Length must be equal to the number of states or mols.",
+    )
+    scores_units: Optional[str] = Field(None, description="Score function unit.")
     provenance: Provenance = Field(
-        default_factory=functools.partial(provenance_stamp, __name__),
+        provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
+    )
+    extras: Dict[str, Any] = Field(  # type: ignore
+        None,
+        description="Additional information to bundle with this object. Use for schema development and scratch space.",
     )
