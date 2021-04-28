@@ -70,10 +70,10 @@ class Molecule(ProtoModel):
         ),
     )
     schema_version: int = Field(  # type: ignore
-        0,
+        1,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    symbols: Optional[List[str]] = Field(  # type: ignore
+    symbols: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
         "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
@@ -106,7 +106,7 @@ class Molecule(ProtoModel):
         "to be real (``True``). If this is provided, the reality or ghostedness of every atom must be specified.",
         shape=["nat"],
     )
-    atom_labels_: Optional[List[str]] = Field(  # type: ignore
+    atom_labels_: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="Additional per-atom labels as an array of strings. Typical use is in "
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
@@ -275,13 +275,14 @@ class Molecule(ProtoModel):
 
     @validator("geometry")
     def _valid_dims(cls, v, values, **kwargs):
-        n = len(values["symbols"])
-        try:
-            v = v.reshape(n, values["ndim"])
-        except (ValueError, AttributeError):
-            raise ValueError(
-                f"Geometry must be castable to shape (Natoms,{values['ndim']})!"
-            )
+        if v is not None:
+            n = len(values["symbols"])
+            try:
+                v = v.reshape(n, values["ndim"])
+            except (ValueError, AttributeError):
+                raise ValueError(
+                    f"Geometry must be castable to shape (Natoms,{values['ndim']})!"
+                )
         return v
 
     # Properties
@@ -551,12 +552,15 @@ class Molecule(ProtoModel):
                         )
         elif importlib.util.find_spec(translator):
             mod = importlib.import_module(translator)
+        else:
+            raise ModuleNotFoundError(f"Translator {translator} is not installed.")
 
-        tkmol_class = mod._classes_map.get("Molecule")
-
-        if not tkmol_class:
-            raise ValueError(
-                f"No Molecule model found while looking in translator: {translator}."
+        try:
+            tkmol_class = mod._classes_map.get("Molecule")
+        except AttributeError as e:
+            raise AttributeError(
+                f"{translator} is not a valid Molecule translator. Exception raised: "
+                + repr(e)
             )
 
         tkmol = tkmol_class.from_file(
