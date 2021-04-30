@@ -44,7 +44,6 @@ setup(
     # url='http://www.my_package.com',  # Website
     install_requires=[
         "pint",
-        "qcengine",
     ],  # Required packages, pulls from pip if needed; do not use for Conda deployment
     # platforms=['Linux',
     #            'Mac OS-X',
