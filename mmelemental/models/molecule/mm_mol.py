@@ -106,7 +106,7 @@ class Molecule(ProtoModel):
         "to be real (``True``). If this is provided, the reality or ghostedness of every atom must be specified.",
         shape=["nat"],
     )
-    atom_labels_: Optional[Array[str]] = Field(  # type: ignore
+    atom_labels: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="Additional per-atom labels as an array of strings. Typical use is in "
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
@@ -119,7 +119,7 @@ class Molecule(ProtoModel):
         "Values are inferred from the ``symbols`` list if not explicitly set. "
         "Ghostedness should be indicated through ``real`` field, not zeros here.",
     )
-    mass_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
+    mass_numbers: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
@@ -197,9 +197,7 @@ class Molecule(ProtoModel):
         fields = {
             "masses_": "masses",
             "real_": "real",
-            "atom_labels_": "atom_labels",
             "atomic_numbers_": "atomic_numbers",
-            "mass_numbers_": "mass_numbers",
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
         }
         schema_extra = "http://json-schema.org/draft-04/schema#"
@@ -306,13 +304,6 @@ class Molecule(ProtoModel):
         return real
 
     @property
-    def atom_labels(self) -> Array[str]:
-        atom_labels = self.__dict__.get("atom_labels_")
-        if atom_labels is None:
-            atom_labels = numpy.array(["" for x in self.symbols])
-        return atom_labels
-
-    @property
     def atomic_numbers(self) -> Array[numpy.int16]:
         atomic_numbers = self.__dict__.get("atomic_numbers_")
         if atomic_numbers is None:
@@ -323,15 +314,6 @@ class Molecule(ProtoModel):
             except Exception:
                 atomic_numbers = None
         return atomic_numbers
-
-    @property
-    def mass_numbers(self) -> Array[numpy.int16]:
-        mass_numbers = self.__dict__.get("mass_numbers_")
-        if mass_numbers is None:
-            mass_numbers = numpy.array(
-                [qcelemental.periodictable.to_A(x) for x in self.symbols]
-            )
-        return mass_numbers
 
     @property
     def hash_fields(self):
