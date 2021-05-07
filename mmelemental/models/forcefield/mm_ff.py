@@ -115,8 +115,8 @@ class ForceField(ProtoModel):
     )
     substructs: Optional[List[Tuple[str, int]]] = Field(
         None,
-        description="A list of substructure names the particles belong to. E.g. [('ALA', 1), ('ACE', 2)] means atom1 belong to residue ALA (alanine) "
-        "with residue number 1, while atom2 belongs to residue ACE (acetyl) with residue number 2.",
+        description="A list of substructure names the particles belong to. E.g. [('ALA', 4), ('ACE', 0)] means atom1 belong to residue ALA (alanine) "
+        "with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.",
     )
     combination_rule: Optional[str] = Field(
         "Lorentz-Berthelot", description="Combination rule for the force field."
