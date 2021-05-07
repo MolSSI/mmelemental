@@ -653,7 +653,7 @@ class Molecule(ProtoModel):
                     )
 
             tkmol = self.to_data(translator=translator, **kwargs)
-            tkmol.to_file(filename, dtype=dtype, translator=translator, **kwargs)  # pass dtype?
+            tkmol.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
     def to_data(
         self,
