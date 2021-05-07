@@ -637,22 +637,23 @@ class Molecule(ProtoModel):
             with open(filename, mode) as fp:
                 fp.write(stringified)
         else:  # look for an installed mmic_translator
-            try:
-                from mmic_translator.components import TransComponent
-            except Exception:
-                TransComponent = None
-
-            if not TransComponent:
-                raise ModuleNotFoundError(_trans_nfound_msg)
-            translator = TransComponent.find_molwrite_tk(ext)
-
             if not translator:
-                raise NotImplementedError(
-                    f"File extension {ext} not supported with any installed translators."
-                )
+                try:
+                    from mmic_translator.components import TransComponent
+                except Exception:
+                    TransComponent = None
+
+                if not Tranmmic_optim_gmx.egg-info/sComponent:
+                    raise ModuleNotFoundError(_trans_nfound_msg)
+                translator = TransComponent.find_molwrite_tk(ext)
+
+                if not translator:
+                    raise NotImplementedError(
+                        f"File extension {ext} not supported with any installed translators."
+                    )
 
             tkmol = self.to_data(translator=translator, **kwargs)
-            tkmol.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
+            tkmol.to_file(filename, dtype=dtype, translator=translator, **kwargs)  # pass dtype?
 
     def to_data(
         self,
