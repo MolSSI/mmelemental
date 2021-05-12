@@ -643,7 +643,7 @@ class Molecule(ProtoModel):
                 except Exception:
                     TransComponent = None
 
-                if not Tranmmic_optim_gmx.egg-info/sComponent:
+                if not TransComponent:
                     raise ModuleNotFoundError(_trans_nfound_msg)
                 translator = TransComponent.find_molwrite_tk(ext)
 
