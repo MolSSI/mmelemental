@@ -75,10 +75,9 @@ class Molecule(ProtoModel):
     )
     symbols: Optional[Array[str]] = Field(  # type: ignore
         None,
-        description="An ordered (natom,) array-like object of atomic elemental symbols. The index of "
-        "this attribute sets atomic order for all other per-atom setting like ``real`` and the first "
-        "dimension of ``geometry``. Ghost/Virtual atoms must have an entry in this array-like and are "
-        "indicated by the matching the 0-indexed indices in ``real`` field.",
+        description="An ordered (natom,) array-like object of particle symbols. The index of "
+        "this attribute sets the order for all other per-particle setting like ``geometry`` and the first "
+        "dimension of ``geometry``.",
     )
     name: Optional[str] = Field(  # type: ignore
         None,
@@ -98,14 +97,6 @@ class Molecule(ProtoModel):
         3, description="Number of spatial dimensions."
     )
     # Molecular data
-    real_: Optional[Array[bool]] = Field(  # type: ignore
-        None,
-        description="The ordered array indicating if each atom is real (``True``) or "
-        "ghost/virtual (``False``). Index matches the 0-indexed indices of all other per-atom settings like "
-        "``symbols`` and the first dimension of ``geometry``. If this is not provided, all atoms are assumed "
-        "to be real (``True``). If this is provided, the reality or ghostedness of every atom must be specified.",
-        shape=["nat"],
-    )
     atom_labels: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="Additional per-atom labels as an array of strings. Typical use is in "
@@ -138,7 +129,7 @@ class Molecule(ProtoModel):
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
     )
-    molecular_charge: float = Field(  # type: ignore
+    molecular_charge: Optional[float] = Field(  # type: ignore
         0.0,
         description="The net electrostatic charge of the molecule. Default unit is elementary charge.",
     )
@@ -176,18 +167,13 @@ class Molecule(ProtoModel):
         "of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [('ALA', 4), ...] "
         "means atom1 belongs to aminoacid alanine with residue number 4.",
     )
-    chains: Optional[Dict[str, List[int]]] = Field(  # type: ignore
-        None,
-        description="A sequence of connected substructures forming a subunit that is not bonded to any "
-        "other subunit. For example, a hemoglobin molecule consists of four chains that are not connected to one another.",
-    )
     # Extras
     provenance: Provenance = Field(
         provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
-    extras: Dict[str, Any] = Field(  # type: ignore
+    extras: Optional[Dict[str, Any]] = Field(  # type: ignore
         None,
         description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
     )
@@ -196,11 +182,12 @@ class Molecule(ProtoModel):
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
         fields = {
             "masses_": "masses",
-            "real_": "real",
             "atomic_numbers_": "atomic_numbers",
-            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
         }
-        schema_extra = "http://json-schema.org/draft-04/schema#"
+
+        def schema_extra(schema, model):
+            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
+            schema_extra = "http://json-schema.org/draft-04/schema#"
 
     def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
         """
@@ -254,21 +241,11 @@ class Molecule(ProtoModel):
                 raise ValueError("Array must be castable to shape (natom,ndim)!")
         return v
 
-    @validator("masses_", "real_")
+    @validator("masses_")
     def _must_be_n(cls, v, values, **kwargs):
         n = len(values["symbols"])
         if len(v) != n:
-            raise ValueError(
-                "Masses and Real must be same number of entries as Symbols"
-            )
-        return v
-
-    @validator("real_")
-    def _populate_real(cls, v, values, **kwargs):
-        # Can't use geometry here since its already been validated and not in values
-        n = len(values["symbols"])
-        if len(v) == 0:
-            v = numpy.array([True for _ in range(n)])
+            raise ValueError("Masses must be same number of entries as Symbols")
         return v
 
     @validator("geometry")
@@ -297,13 +274,6 @@ class Molecule(ProtoModel):
         return masses
 
     @property
-    def real(self) -> Array[bool]:
-        real = self.__dict__.get("real_")
-        if real is None:
-            real = numpy.array([True for x in self.symbols])
-        return real
-
-    @property
     def atomic_numbers(self) -> Array[numpy.int16]:
         atomic_numbers = self.__dict__.get("atomic_numbers_")
         if atomic_numbers is None:
@@ -321,7 +291,6 @@ class Molecule(ProtoModel):
             "symbols",
             "masses",
             "molecular_charge",
-            "real",
             "geometry",
             "velocities",
             "connectivity",
@@ -348,32 +317,6 @@ class Molecule(ProtoModel):
             )
 
         return self.get_hash() == other.get_hash()
-
-    def pretty_print(self):
-        """Prints the molecule. Not sure yet what this is used for, but I have modified the
-        original implementation from qcelemental.
-        Returns
-        -------
-        str
-            Molecule representation in terms of its total charge and coordinates (geometry).
-        """
-        text = ""
-
-        text += """    Geometry (in {0:s}), charge = {1:.1f} (in {2:s}):\n\n""".format(
-            self.geometry_units, self.molecular_charge, self.molecular_charge_units
-        )
-        text += """       Center              X                  Y                   Z       \n"""
-        text += """    ------------   -----------------  -----------------  -----------------\n"""
-
-        for i in range(len(self.geometry)):
-            text += """    {0:8s}{1:4s} """.format(
-                self.symbols[i], "" if self.real[i] else "(Gh)"
-            )
-            for j in range(self.geometry.shape(axis=1)):
-                text += """  {0:17.12f}""".format(self.geometry[i][j])
-            text += "\n"
-
-        return text
 
     def get_molecular_formula(self, order: Optional[str] = "alphabetical") -> str:
         """
