@@ -57,8 +57,8 @@ class ForceField(ProtoModel):
         ...,
         description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols.",
     )
-    nonbonded: Union[NonBonded, List[NonBonded]] = Field(  # type: ignore
-        ..., description="Non-bonded parameters model."
+    nonbonded: Optional[Union[NonBonded, List[NonBonded]]] = Field(  # type: ignore
+        None, description="Non-bonded parameters model."
     )
     bonds: Optional[Union[Bonds, List[Bonds]]] = Field(  # type: ignore
         None, description="2-body covalent bond model."
@@ -69,9 +69,9 @@ class ForceField(ProtoModel):
     dihedrals: Optional[Union[Dihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="4-body torsional bond model."
     )
-    im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
-        None, description="Improper dihedral bond model."
-    )
+    #im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
+    #    None, description="Improper dihedral bond model."
+    #)
     charges: Optional[qcelemental.models.types.Array[float]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
@@ -126,10 +126,8 @@ class ForceField(ProtoModel):
     ] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
-        "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
+        "matches the 0-indexed indices of all other per-atom settings like ``symbols``. "
         "Values are inferred from the ``symbols`` list if not explicitly set. "
-        "Ghostedness should be indicated through ``real`` field, not zeros here.",
-        shape=["nat"],
     )
     # Extras
     provenance: Provenance = Field(  # type: ignore
@@ -175,9 +173,7 @@ class ForceField(ProtoModel):
         values = self.__dict__
 
         if not values.get("name"):
-            from qcelemental.molparse.to_string import formula_generator
-
-            values["name"] = formula_generator(values["symbols"])
+            values["name"] = "forcefield"
 
     # Representation -> used by qcelemental's __repr__
     def __repr_args__(self) -> "ReprArgs":
