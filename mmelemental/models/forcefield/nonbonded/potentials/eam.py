@@ -9,19 +9,21 @@ __all__ = ["EAM"]
 class EAM(ProtoModel):
 
     embed: qcelemental.models.types.Array[float] = Field(
-        ..., description="Embedding energy term. Default unit is kJ/mol."
+        ...,
+        description="Array of embedding (discretized) energy terms. Default unit is kJ/mol.",
     )
     embed_units: Optional[str] = Field(
         "kJ/mol", description="Units for the embedding energy term."
     )
-    pair: qcelemental.models.types.Array[float] = Field(
-        ..., description="Pair potential interaction. Default unit is kJ/mol."
+    potential: qcelemental.models.types.Array[float] = Field(
+        ...,
+        description="Array of (discretized) pair potential interaction functions. Default unit is kJ/mol.",
     )
     pair_units: Optional[str] = Field(
-        "kJ/mol", description="Units for the pair potential interaction."
+        "kJ/mol", description="Units for the pair potential interaction term."
     )
     density: qcelemental.models.types.Array[float] = Field(
-        ..., description="Atomic electron density."
+        ..., description="Array of (discretized) atomic electron densities."
     )
 
     @root_validator(allow_reuse=True)
