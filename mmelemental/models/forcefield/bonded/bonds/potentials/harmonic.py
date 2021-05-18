@@ -12,7 +12,7 @@ class Harmonic(ProtoModel):
     """
 
     spring: qcelemental.models.types.Array[float] = Field(
-        0, description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
+        ..., description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
     )
     spring_units: Optional[str] = Field(
         "kJ/(mol*angstrom**2)", description="Bond spring constant unit."
@@ -22,7 +22,3 @@ class Harmonic(ProtoModel):
     def _valid_length(cls, v):
         assert len(v.shape) == 1, "Bond spring constants must be a 1D array!"
         return v
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)
