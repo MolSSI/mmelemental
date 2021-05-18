@@ -55,7 +55,7 @@ class ForceField(ProtoModel):
     )
     symbols: List[str] = Field(  # type: ignore
         ...,
-        description="An ordered (natom,) list of particle (e.g. atomic) elemental symbols.",
+        description="An ordered (natom,) list of particle (e.g. atomic elemental) symbols.",
     )
     nonbonded: Optional[Union[NonBonded, List[NonBonded]]] = Field(  # type: ignore
         None, description="Non-bonded parameters model."
@@ -69,9 +69,9 @@ class ForceField(ProtoModel):
     dihedrals: Optional[Union[Dihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="4-body torsional bond model."
     )
-    #im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
+    # im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
     #    None, description="Improper dihedral bond model."
-    #)
+    # )
     charges: Optional[qcelemental.models.types.Array[float]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
@@ -127,7 +127,7 @@ class ForceField(ProtoModel):
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols``. "
-        "Values are inferred from the ``symbols`` list if not explicitly set. "
+        "Values are inferred from the ``symbols`` list if not explicitly set. ",
     )
     # Extras
     provenance: Provenance = Field(  # type: ignore
