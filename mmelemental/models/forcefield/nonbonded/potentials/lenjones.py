@@ -13,14 +13,15 @@ class LennardJones(ProtoModel):
         description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
     )
     epsilon_units: Optional[str] = Field(
-        "kJ/mol", description="The epsilon (well depth) Lennard-Jones unit."
+        "kJ/mol",
+        description="Units for the Lennard-Jones epsilon (well depth) constant.",
     )
     sigma: qcelemental.models.types.Array[float] = Field(
         ...,
         description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
     )
     sigma_units: Optional[str] = Field(
-        "angstrom", description="The Lennard-Jones sigma unit."
+        "angstrom", description="Units for the Lennard-Jones sigma constant."
     )
 
     @root_validator(allow_reuse=True)
