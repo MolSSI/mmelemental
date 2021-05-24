@@ -1,5 +1,5 @@
 """ This file ought to be removed and its contents included in CMSElemental """
 
-import qcelemental
+import cmselemental
 
-Array = qcelemental.models.types.Array
+Array = cmselemental.models.types.Array
