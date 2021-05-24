@@ -445,11 +445,9 @@ class Molecule(ProtoModel):
         try:
             from mmic_translator.components import TransComponent
         except Exception:
-            TransComponent = None
+            raise ModuleNotFoundError(_trans_nfound_msg)
 
         if not translator:
-            if not TransComponent:
-                raise ModuleNotFoundError(_trans_nfound_msg)
             inst_trans = TransComponent.installed_comps()
 
             while not translator:
@@ -494,7 +492,8 @@ class Molecule(ProtoModel):
             dtype=dtype,
         )
 
-        return cls.from_data(tkmol, dtype=tkmol.dtype, **kwargs)
+        dtype = TransComponent.get_dtype(translator)
+        return cls.from_data(tkmol.data, dtype=dtype, **kwargs)
 
     @classmethod
     def from_data(
@@ -527,21 +526,41 @@ class Molecule(ProtoModel):
             symbols = list(code.code)  # this is garbage, must be replaced
             return Molecule(identifiers={dtype: data}, symbols=symbols)
 
-            try:
-                import mmic_molconv
-            except Exception as e:
-                raise ValueError(f"Failed in importing mmic_molconv. Exception: {e}")
-
-            return mmic_molconv.RunComponent.compute(
-                {"data": data, "kwargs": kwargs}
-            ).molecule
-
         elif isinstance(data, dict):
             kwargs.pop("dtype", None)  # remove dtype if supplied
             kwargs.update(data)
             return cls(**kwargs)
 
-        return data.to_schema(**kwargs)
+        if not dtype:
+            raise ValueError(
+                "You must supply dtype for proper interpretation of data objects e.g. mdanalysis, qcschema, etc."
+            )
+        try:
+            from mmic_translator.components import TransComponent
+        except ModuleNotFoundError:
+            raise ModuleNotFoundError(_trans_nfound_msg)
+
+        translator = TransComponent.find_trans(dtype)
+
+        if not translator:
+            raise NotImplementedError(
+                f"Data type {dtype} not supported with any installed translators."
+            )
+
+        if importlib.util.find_spec(translator):
+            mod = importlib.import_module(translator)
+            tkmol_class = mod._classes_map.get("Molecule")
+            tkmol = tkmol_class(data=data)
+
+            if not tkmol:
+                raise ValueError(
+                    f"No Molecule model found while looking in translator: {translator}."
+                )
+            return tkmol.to_schema(**kwargs)
+        else:
+            raise NotImplementedError(
+                f"Translator {translator} not available. Make sure it is properly installed."
+            )
 
     def to_file(
         self,
@@ -583,11 +602,9 @@ class Molecule(ProtoModel):
             if not translator:
                 try:
                     from mmic_translator.components import TransComponent
-                except Exception:
-                    TransComponent = None
-
-                if not TransComponent:
+                except ModuleNotFoundError:
                     raise ModuleNotFoundError(_trans_nfound_msg)
+
                 translator = TransComponent.find_molwrite_tk(ext)
 
                 if not translator:
