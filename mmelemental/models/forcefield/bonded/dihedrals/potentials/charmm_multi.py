@@ -1,6 +1,6 @@
 from pydantic import Field, validator, root_validator
 from typing import Optional, List
-from cmselemental.types import Array
+from cmselemental.models.types import Array
 from mmelemental.models.base import ProtoModel
 
 __all__ = ["CharmmMulti"]
