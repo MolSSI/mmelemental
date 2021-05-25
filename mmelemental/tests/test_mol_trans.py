@@ -4,15 +4,16 @@ Unit and regression test for the mmelemental package.
 import pytest
 import sys
 import os
+import importlib
 import mmelemental
-from mmelemental.models.util.input import FileInput
-from mmelemental.models.molecule.mm_mol import Molecule
 import mm_data
 
 try:
     import mmic_translator
 
-    translators = mmic_translator.components.TransComponent.installed_comps()
+    translators = mmic_translator.components.TransComponent.installed_comps_model(
+        "Molecule"
+    )
 except Exception:
     translators = []
 
@@ -22,30 +23,29 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize("translator", translators)
 
 
-def test_mmelemental_moldata(translator):
-    groFile = mm_data.mols["alanine.gro"]
+def test_mmelemental_mol(translator):
+    trans_mod = importlib.import_module(translator)
+    for ext in ["pdb", "gro", "xyz"]:
+        if ext in trans_mod.molread_ext_maps:
+            molFile = mm_data.mols[f"alanine.{ext}"]
+            mol = mmelemental.models.Molecule.from_file(molFile, translator=translator)
 
-    mm_mol = Molecule.from_file(groFile, translator=translator)
-    assert isinstance(mm_mol, Molecule)
+        if ext in trans_mod.molwrite_ext_maps:
+            mol.to_file(f"mol.{ext}")
+            os.remove(f"mol.{ext}")
 
 
 def test_mmelemental_moltop(translator):
-    topFile = mm_data.ffs["alanine.top"]
-    groFile = mm_data.mols["alanine.gro"]
-    mm_mol = Molecule.from_file(groFile, topFile, translator=translator)
-    assert mm_mol.connectivity is not None
-
-
-def test_mmelemental_mol_tofile(translator):
+    trans_mod = importlib.import_module(translator)
     for ext in ["pdb", "gro"]:
-        pdbFile = mm_data.mols[f"alanine.{ext}"]
-        mol = Molecule.from_file(pdbFile, translator=translator)
+        if ext in trans_mod.molread_ext_maps:
+            molFile = mm_data.mols[f"alanine.{ext}"]
+            topFile = mm_data.ffs["alanine.top"]
+            mol = mmelemental.models.Molecule.from_file(
+                molFile, topFile, translator=translator
+            )
+            assert mol.connectivity is not None
 
-        mol.to_file("mol.pdb")
-        mol.to_file("mol.json")  # , indent=2)
-        mol.to_file("mol.gro")
-
-        os.remove("mol.pdb")
-        os.remove("mol.json")
-        os.remove("mol.gro")
-    return mol
+        if ext in trans_mod.molwrite_ext_maps:
+            mol.to_file(f"mol.{ext}")
+            os.remove(f"mol.{ext}")
