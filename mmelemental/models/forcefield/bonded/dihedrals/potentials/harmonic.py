@@ -1,6 +1,6 @@
 from pydantic import Field, validator
 from typing import Optional
-from cmselemental.models.types import Array
+from mmelemental.types import Array
 from mmelemental.models.base import ProtoModel
 
 __all__ = ["Harmonic"]
