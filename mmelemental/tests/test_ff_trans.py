@@ -9,7 +9,9 @@ import mm_data
 try:
     import mmic_translator
 
-    translators = mmic_translator.components.TransComponent.installed_comps()
+    translators = mmic_translator.components.TransComponent.installed_comps_model(
+        "ForceField"
+    )
 except Exception:
     translators = []
 
@@ -24,7 +26,7 @@ def test_mmelemental_imported():
     assert "mmelemental" in sys.modules
 
 
-def test_mmelemental_moldata(translator):
+def test_mmelemental_ffdata(translator):
     topFile = mm_data.ffs["alanine.top"]
 
     mm_ff = ForceField.from_file(topFile, translator=translator)
