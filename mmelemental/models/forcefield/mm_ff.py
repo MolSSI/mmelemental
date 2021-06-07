@@ -437,7 +437,7 @@ class ForceField(ProtoModel):
             "bonds",
             "angles",
             "dihedrals",
-            "im_dihedrals",
+            # "im_dihedrals",
             "exclusions",
             "inclusions",
         ]
