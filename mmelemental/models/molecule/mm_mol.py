@@ -1,4 +1,5 @@
 import qcelemental
+import cmselemental
 import numpy
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator
@@ -296,6 +297,14 @@ class Molecule(ProtoModel):
             "connectivity",
         ]
 
+    def _ipython_display_(self, **kwargs) -> None:
+        try:
+            self.show()._ipython_display_(**kwargs)
+        except ModuleNotFoundError:
+            from IPython.display import display
+
+            display(f"Install nglview for interactive visualization.", f"{repr(self)}")
+
     # Representation -> used by qcelemental's __repr__
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
@@ -382,6 +391,32 @@ class Molecule(ProtoModel):
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
+
+    def show(self, ngl_kwargs: Optional[Dict[str, Any]] = None) -> "nglview.NGLWidget":  # type: ignore
+        r"""Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
+        images (`.png`).
+        Parameters
+        ----------
+        ngl_kwargs
+            Addition nglview NGLWidget kwargs
+        Returns
+        -------
+        nglview.NGLWidget
+            A nglview view of the molecule
+        """
+        if not cmselemental.util.importing.which_import("nglview", return_bool=True):
+            raise ModuleNotFoundError(
+                f"Python module nglwview not found. Solve by installing it: `pip install nglview`"
+            )  # pragma: no cover
+
+        import nglview  # type: ignore
+
+        if ngl_kwargs is None:
+            ngl_kwargs = {}
+
+        structure = nglview.adaptor.MMElementalStructure(self)
+        widget = nglview.NGLWidget(structure, **ngl_kwargs)
+        return widget
 
     # Constructors
     @classmethod
