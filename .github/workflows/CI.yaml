@@ -37,6 +37,9 @@ jobs:
         df -h
         ulimit -a
 
+    - name: update distri
+      shell: bash
+      run: sudo apt-get update
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
