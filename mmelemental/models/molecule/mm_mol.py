@@ -291,9 +291,13 @@ class Molecule(ProtoModel):
         return [
             "symbols",
             "masses",
+            "masses_units",
             "molecular_charge",
+            "molecular_charge_units",
             "geometry",
+            "geometry_units",
             "velocities",
+            "velocities_units",
             "connectivity",
         ]
 
