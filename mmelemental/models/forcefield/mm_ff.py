@@ -359,7 +359,7 @@ class ForceField(ProtoModel):
 
     def to_data(
         self,
-        dtype: Optional[str] = None,
+        dtype: str,
         translator: Optional[str] = None,
         **kwargs: Dict[str, Any],
     ) -> "ToolkitModel":
@@ -371,8 +371,8 @@ class ForceField(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
             to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
-        dtype: Optional[str], optional
-            Data type e.g. MDAnalysis, parmed, etc.
+        dtype: str
+            Data type e.g. mdanalysis, parmed, etc.
         **kwargs: Optional[Dict[str, Any]]
             Additional kwargs to pass to the constructors.
         Results
