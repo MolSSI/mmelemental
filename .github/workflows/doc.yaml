@@ -1,4 +1,4 @@
-name: "docs deployment"
+name: "doc deployment"
 
 on:
   push:
