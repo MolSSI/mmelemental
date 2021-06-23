@@ -1,0 +1,9 @@
+name: test
+channels: null
+dependencies:
+  - python
+  - pip
+  - pytest
+  - pytest-cov
+  - codecov
+  - python=3.7
