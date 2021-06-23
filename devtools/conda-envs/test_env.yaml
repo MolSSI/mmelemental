@@ -11,6 +11,10 @@ dependencies:
   - codecov
 
     # Pip-only installs
-  #- pip:
-  #  - codecov
-
+  - pip:
+    - qcelemental
+    - codecov
+    - sphinx
+    - asteroid-sphinx-theme
+    - git+https://github.com/MolSSI/mm_data
+    - git+https://github.com/MolSSI/cmselemental@dev
