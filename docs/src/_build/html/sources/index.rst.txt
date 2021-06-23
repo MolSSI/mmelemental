@@ -10,6 +10,7 @@ MMElemental documentation
    :maxdepth: 1
    :caption: Documentation:
 
+   get_started
    models
    components
 
