@@ -656,7 +656,7 @@ class Molecule(ProtoModel):
 
     def to_data(
         self,
-        dtype: str,
+        dtype: Optional[str] = None,
         *,
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
@@ -664,7 +664,7 @@ class Molecule(ProtoModel):
         """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
         Parameters
         ----------
-        dtype: str
+        dtype: str, optional
             The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
