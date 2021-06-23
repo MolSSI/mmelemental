@@ -10,5 +10,6 @@ for d in _* ; do
     mv $d $nd
 done
 
-cd ../..
-cp -r _build/html/* ..
+cd ../../..
+rm -r static/ objects.inv *.html *.js modules/ sources/
+cp -r src/_build/html/* .
