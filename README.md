@@ -6,7 +6,7 @@ MMElemental
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/MolSSI/MMElemental.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MolSSI/MMElemental/context:python)
 [![docs](https://github.com/MolSSI/mmelemental/actions/workflows/doc.yaml/badge.svg)](https://molssi.github.io/mmelemental)
 
-A python package which provides data models for Molecular Mechanics based on the [MMSchema](https://mm-portal.netlify.app/mmschema) specification.
+A python package which provides data models for Molecular Mechanics based on the [MMSchema](https://molssi.github.io/mmschema) specification.
 
 <p align="center">
 <img src="mmelemental/data/imgs/mmelemental.png" width="170">
