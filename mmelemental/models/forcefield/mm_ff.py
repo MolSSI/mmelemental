@@ -19,7 +19,7 @@ Solve by: pip install mmic_translator"
 mmschema_forcefield_default = "mmschema_forcefield"
 
 
-__all__ = ["ForceField"]
+__all__ = ["ForceField", "ForcesInput"]
 
 
 class ImproperDihedrals(ProtoModel):
@@ -30,6 +30,15 @@ class ImproperDihedrals(ProtoModel):
         None,
         description="Improper dihedral potential form e.g. harmonic, fourier, etc.",
     )
+
+
+class ForcesInput(ProtoModel):
+    method: str = Field(..., description="")
+    cutoff: Optional[float] = Field(None, description="")
+    cutoff_units: Optional[str] = Field("angstrom", description="")
+    modifier: Optional[str] = Field(None, description="")
+    dielectric: Optional[float] = Field(numpy.inf, description="")
+    correct: Optional[str] = Field(None, description="")
 
 
 class ForceField(ProtoModel):
