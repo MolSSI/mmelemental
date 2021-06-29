@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.653.gec1e730
+                  0+untagged.656.g1235914
                 </div>
               
             
@@ -261,7 +261,7 @@
 <span class="n">mmschema_forcefield_default</span> <span class="o">=</span> <span class="s2">&quot;mmschema_forcefield&quot;</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ForceField&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ForceField&quot;</span><span class="p">,</span> <span class="s2">&quot;ForcesInput&quot;</span><span class="p">]</span>
 
 
 <span class="k">class</span> <span class="nc">ImproperDihedrals</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
@@ -272,6 +272,15 @@
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Improper dihedral potential form e.g. harmonic, fourier, etc.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ForcesInput"><a class="viewcode-back" href="../../../../models.html#mmelemental.models.forcefield.ForcesInput">[docs]</a><span class="k">class</span> <span class="nc">ForcesInput</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">cutoff_units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;angstrom&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">modifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">dielectric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">correct</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ForceField"><a class="viewcode-back" href="../../../../models.html#mmelemental.models.forcefield.ForceField">[docs]</a><span class="k">class</span> <span class="nc">ForceField</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
