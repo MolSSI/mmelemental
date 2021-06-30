@@ -169,7 +169,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "mmelemental.tex", "mmelemental Documentation", "mmelemental", "manual"),
+    (
+        master_doc,
+        "mmelemental.tex",
+        "mmelemental Documentation",
+        "mmelemental",
+        "manual",
+    ),
 ]
 
 
