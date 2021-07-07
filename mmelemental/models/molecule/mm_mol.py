@@ -494,9 +494,15 @@ class Molecule(ProtoModel):
                     fileobj.ext, trans=inst_trans
                 )
                 if not translator:
-                    raise ValueError(
-                        f"There is no installed translator for reading file {filename}. Please install an appropriate translator."
-                    )
+                    if not top_filename:
+                        raise ValueError(
+                            f"There is no installed translator for reading file {filename}. Please install an appropriate translator."
+                        )
+                    else:
+                        raise ValueError(
+                            f"There is no installed translator for concurrently reading files {filename} and {top_filename}.\n"
+                            + "Please install an appropriate translator."
+                        )
 
                 # We should be able to always import the translator
                 mod = importlib.import_module(translator)
