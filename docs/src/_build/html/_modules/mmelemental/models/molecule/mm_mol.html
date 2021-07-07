@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.662.gf789be4
+                  0+untagged.665.g45e917e
                 </div>
               
             
@@ -736,9 +736,15 @@
                     <span class="n">fileobj</span><span class="o">.</span><span class="n">ext</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="n">inst_trans</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">translator</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;There is no installed translator for reading file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">. Please install an appropriate translator.&quot;</span>
-                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">top_filename</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;There is no installed translator for reading file </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">. Please install an appropriate translator.&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;There is no installed translator for concurrently reading files </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">top_filename</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="o">+</span> <span class="s2">&quot;Please install an appropriate translator.&quot;</span>
+                        <span class="p">)</span>
 
                 <span class="c1"># We should be able to always import the translator</span>
                 <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">translator</span><span class="p">)</span>
