@@ -175,7 +175,7 @@ class Molecule(ProtoModel):
         "provided, and manipulated.",
     )
     extras: Optional[Dict[str, Any]] = Field(  # type: ignore
-        None,
+        {},
         description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
     )
 
