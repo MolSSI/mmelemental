@@ -1,5 +1,3 @@
-import qcelemental
-import cmselemental
 import numpy
 from typing import List, Tuple, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator
@@ -11,8 +9,9 @@ import json
 # MM models
 from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.base import Provenance, provenance_stamp, ProtoModel
+from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
+
 
 __all__ = ["Molecule"]
 
@@ -24,15 +23,50 @@ CHARGE_NOISE = 4
 
 _trans_nfound_msg = "MMElemental translation requires mmic & mmic_translator. \
 Solve by: pip install mmic mmic_translator"
+_qcel_nfound_msg = "MMElemental feature requires qcelemental. \
+Solve by: pip install qcelemental"
 mmschema_molecule_default = "mmschema_molecule"
 
 
-class Identifiers(qcelemental.models.molecule.Identifiers):
+def float_prep(array, around):
+    """
+    Rounds floats to a common value and build positive zeros to prevent hash conflicts.
+    """
+    if isinstance(array, (list, np.ndarray)):
+        # Round array
+        array = np.around(array, around)
+        # Flip zeros
+        array[np.abs(array) < 5 ** (-(around + 1))] = 0
+
+    elif isinstance(array, (float, int)):
+        array = round(array, around)
+        if array == -0.0:
+            array = 0.0
+    else:
+        raise TypeError("Type '{}' not recognized".format(type(array).__name__))
+
+    return array
+
+
+class Identifiers(ProtoModel):
     """
     An extension of the qcelemental.models.molecule.Identifiers for RDKit constructors.
     See `link <https://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html>`_ for more info.
     """
 
+    molecule_hash: Optional[str] = None
+    molecular_formula: Optional[str] = None
+    smiles: Optional[str] = None
+    inchi: Optional[str] = None
+    inchikey: Optional[str] = None
+    canonical_explicit_hydrogen_smiles: Optional[str] = None
+    canonical_isomeric_explicit_hydrogen_mapped_smiles: Optional[str] = None
+    canonical_isomeric_explicit_hydrogen_smiles: Optional[str] = None
+    canonical_isomeric_smiles: Optional[str] = None
+    canonical_smiles: Optional[str] = None
+    pubchem_cid: Optional[str] = Field(None, description="PubChem Compound ID")
+    pubchem_sid: Optional[str] = Field(None, description="PubChem Substance ID")
+    pubchem_conformerid: Optional[str] = Field(None, description="PubChem Conformer ID")
     smiles: Optional[Union[ChemCode, str]] = Field(
         None, description="A simplified molecular-input line-entry system code."
     )
@@ -53,6 +87,9 @@ class Identifiers(qcelemental.models.molecule.Identifiers):
     helm: Optional[Union[ChemCode, str]] = Field(
         None, description="A HELM code (currently only supports peptides)."
     )
+
+    class Config(ProtoModel.Config):
+        serialize_skip_defaults = True
 
 
 class Molecule(ProtoModel):
@@ -200,6 +237,11 @@ class Molecule(ProtoModel):
         """
         atomic_numbers = kwargs.get("atomic_numbers")
         if atomic_numbers is not None:
+            try:
+                import qcelemental
+            except Exception:
+                raise ModuleNotFoundError(_qcel_nfound_msg)
+
             if kwargs.get("symbols") is None:
 
                 kwargs["symbols"] = [
@@ -218,6 +260,10 @@ class Molecule(ProtoModel):
             )
 
         if not values.get("name"):
+            try:
+                import qcelemental
+            except Exception:
+                raise ModuleNotFoundError(_qcel_nfound_msg)
             from qcelemental.molparse.to_string import formula_generator
 
             values["name"] = formula_generator(values["symbols"])
@@ -279,6 +325,8 @@ class Molecule(ProtoModel):
         atomic_numbers = self.__dict__.get("atomic_numbers_")
         if atomic_numbers is None:
             try:
+                import qcelemental
+
                 atomic_numbers = numpy.array(
                     [qcelemental.periodictable.to_Z(x) for x in self.symbols]
                 )
@@ -309,7 +357,6 @@ class Molecule(ProtoModel):
 
             display(f"Install nglview for interactive visualization.", f"{repr(self)}")
 
-    # Representation -> used by qcelemental's __repr__
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
 
@@ -348,7 +395,7 @@ class Molecule(ProtoModel):
         Examples
         --------
 
-        >>> methane = qcelemental.models.Molecule('''
+        >>> methane = mmelemental.models.Molecule('''
         ... H      0.5288      0.1610      0.9359
         ... C      0.0000      0.0000      0.0000
         ... H      0.2051      0.8240     -0.6786
@@ -358,7 +405,7 @@ class Molecule(ProtoModel):
         >>> methane.get_molecular_formula()
         CH4
 
-        >>> hcl = qcelemental.models.Molecule('''
+        >>> hcl = mmelemental.models.Molecule('''
         ... H      0.0000      0.0000      0.0000
         ... Cl     0.0000      0.0000      1.2000
         ... ''')
@@ -366,6 +413,10 @@ class Molecule(ProtoModel):
         ClH
 
         """
+        try:
+            import qcelemental
+        except Exception:
+            raise ModuleNotFoundError(_qcel_nfound_msg)
         return qcelemental.molutil.molecular_formula_from_symbols(
             symbols=self.symbols, order=order
         )
@@ -383,13 +434,13 @@ class Molecule(ProtoModel):
             data = getattr(self, field)
             if data is not None:
                 if field == "geometry":
-                    data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+                    data = float_prep(data, GEOMETRY_NOISE)
                 elif field == "velocities":
-                    data = qcelemental.models.molecule.float_prep(data, VELOCITY_NOISE)
+                    data = float_prep(data, VELOCITY_NOISE)
                 elif field == "molecular_charge":
-                    data = qcelemental.models.molecule.float_prep(data, CHARGE_NOISE)
+                    data = float_prep(data, CHARGE_NOISE)
                 elif field == "masses":
-                    data = qcelemental.models.molecule.float_prep(data, MASS_NOISE)
+                    data = float_prep(data, MASS_NOISE)
 
                 concat += json.dumps(data, default=lambda x: x.ravel().tolist())
 
@@ -408,6 +459,8 @@ class Molecule(ProtoModel):
         nglview.NGLWidget
             A nglview view of the molecule
         """
+        import cmselemental
+
         if not cmselemental.util.importing.which_import("nglview", return_bool=True):
             raise ModuleNotFoundError(
                 f"Python module nglwview not found. Solve by installing it: `pip install nglview`"
@@ -456,14 +509,14 @@ class Molecule(ProtoModel):
         """
         file_ext = Path(filename).suffix if filename else None
 
-        if file_ext in qcelemental.models.molecule._extension_map:
+        if file_ext in [".json"]:
             if top_filename:
                 raise TypeError(
                     "Molecule topology must be supplied in a single JSON (or similar) file."
                 )
 
             if dtype is None:
-                dtype = qcelemental.models.molecule._extension_map[file_ext]
+                dtype = "json"
 
             # Raw string type, read and pass through
             if dtype == "json":
@@ -529,6 +582,25 @@ class Molecule(ProtoModel):
             raise AttributeError(
                 f"{translator} is not a valid Molecule translator. Exception raised: "
                 + repr(e)
+            )
+
+        if kwargs.get("debug"):
+            print(
+                "===============================================================================\n"
+                f"Printing debug info from {__name__}.{cls.__name__}.{cls.from_file.__name__}:\n"
+                "==============================================================================="
+            )
+            print(
+                f"Translator selected: ('{translator}', '{mod.__version__}').\n"
+                "------------------------------------------------------------"
+            )
+            print(
+                f"Engine used: {tkmol_class.engine()}.\n"
+                "------------------------------------------------------------"
+            )
+            print(
+                f"Intermediate model: {tkmol_class}.\n"
+                "------------------------------------------------------------"
             )
 
         tkmol = tkmol_class.from_file(
