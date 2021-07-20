@@ -27,7 +27,7 @@ def test_mmelemental_imported():
 
 
 def test_mmelemental_ffdata(translator):
-    topFile = mm_data.ffs["alanine.top"]
+    topFile = mm_data.ffs["dialanine.top"]
 
     mm_ff = ForceField.from_file(topFile, translator=translator)
     assert isinstance(mm_ff, ForceField)
