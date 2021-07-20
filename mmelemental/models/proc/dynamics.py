@@ -1,6 +1,6 @@
 from mmelemental.models.proc.base import ProcInput
 from pydantic import Field
-from qcelemental.models.types import Array
+from cmselemental.types import Array
 
 __all__ = ["DynamicsInput"]
 
