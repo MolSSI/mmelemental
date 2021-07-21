@@ -41,7 +41,7 @@ class CharmmMulti(ProtoModel):
             assert (arr >= 0).all(), "Dihedral periodicity must be >= 0."
         return v
 
-    # @root_validator(allow_reuse=True)
+    @root_validator(allow_reuse=True)
     def _valid_arrays(cls, values):
         energy_len = len(values["energy"])
         periodicity_len = len(values["periodicity"])
