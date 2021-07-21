@@ -1,16 +1,12 @@
 from pydantic import Field, validator, constr
 from typing import Union, Optional, List, Dict, Any
 from mmelemental.types import Array
-from mmelemental.models.util.input import FileInput
 from mmelemental.models.molecule.mm_mol import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
-import qcelemental
 from pathlib import Path
 import importlib
-import functools
 import hashlib
-from .sm_ensem import Microstate
 
 
 __all__ = ["Trajectory", "TrajInput"]
@@ -143,10 +139,6 @@ class Trajectory(ProtoModel):
             "nframes_": "nframes",
             # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
         }
-
-        def schema_extra(schema, model):
-            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
-            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
 
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
