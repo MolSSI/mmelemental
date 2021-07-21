@@ -50,6 +50,8 @@ class Params(ProtoModel):
         fileobj = FileOutput(path=filename)
         dtype = dtype or fileobj.ext.strip(".")
 
+        assert dtype == "json", "Only JSON format supported for now."
+
         if translator:
             raise NotImplementedError
 
