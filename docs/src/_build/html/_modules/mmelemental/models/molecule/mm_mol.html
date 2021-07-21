@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.665.g45e917e
+                  0+untagged.670.g119dc9d
                 </div>
               
             
@@ -159,13 +159,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Documentation:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../get_started.html">Prerequisites</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../components.html">Components</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials_top.html">Topology</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials_ff.html">Forcefields</a></li>
@@ -240,9 +240,7 @@
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
   <h1>Source code for mmelemental.models.molecule.mm_mol</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">qcelemental</span>
-<span class="kn">import</span> <span class="nn">cmselemental</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">constr</span><span class="p">,</span> <span class="n">validator</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
@@ -253,8 +251,9 @@
 <span class="c1"># MM models</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.util.output</span> <span class="kn">import</span> <span class="n">FileOutput</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.chem.codes</span> <span class="kn">import</span> <span class="n">ChemCode</span>
-<span class="kn">from</span> <span class="nn">mmelemental.models.base</span> <span class="kn">import</span> <span class="n">Provenance</span><span class="p">,</span> <span class="n">provenance_stamp</span><span class="p">,</span> <span class="n">ProtoModel</span>
+<span class="kn">from</span> <span class="nn">mmelemental.models.base</span> <span class="kn">import</span> <span class="n">ProtoModel</span><span class="p">,</span> <span class="n">Provenance</span><span class="p">,</span> <span class="n">provenance_stamp</span>
 <span class="kn">from</span> <span class="nn">mmelemental.types</span> <span class="kn">import</span> <span class="n">Array</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Molecule&quot;</span><span class="p">]</span>
 
@@ -266,15 +265,50 @@
 
 <span class="n">_trans_nfound_msg</span> <span class="o">=</span> <span class="s2">&quot;MMElemental translation requires mmic &amp; mmic_translator. </span><span class="se">\</span>
 <span class="s2">Solve by: pip install mmic mmic_translator&quot;</span>
+<span class="n">_qcel_nfound_msg</span> <span class="o">=</span> <span class="s2">&quot;MMElemental feature requires qcelemental. </span><span class="se">\</span>
+<span class="s2">Solve by: pip install qcelemental&quot;</span>
 <span class="n">mmschema_molecule_default</span> <span class="o">=</span> <span class="s2">&quot;mmschema_molecule&quot;</span>
 
 
-<span class="k">class</span> <span class="nc">Identifiers</span><span class="p">(</span><span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">Identifiers</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">float_prep</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">around</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rounds floats to a common value and build positive zeros to prevent hash conflicts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+        <span class="c1"># Round array</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">around</span><span class="p">)</span>
+        <span class="c1"># Flip zeros</span>
+        <span class="n">array</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">around</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">around</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">array</span> <span class="o">==</span> <span class="o">-</span><span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Type &#39;</span><span class="si">{}</span><span class="s2">&#39; not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">array</span>
+
+
+<span class="k">class</span> <span class="nc">Identifiers</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An extension of the qcelemental.models.molecule.Identifiers for RDKit constructors.</span>
 <span class="sd">    See `link &lt;https://rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html&gt;`_ for more info.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">molecule_hash</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">molecular_formula</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">inchi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">inchikey</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">canonical_explicit_hydrogen_smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">canonical_isomeric_explicit_hydrogen_mapped_smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">canonical_isomeric_explicit_hydrogen_smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">canonical_isomeric_smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">canonical_smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">pubchem_cid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;PubChem Compound ID&quot;</span><span class="p">)</span>
+    <span class="n">pubchem_sid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;PubChem Substance ID&quot;</span><span class="p">)</span>
+    <span class="n">pubchem_conformerid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;PubChem Conformer ID&quot;</span><span class="p">)</span>
     <span class="n">smiles</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ChemCode</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A simplified molecular-input line-entry system code.&quot;</span>
     <span class="p">)</span>
@@ -295,6 +329,9 @@
     <span class="n">helm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ChemCode</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A HELM code (currently only supports peptides).&quot;</span>
     <span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">ProtoModel</span><span class="o">.</span><span class="n">Config</span><span class="p">):</span>
+        <span class="n">serialize_skip_defaults</span> <span class="o">=</span> <span class="kc">True</span>
 
 
 <div class="viewcode-block" id="Molecule"><a class="viewcode-back" href="../../../../models.html#mmelemental.models.molecule.Molecule">[docs]</a><span class="k">class</span> <span class="nc">Molecule</span><span class="p">(</span><span class="n">ProtoModel</span><span class="p">):</span>
@@ -442,6 +479,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">atomic_numbers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;atomic_numbers&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">qcelemental</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;symbols&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
                 <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;symbols&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
@@ -460,6 +502,10 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">qcelemental</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
             <span class="kn">from</span> <span class="nn">qcelemental.molparse.to_string</span> <span class="kn">import</span> <span class="n">formula_generator</span>
 
             <span class="n">values</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formula_generator</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;symbols&quot;</span><span class="p">])</span>
@@ -521,6 +567,8 @@
         <span class="n">atomic_numbers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;atomic_numbers_&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">qcelemental</span>
+
                 <span class="n">atomic_numbers</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">qcelemental</span><span class="o">.</span><span class="n">periodictable</span><span class="o">.</span><span class="n">to_Z</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">]</span>
                 <span class="p">)</span>
@@ -551,7 +599,6 @@
 
             <span class="n">display</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Install nglview for interactive visualization.&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Representation -&gt; used by qcelemental&#39;s __repr__</span>
     <span class="k">def</span> <span class="nf">__repr_args__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ReprArgs&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hash</span><span class="p">()[:</span><span class="mi">7</span><span class="p">])]</span>
 
@@ -590,7 +637,7 @@
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
 
-<span class="sd">        &gt;&gt;&gt; methane = qcelemental.models.Molecule(&#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; methane = mmelemental.models.Molecule(&#39;&#39;&#39;</span>
 <span class="sd">        ... H      0.5288      0.1610      0.9359</span>
 <span class="sd">        ... C      0.0000      0.0000      0.0000</span>
 <span class="sd">        ... H      0.2051      0.8240     -0.6786</span>
@@ -600,7 +647,7 @@
 <span class="sd">        &gt;&gt;&gt; methane.get_molecular_formula()</span>
 <span class="sd">        CH4</span>
 
-<span class="sd">        &gt;&gt;&gt; hcl = qcelemental.models.Molecule(&#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; hcl = mmelemental.models.Molecule(&#39;&#39;&#39;</span>
 <span class="sd">        ... H      0.0000      0.0000      0.0000</span>
 <span class="sd">        ... Cl     0.0000      0.0000      1.2000</span>
 <span class="sd">        ... &#39;&#39;&#39;)</span>
@@ -608,6 +655,10 @@
 <span class="sd">        ClH</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">qcelemental</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">molutil</span><span class="o">.</span><span class="n">molecular_formula_from_symbols</span><span class="p">(</span>
             <span class="n">symbols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span>
         <span class="p">)</span></div>
@@ -625,13 +676,13 @@
             <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;geometry&quot;</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">GEOMETRY_NOISE</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">GEOMETRY_NOISE</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;velocities&quot;</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">VELOCITY_NOISE</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">VELOCITY_NOISE</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;molecular_charge&quot;</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">CHARGE_NOISE</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">CHARGE_NOISE</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;masses&quot;</span><span class="p">:</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">MASS_NOISE</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">MASS_NOISE</span><span class="p">)</span>
 
                 <span class="n">concat</span> <span class="o">+=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
@@ -650,6 +701,8 @@
 <span class="sd">        nglview.NGLWidget</span>
 <span class="sd">            A nglview view of the molecule</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">cmselemental</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cmselemental</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">importing</span><span class="o">.</span><span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;nglview&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Python module nglwview not found. Solve by installing it: `pip install nglview`&quot;</span>
@@ -698,14 +751,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="k">if</span> <span class="n">filename</span> <span class="k">else</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">_extension_map</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.json&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">top_filename</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                     <span class="s2">&quot;Molecule topology must be supplied in a single JSON (or similar) file.&quot;</span>
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">dtype</span> <span class="o">=</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">_extension_map</span><span class="p">[</span><span class="n">file_ext</span><span class="p">]</span>
+                <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;json&quot;</span>
 
             <span class="c1"># Raw string type, read and pass through</span>
             <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
@@ -771,6 +824,25 @@
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">translator</span><span class="si">}</span><span class="s2"> is not a valid Molecule translator. Exception raised: &quot;</span>
                 <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debug&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;===============================================================================</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Printing debug info from </span><span class="si">{</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;===============================================================================&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Translator selected: (&#39;</span><span class="si">{</span><span class="n">translator</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39;).</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;------------------------------------------------------------&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Engine used: </span><span class="si">{</span><span class="n">tkmol_class</span><span class="o">.</span><span class="n">engine</span><span class="p">()</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;------------------------------------------------------------&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Intermediate model: </span><span class="si">{</span><span class="n">tkmol_class</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;------------------------------------------------------------&quot;</span>
             <span class="p">)</span>
 
         <span class="n">tkmol</span> <span class="o">=</span> <span class="n">tkmol_class</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span>
