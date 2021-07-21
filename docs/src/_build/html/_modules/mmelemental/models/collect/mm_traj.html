@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.670.g119dc9d
+                  0+untagged.686.gb03ade7
                 </div>
               
             
@@ -243,16 +243,12 @@
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">constr</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">mmelemental.types</span> <span class="kn">import</span> <span class="n">Array</span>
-<span class="kn">from</span> <span class="nn">mmelemental.models.util.input</span> <span class="kn">import</span> <span class="n">FileInput</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.molecule.mm_mol</span> <span class="kn">import</span> <span class="n">Molecule</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.base</span> <span class="kn">import</span> <span class="n">ProtoModel</span><span class="p">,</span> <span class="n">Provenance</span><span class="p">,</span> <span class="n">provenance_stamp</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.util.output</span> <span class="kn">import</span> <span class="n">FileOutput</span>
-<span class="kn">import</span> <span class="nn">qcelemental</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
-<span class="kn">from</span> <span class="nn">.sm_ensem</span> <span class="kn">import</span> <span class="n">Microstate</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Trajectory&quot;</span><span class="p">,</span> <span class="s2">&quot;TrajInput&quot;</span><span class="p">]</span>
@@ -385,10 +381,6 @@
             <span class="s2">&quot;nframes_&quot;</span><span class="p">:</span> <span class="s2">&quot;nframes&quot;</span><span class="p">,</span>
             <span class="c1"># below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .</span>
         <span class="p">}</span>
-
-        <span class="k">def</span> <span class="nf">schema_extra</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-            <span class="c1"># below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;$schema&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;http://json-schema.org/draft-04/schema#&quot;</span>
 
     <span class="k">def</span> <span class="nf">__repr_args__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ReprArgs&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hash</span><span class="p">()[:</span><span class="mi">7</span><span class="p">])]</span>
