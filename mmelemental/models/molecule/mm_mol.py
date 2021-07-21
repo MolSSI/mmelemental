@@ -223,10 +223,6 @@ class Molecule(ProtoModel):
             "atomic_numbers_": "atomic_numbers",
         }
 
-        def schema_extra(schema, model):
-            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
-            schema_extra = "http://json-schema.org/draft-04/schema#"
-
     def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
         """
         Initializes the molecule object from dictionary-like values.

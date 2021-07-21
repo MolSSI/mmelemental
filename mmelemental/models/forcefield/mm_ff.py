@@ -152,10 +152,6 @@ class ForceField(ProtoModel):
     class Config(ProtoModel.Config):
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
 
-        def schema_extra(schema, model):
-            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
-            schema["$schema"] = "http://json-schema.org/draft-04/schema#"
-
     def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
         """
         Initializes the molecule object from dictionary-like values.
@@ -469,3 +465,7 @@ class ForceField(ProtoModel):
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
+
+    @property
+    def is_topology(self):
+        return True if self.defs is None else False
