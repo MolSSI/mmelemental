@@ -1,6 +1,6 @@
 from pydantic import Field, validator
 from mmelemental.models.forcefield.params import Params
-import qcelemental
+from cmselemental.types import Array
 from typing import Optional, Tuple, List
 import os
 import pathlib
@@ -10,7 +10,7 @@ __all__ = ["Angles"]
 
 class Angles(Params):
     _path = os.path.join(pathlib.Path(__file__).parent.absolute(), "potentials", "*.py")
-    angles: qcelemental.models.types.Array[float] = Field(
+    angles: Array[float] = Field(
         ..., description="Equilibrium angles. Default unit is degrees."
     )
     angles_units: Optional[str] = Field(
