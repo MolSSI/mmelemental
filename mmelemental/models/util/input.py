@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Dict
+from typing import List, Optional, Dict
 from mmelemental.models.base import ProtoModel
 from pydantic import validator, Field
 import os
