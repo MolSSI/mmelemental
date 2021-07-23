@@ -16,7 +16,7 @@ class Dihedrals(Params):
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium dihedral angle units."
     )
-    indices: List[Tuple[int, int, int, int]] = Field(  # type: ignore
+    connectivity: List[Tuple[int, int, int, int]] = Field(  # type: ignore
         ...,
         description="Particle indices for each dihedral angle.",
         min_items=1,

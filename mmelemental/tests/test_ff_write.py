@@ -78,7 +78,7 @@ def test_bonds(form, lengths, params):
         params=potential,
         lengths=lengths,
         form=form,
-        indices=indices,
+        connectivity=indices,
     )
     assert bonds.form == form
     return bonds
@@ -94,7 +94,7 @@ def test_angles(form, lengths, params):
         params=potential,
         angles=lengths,
         angles_units="radians",
-        indices=indices,
+        connectivity=indices,
         form=form,
     )
     assert angles.form == form
@@ -111,7 +111,7 @@ def test_dihedrals(form, lengths, params):
         params=potential,
         # angles=lengths,
         # angles_units="radians",
-        indices=indices,
+        connectivity=indices,
         form=form,
     )
     assert dihedrals.form == form

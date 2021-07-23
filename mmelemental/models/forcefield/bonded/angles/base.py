@@ -16,7 +16,7 @@ class Angles(Params):
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium angle units."
     )
-    indices: List[Tuple[int, int, int]] = Field(  # type: ignore, need to make this field non-optional?
+    connectivity: List[Tuple[int, int, int]] = Field(  # type: ignore, need to make this field non-optional?
         ...,
         description="Particle indices for each angle.",
         min_items=1,
