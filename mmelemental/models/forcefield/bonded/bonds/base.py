@@ -1,6 +1,6 @@
 from pydantic import Field
 from mmelemental.models.forcefield.params import Params
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Union
 import qcelemental
 import os
 import pathlib
@@ -15,9 +15,9 @@ class Bonds(Params):
     lengths_units: Optional[str] = Field(
         "angstroms", description="Equilibrium bond lengths unit."
     )
-    indices: List[Tuple[int, int, float]] = Field(  # type: ignore, need to make this field non-optional?
+    connectivity: List[Tuple[Union[int, str], Union[int, str], float]] = Field(  # type: ignore
         ...,
-        description="Particle indices for each bond and the bond order: (index1, index2, order).",
+        description="Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).",
         min_items=1,
     )
     _path = os.path.join(pathlib.Path(__file__).parent.absolute(), "potentials", "*.py")
