@@ -1,7 +1,7 @@
 from pydantic import Field, validator
 from mmelemental.models.forcefield.params import Params
 from cmselemental.types import Array
-from typing import Optional, Tuple, List
+from typing import Optional, Tuple, List, Union
 import os
 import pathlib
 
@@ -16,7 +16,7 @@ class Angles(Params):
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium angle units."
     )
-    connectivity: List[Tuple[int, int, int]] = Field(  # type: ignore, need to make this field non-optional?
+    connectivity: List[Tuple[Union[int, str], Union[int, str], Union[int, str]]] = Field(  # type: ignore, need to make this field non-optional?
         ...,
         description="Particle indices for each angle.",
         min_items=1,
