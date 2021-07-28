@@ -32,11 +32,11 @@ def float_prep(array, around):
     """
     Rounds floats to a common value and build positive zeros to prevent hash conflicts.
     """
-    if isinstance(array, (list, np.ndarray)):
+    if isinstance(array, (list, numpy.ndarray)):
         # Round array
-        array = np.around(array, around)
+        array = numpy.around(array, around)
         # Flip zeros
-        array[np.abs(array) < 5 ** (-(around + 1))] = 0
+        array[numpy.abs(array) < 5 ** (-(around + 1))] = 0
 
     elif isinstance(array, (float, int)):
         array = round(array, around)
