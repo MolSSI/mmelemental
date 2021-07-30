@@ -1,7 +1,7 @@
 from pydantic import Field, validator
 from mmelemental.models.forcefield.params import Params
 from cmselemental.types import Array
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Union
 import os
 import pathlib
 
@@ -10,13 +10,13 @@ __all__ = ["Dihedrals"]
 
 class Dihedrals(Params):
     _path = os.path.join(pathlib.Path(__file__).parent.absolute(), "potentials", "*.py")
-    angles: Array[float] = Field(
+    angles: Optional[Array[float]] = Field(
         None, description="Equilibrium dihedral angles. Default unit is degrees."
     )
     angles_units: Optional[str] = Field(
         "degrees", description="Equilibrium dihedral angle units."
     )
-    connectivity: List[Tuple[int, int, int, int]] = Field(  # type: ignore
+    connectivity: List[Tuple[Union[int, str], Union[int, str], Union[int, str], Union[int, str]]] = Field(  # type: ignore
         ...,
         description="Particle indices for each dihedral angle.",
         min_items=1,
