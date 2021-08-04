@@ -17,4 +17,4 @@ dependencies:
     - sphinx
     - asteroid-sphinx-theme
     - git+https://github.com/MolSSI/mm_data
-    - git+https://github.com/MolSSI/cmselemental@dev
+    - git+https://github.com/MolSSI/cmselemental@v0.2.0
