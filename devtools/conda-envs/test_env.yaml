@@ -13,7 +13,7 @@ dependencies:
     # Pip-only installs
   - pip:
     - qcelemental
-    - codecov
+    - pyyaml
     - sphinx
     - asteroid-sphinx-theme
     - git+https://github.com/MolSSI/mm_data
