@@ -1,4 +1,4 @@
-from qcelemental import models
+from cmselemental import models
 from pydantic import Field
 from typing import Dict, Optional
 from mmelemental.extras import get_information
