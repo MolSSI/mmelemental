@@ -11,7 +11,7 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
-
+from cmselemental.util import yaml_import
 
 __all__ = ["Molecule"]
 
@@ -505,19 +505,27 @@ class Molecule(ProtoModel):
         """
         file_ext = Path(filename).suffix if filename else None
 
-        if file_ext in [".json"]:
+        if file_ext in [".json", ".js", ".yaml", ".yml"]:
             if top_filename:
                 raise TypeError(
-                    "Molecule topology must be supplied in a single JSON (or similar) file."
+                    "Molecule topology must be supplied in a single JSON (or YAML) file."
                 )
 
             if dtype is None:
-                dtype = "json"
+                if file_ext in [".json", ".js"]:
+                    dtype = "json"
+                elif file_ext in [".yaml", ".yml"]:
+                    dtype = "yaml"
 
             # Raw string type, read and pass through
             if dtype == "json":
                 with open(filename, "r") as infile:
                     data = json.load(infile)
+                dtype = "dict"
+            elif dtype == "yaml":
+                with open(filename, "r") as infile:
+                    yaml = yaml_import(raise_error=True)
+                    data = yaml.safe_load(infile)
                 dtype = "dict"
             else:
                 raise KeyError(f"Data type not supported: {dtype}.")
@@ -633,11 +641,24 @@ class Molecule(ProtoModel):
         if isinstance(data, str):
             if not dtype:
                 raise ValueError(
-                    "You must supply dtype for proper interpretation of symbolic data e.g. MDAnalysis, smiles, etc."
+                    "You must supply dtype for proper interpretation of string data e.g. smiles, yaml, json, etc."
                 )
-            code = ChemCode(code=data, dtype=dtype)
-            symbols = list(code.code)  # this is garbage, must be replaced
-            return Molecule(identifiers={dtype: data}, symbols=symbols)
+            if dtype == "smiles":
+                code = ChemCode(code=data, dtype=dtype)
+                symbols = list(code.code)  # this is garbage, must be replaced
+                input_dict = {"identifiers": {dtype: data}, "symbols": symbols}
+            elif dtype == "json":
+                assert isinstance(data, str)
+                input_dict = json.loads(data)
+            elif dtype == "yaml":
+                yaml = yaml_import(raise_error=True)
+                assert isinstance(data, str)
+                input_dict = yaml.safe_load(data)
+            else:
+                raise NotImplementedError(f"Data type {dtype} not understood.")
+            kwargs.pop("dtype", None)
+            kwargs.update(input_dict)
+            return cls(**kwargs)
 
         elif isinstance(data, dict):
             kwargs.pop("dtype", None)  # remove dtype if supplied
@@ -707,8 +728,9 @@ class Molecule(ProtoModel):
 
         mode = kwargs.pop("mode", "w")
 
-        if ext == ".json":
-            stringified = self.json(**kwargs)
+        if ext in [".json", ".yaml"]:
+            encoding = dtype or ext.strip(".")
+            stringified = self.serialize(encoding=encoding, **kwargs)
             with open(filename, mode) as fp:
                 fp.write(stringified)
         else:  # look for an installed mmic_translator
