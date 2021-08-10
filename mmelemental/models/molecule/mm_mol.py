@@ -11,7 +11,7 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
-from cmselemental.util import yaml_import
+from cmselemental.util import yaml_import, which_import
 
 __all__ = ["Molecule"]
 
@@ -111,7 +111,7 @@ class Molecule(ProtoModel):
         1,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    symbols: Optional[Array[str]] = Field(  # type: ignore
+    symbols: Optional[List[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of particle symbols. The index of "
         "this attribute sets the order for all other per-particle setting like ``geometry`` and the first "
@@ -233,10 +233,10 @@ class Molecule(ProtoModel):
         """
         atomic_numbers = kwargs.get("atomic_numbers")
         if atomic_numbers is not None:
-            try:
-                import qcelemental
-            except Exception:
+            if not which_import("qcelemental", return_bool=True):
                 raise ModuleNotFoundError(_qcel_nfound_msg)
+
+            import qcelemental
 
             if kwargs.get("symbols") is None:
 
@@ -256,10 +256,9 @@ class Molecule(ProtoModel):
             )
 
         if not values.get("name"):
-            try:
-                import qcelemental
-            except Exception:
+            if not which_import("qcelemental", return_bool=True):
                 raise ModuleNotFoundError(_qcel_nfound_msg)
+
             from qcelemental.molparse.to_string import formula_generator
 
             values["name"] = formula_generator(values["symbols"])
@@ -409,10 +408,10 @@ class Molecule(ProtoModel):
         ClH
 
         """
-        try:
-            import qcelemental
-        except Exception:
+        if not which_import("qcelemental", return_bool=True):
             raise ModuleNotFoundError(_qcel_nfound_msg)
+        import qcelemental
+
         return qcelemental.molutil.molecular_formula_from_symbols(
             symbols=self.symbols, order=order
         )
@@ -538,10 +537,10 @@ class Molecule(ProtoModel):
         dtype = dtype or fileobj.ext.strip(".")
 
         # Generic translator component
-        try:
-            from mmic_translator.components import TransComponent
-        except Exception:
+        if not which_import("mmic_translator", return_bool=True):
             raise ModuleNotFoundError(_trans_nfound_msg)
+
+        from mmic_translator.components import TransComponent
 
         if not translator:
             inst_trans = TransComponent.installed_comps()
@@ -575,7 +574,7 @@ class Molecule(ProtoModel):
                             f"There is no installed translator for concurrently reading files {filename} and {top_filename}.\n"
                             + "Please install an appropriate translator."
                         )
-        elif importlib.util.find_spec(translator):
+        elif which_import(translator, return_bool=True):
             mod = importlib.import_module(translator)
         else:
             raise ModuleNotFoundError(f"Translator {translator} is not installed.")
@@ -669,10 +668,11 @@ class Molecule(ProtoModel):
             raise ValueError(
                 "You must supply dtype for proper interpretation of data objects e.g. mdanalysis, qcschema, etc."
             )
-        try:
-            from mmic_translator.components import TransComponent
-        except ModuleNotFoundError:
+
+        if not which_import("mmic_translator", return_bool=True):
             raise ModuleNotFoundError(_trans_nfound_msg)
+
+        from mmic_translator.components import TransComponent
 
         translator = TransComponent.find_trans(dtype)
 
@@ -681,7 +681,7 @@ class Molecule(ProtoModel):
                 f"Data type {dtype} not supported with any installed translators."
             )
 
-        if importlib.util.find_spec(translator):
+        if which_import(translator, return_bool=True):
             mod = importlib.import_module(translator)
             tkmol_class = mod._classes_map.get("Molecule")
             tkmol = tkmol_class(data=data)
@@ -735,10 +735,10 @@ class Molecule(ProtoModel):
                 fp.write(stringified)
         else:  # look for an installed mmic_translator
             if not translator:
-                try:
-                    from mmic_translator.components import TransComponent
-                except ModuleNotFoundError:
+                if not which_import("mmic_translator", return_bool=True):
                     raise ModuleNotFoundError(_trans_nfound_msg)
+
+                from mmic_translator.components import TransComponent
 
                 translator = TransComponent.find_molwrite_tk(ext)
 
@@ -787,7 +787,7 @@ class Molecule(ProtoModel):
                 )
             translator = TransComponent.find_trans(dtype)
 
-        if importlib.util.find_spec(translator):
+        if which_import(translator, return_bool=True):
             mod = importlib.import_module(translator)
             tkmol = mod._classes_map.get("Molecule")
 
