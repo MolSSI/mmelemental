@@ -20,11 +20,13 @@ serialize_extensions = [
     pytest.param("yaml", marks=using_yaml),
 ]
 
+
 @pytest.mark.skip(reason="Need rdkit installed to handle codes for now.")
 def test_mmelemental_codes():
     smiles = ChemCode(code="CCCC")
     inputs = MolInput(code=smiles)
     return MolConstructorComponent.compute(inputs)
+
 
 @pytest.mark.parametrize("encoding", serialize_extensions)
 def test_mmelemental_serial(encoding):
