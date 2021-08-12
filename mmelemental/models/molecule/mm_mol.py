@@ -1,6 +1,6 @@
 import numpy
 from typing import List, Tuple, Optional, Any, Dict, Union
-from pydantic import Field, constr, validator
+from pydantic import Field, constr, validator, root_validator
 import importlib
 from pathlib import Path
 import hashlib
@@ -111,7 +111,7 @@ class Molecule(ProtoModel):
         1,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
-    symbols: Optional[List[str]] = Field(  # type: ignore
+    symbols: Optional[Array[str]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of particle symbols. The index of "
         "this attribute sets the order for all other per-particle setting like ``geometry`` and the first "
@@ -191,15 +191,14 @@ class Molecule(ProtoModel):
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
     # Topological data
-    connectivity: Optional[List[Tuple[int, int, float]]] = Field(  # type: ignore
+    connectivity: Optional[Array[Array[int, int, float]]] = Field(  # type: ignore
         None,
         description="A list of bonds within the molecule. Each entry is a tuple "
         "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Bonds may be freely reordered and inverted.",
-        min_items=1,
     )
-    substructs: Optional[List[Tuple[str, int]]] = Field(  # type: ignore
+    substructs: Optional[Array[Array[str, int]]] = Field(  # type: ignore
         None,
         description="A list of (name, num) of connected atoms constituting the building block (e.g. monomer) "
         "of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [('ALA', 4), ...] "
@@ -212,7 +211,7 @@ class Molecule(ProtoModel):
         "provided, and manipulated.",
     )
     extras: Optional[Dict[str, Any]] = Field(  # type: ignore
-        {},
+        None,
         description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
     )
 
@@ -267,14 +266,14 @@ class Molecule(ProtoModel):
     @validator("*", pre=True)
     def _empty_must_none(cls, v, values):
         """
-        Makes sure empty lists or tuples are converted to None.
+        Makes sure empty lists, tuples, or arrays are converted to None.
         """
-        if isinstance(v, List) or isinstance(v, Tuple):
-            return v if v else None
+        if isinstance(v, (list, tuple, numpy.ndarray)):
+            return v if len(v) else None
         return v
 
     @validator("geometry", "velocities")
-    def _must_be_3n(cls, v, values, **kwargs):
+    def _valid_shape(cls, v, values, **kwargs):
         if v is not None:
             n = len(values["symbols"])
             try:
@@ -283,24 +282,21 @@ class Molecule(ProtoModel):
                 raise ValueError("Array must be castable to shape (natom,ndim)!")
         return v
 
-    @validator("masses_")
-    def _must_be_n(cls, v, values, **kwargs):
+    @root_validator
+    def _must_be_n(cls, values):
         n = len(values["symbols"])
-        if len(v) != n:
-            raise ValueError("Masses must be same number of entries as Symbols")
-        return v
-
-    @validator("geometry")
-    def _valid_dims(cls, v, values, **kwargs):
-        if v is not None:
-            n = len(values["symbols"])
-            try:
-                v = v.reshape(n, values["ndim"])
-            except (ValueError, AttributeError):
-                raise ValueError(
-                    f"Geometry must be castable to shape (Natoms,{values['ndim']})!"
-                )
-        return v
+        for key in [
+            "masses",
+            "substructs",
+            "atom_labels",
+            "atomic_numbers",
+            "mass_numbers",
+        ]:
+            if values.get(key) is not None:
+                assert (
+                    len(values[key]) == n
+                ), f"{key} (len(values[key])) must have same number of entries (n) as Symbols."
+        return values
 
     # Properties
     @property
