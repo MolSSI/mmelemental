@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.704.g907820a.dirty
+                  0+untagged.708.g136483b
                 </div>
               
             
@@ -253,7 +253,7 @@
 <span class="kn">from</span> <span class="nn">mmelemental.models.chem.codes</span> <span class="kn">import</span> <span class="n">ChemCode</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.base</span> <span class="kn">import</span> <span class="n">ProtoModel</span><span class="p">,</span> <span class="n">Provenance</span><span class="p">,</span> <span class="n">provenance_stamp</span>
 <span class="kn">from</span> <span class="nn">mmelemental.types</span> <span class="kn">import</span> <span class="n">Array</span>
-<span class="kn">from</span> <span class="nn">cmselemental.util</span> <span class="kn">import</span> <span class="n">yaml_import</span>
+<span class="kn">from</span> <span class="nn">cmselemental.util</span> <span class="kn">import</span> <span class="n">yaml_import</span><span class="p">,</span> <span class="n">which_import</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Molecule&quot;</span><span class="p">]</span>
 
@@ -353,7 +353,7 @@
         <span class="mi">1</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">symbols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">symbols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An ordered (natom,) array-like object of particle symbols. The index of &quot;</span>
         <span class="s2">&quot;this attribute sets the order for all other per-particle setting like ``geometry`` and the first &quot;</span>
@@ -475,10 +475,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">atomic_numbers</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;atomic_numbers&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">import</span> <span class="nn">qcelemental</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;qcelemental&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
+
+            <span class="kn">import</span> <span class="nn">qcelemental</span>
 
             <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;symbols&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
@@ -498,10 +498,9 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">import</span> <span class="nn">qcelemental</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;qcelemental&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
+
             <span class="kn">from</span> <span class="nn">qcelemental.molparse.to_string</span> <span class="kn">import</span> <span class="n">formula_generator</span>
 
             <span class="n">values</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">formula_generator</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;symbols&quot;</span><span class="p">])</span>
@@ -651,10 +650,10 @@
 <span class="sd">        ClH</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">qcelemental</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;qcelemental&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_qcel_nfound_msg</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">qcelemental</span>
+
         <span class="k">return</span> <span class="n">qcelemental</span><span class="o">.</span><span class="n">molutil</span><span class="o">.</span><span class="n">molecular_formula_from_symbols</span><span class="p">(</span>
             <span class="n">symbols</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span>
         <span class="p">)</span></div>
@@ -780,10 +779,10 @@
         <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span> <span class="ow">or</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
         <span class="c1"># Generic translator component</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;mmic_translator&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_trans_nfound_msg</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">translator</span><span class="p">:</span>
             <span class="n">inst_trans</span> <span class="o">=</span> <span class="n">TransComponent</span><span class="o">.</span><span class="n">installed_comps</span><span class="p">()</span>
@@ -817,7 +816,7 @@
                             <span class="sa">f</span><span class="s2">&quot;There is no installed translator for concurrently reading files </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">top_filename</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="o">+</span> <span class="s2">&quot;Please install an appropriate translator.&quot;</span>
                         <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">translator</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">which_import</span><span class="p">(</span><span class="n">translator</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">translator</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Translator </span><span class="si">{</span><span class="n">translator</span><span class="si">}</span><span class="s2"> is not installed.&quot;</span><span class="p">)</span>
@@ -911,10 +910,11 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;You must supply dtype for proper interpretation of data objects e.g. mdanalysis, qcschema, etc.&quot;</span>
             <span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
-        <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;mmic_translator&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_trans_nfound_msg</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
 
         <span class="n">translator</span> <span class="o">=</span> <span class="n">TransComponent</span><span class="o">.</span><span class="n">find_trans</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
 
@@ -923,7 +923,7 @@
                 <span class="sa">f</span><span class="s2">&quot;Data type </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2"> not supported with any installed translators.&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">translator</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">which_import</span><span class="p">(</span><span class="n">translator</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">translator</span><span class="p">)</span>
             <span class="n">tkmol_class</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">_classes_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Molecule&quot;</span><span class="p">)</span>
             <span class="n">tkmol</span> <span class="o">=</span> <span class="n">tkmol_class</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -977,10 +977,10 @@
                 <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stringified</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># look for an installed mmic_translator</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">translator</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
-                <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">which_import</span><span class="p">(</span><span class="s2">&quot;mmic_translator&quot;</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="n">_trans_nfound_msg</span><span class="p">)</span>
+
+                <span class="kn">from</span> <span class="nn">mmic_translator.components</span> <span class="kn">import</span> <span class="n">TransComponent</span>
 
                 <span class="n">translator</span> <span class="o">=</span> <span class="n">TransComponent</span><span class="o">.</span><span class="n">find_molwrite_tk</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span>
 
@@ -1029,7 +1029,7 @@
                 <span class="p">)</span>
             <span class="n">translator</span> <span class="o">=</span> <span class="n">TransComponent</span><span class="o">.</span><span class="n">find_trans</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="n">translator</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">which_import</span><span class="p">(</span><span class="n">translator</span><span class="p">,</span> <span class="n">return_bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">translator</span><span class="p">)</span>
             <span class="n">tkmol</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">_classes_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Molecule&quot;</span><span class="p">)</span>
 
