@@ -1,13 +1,19 @@
 import numpy
 from typing import Any, Union
 
+# Numpy dtypes for heterogenous arrays
+NUMPY_INT = "i8"
+NUMPY_FLOAT = "f8"
+NUMPY_UNI = "U4"
 
-numpy_int = "i8"
-numpy_float = "f8"
-numpy_unicode = "U4"
+# Rounding quantities for hashing
+GEOMETRY_NOISE = 8
+VELOCITY_NOISE = 8
+MASS_NOISE = 6
+CHARGE_NOISE = 4
 
 
-def float_prep(array, around):
+def float_prep(array: numpy.ndarray, around: int) -> numpy.ndarray:
     """
     Rounds floats to a common value and build positive zeros to prevent hash conflicts.
     """
@@ -42,11 +48,11 @@ def get_dtype(data: Any) -> Union[str, None]:
         When `data` type is not a str, float, int, list, tuple, or numpy.ndarray.
     """
     if isinstance(data, str):
-        return numpy_unicode
+        return NUMPY_UNI
     elif isinstance(data, float):
-        return numpy_float
+        return NUMPY_FLOAT
     elif isinstance(data, int):  # check for more types?
-        return numpy_int
+        return NUMPY_INT
     elif isinstance(data, (list, tuple, numpy.ndarray)):
         if isinstance(data[0], (list, tuple, numpy.ndarray)):
             if isinstance(data[0], numpy.ndarray):
