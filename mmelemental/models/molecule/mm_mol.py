@@ -11,6 +11,7 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
+from mmelemental.util.data import float_prep, numpy_int, numpy_float, numpy_unicode
 from cmselemental.util import yaml_import, which_import
 
 __all__ = ["Molecule"]
@@ -26,26 +27,6 @@ Solve by: pip install mmic mmic_translator"
 _qcel_nfound_msg = "MMElemental feature requires qcelemental. \
 Solve by: pip install qcelemental"
 mmschema_molecule_default = "mmschema_molecule"
-
-
-def float_prep(array, around):
-    """
-    Rounds floats to a common value and build positive zeros to prevent hash conflicts.
-    """
-    if isinstance(array, (list, numpy.ndarray)):
-        # Round array
-        array = numpy.around(array, around)
-        # Flip zeros
-        array[numpy.abs(array) < 5 ** (-(around + 1))] = 0
-
-    elif isinstance(array, (float, int)):
-        array = round(array, around)
-        if array == -0.0:
-            array = 0.0
-    else:
-        raise TypeError("Type '{}' not recognized".format(type(array).__name__))
-
-    return array
 
 
 class Identifiers(ProtoModel):
@@ -141,21 +122,21 @@ class Molecule(ProtoModel):
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
         "assigned. See the ``comments`` field for general human-consumable text to affix to the molecule.",
     )
-    atomic_numbers_: Optional[Array[numpy.int16]] = Field(  # type: ignore
+    atomic_numbers_: Optional[Array[numpy.dtype("i8")]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the ``symbols`` list if not explicitly set. "
         "Ghostedness should be indicated through ``real`` field, not zeros here.",
     )
-    mass_numbers: Optional[Array[numpy.int16]] = Field(  # type: ignore
+    mass_numbers: Optional[Array[numpy.dtype("i8")]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the most common isotopes of the ``symbols`` list if not explicitly set. "
         "If single isotope not (yet) known for an atom, -1 is placeholder.",
     )
-    masses_: Optional[Array[float]] = Field(  # type: ignore
+    masses_: Optional[Array[numpy.dtype("f8")]] = Field(  # type: ignore
         None,
         description="The ordered array of particle masses. Index order "
         "matches the 0-indexed indices of all other per-atom fields like ``symbols`` and ``real``. If "
@@ -174,14 +155,14 @@ class Molecule(ProtoModel):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to elementary charge."
     )
-    geometry: Optional[Array[float]] = Field(  # type: ignore
+    geometry: Optional[Array[numpy.dtype(f"{numpy_float}")]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[float]] = Field(  # type: ignore
+    velocities: Optional[Array[f"{numpy_float}"]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
         "Angstroms/femtoseconds.",
@@ -191,18 +172,18 @@ class Molecule(ProtoModel):
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
     # Topological data
-    connectivity: Optional[Array[Array[int, int, float]]] = Field(  # type: ignore
+    connectivity: Optional[Array[numpy.dtype(f"{numpy_int}, {numpy_int}, {numpy_float}")]] = Field(  # type: ignore
         None,
         description="A list of bonds within the molecule. Each entry is a tuple "
         "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Bonds may be freely reordered and inverted.",
     )
-    substructs: Optional[Array[Array[str, int]]] = Field(  # type: ignore
+    substructs: Optional[Array[numpy.dtype(f"{numpy_unicode}, {numpy_int}")]] = Field(  # type: ignore
         None,
         description="A list of (name, num) of connected atoms constituting the building block (e.g. monomer) "
         "of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [('ALA', 4), ...] "
-        "means atom1 belongs to aminoacid alanine with residue number 4.",
+        "means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.",
     )
     # Extras
     provenance: Provenance = Field(
@@ -272,6 +253,15 @@ class Molecule(ProtoModel):
             return v if len(v) else None
         return v
 
+    @validator("substructs", pre=True)
+    def _valid_substructs(cls, v):
+        assert isinstance(
+            v, (list, tuple, numpy.ndarray)
+        ), "Substructs must be a list, tuple, or array."
+        if isinstance(v[0], list):
+            return [tuple(item) for item in v]
+        return v
+
     @validator("geometry", "velocities")
     def _valid_shape(cls, v, values, **kwargs):
         if v is not None:
@@ -280,6 +270,11 @@ class Molecule(ProtoModel):
                 v.reshape(n, values["ndim"])
             except (ValueError, AttributeError):
                 raise ValueError("Array must be castable to shape (natom,ndim)!")
+        if v.ndim > 1:
+            assert v.ndim == 2, f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
+            assert (
+                v.shape[1] == values["ndim"]
+            ), f"Array column number ({v.shape[1]}) should be equal to ndim ({values['ndim']})."
         return v
 
     @root_validator
@@ -716,19 +711,15 @@ class Molecule(ProtoModel):
             Additional kwargs to pass to the constructor.
         """
         if not dtype:
-            from pathlib import Path
-
-            ext = Path(filename).suffix
-        else:
-            ext = "." + dtype
+            dtype = Path(filename).suffix[1:]
 
         mode = kwargs.pop("mode", "w")
 
-        if ext in [".json", ".yaml"]:
-            encoding = dtype or ext.strip(".")
-            stringified = self.serialize(encoding=encoding, **kwargs)
-            with open(filename, mode) as fp:
-                fp.write(stringified)
+        if dtype in ["json", "js", "yaml", "yml", "hdf5", "h5"]:
+            self.write_file(
+                filename,
+                encoding=dtype,
+            )
         else:  # look for an installed mmic_translator
             if not translator:
                 if not which_import("mmic_translator", return_bool=True):
@@ -736,11 +727,11 @@ class Molecule(ProtoModel):
 
                 from mmic_translator.components import TransComponent
 
-                translator = TransComponent.find_molwrite_tk(ext)
+                translator = TransComponent.find_molwrite_tk("." + dtype)
 
                 if not translator:
                     raise NotImplementedError(
-                        f"File extension {ext} not supported with any installed translators."
+                        f"File extension {dtype} not supported with any installed translators."
                     )
 
             tkmol = self.to_data(translator=translator, **kwargs)
