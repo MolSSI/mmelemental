@@ -11,16 +11,20 @@ from mmelemental.models.util.output import FileOutput
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
-from mmelemental.util.data import float_prep, numpy_int, numpy_float, numpy_unicode
+from mmelemental.util.data import (
+    float_prep,
+    NUMPY_UNI,
+    NUMPY_INT,
+    NUMPY_FLOAT,
+    GEOMETRY_NOISE,
+    VELOCITY_NOISE,
+    MASS_NOISE,
+    CHARGE_NOISE,
+)
 from cmselemental.util import yaml_import, which_import
 
 __all__ = ["Molecule"]
 
-# Rounding quantities for hashing
-GEOMETRY_NOISE = 8
-VELOCITY_NOISE = 8
-MASS_NOISE = 6
-CHARGE_NOISE = 4
 
 _trans_nfound_msg = "MMElemental translation requires mmic & mmic_translator. \
 Solve by: pip install mmic mmic_translator"
@@ -155,14 +159,14 @@ class Molecule(ProtoModel):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to elementary charge."
     )
-    geometry: Optional[Array[numpy.dtype(f"{numpy_float}")]] = Field(  # type: ignore
+    geometry: Optional[Array[numpy.dtype(f"{NUMPY_FLOAT}")]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[f"{numpy_float}"]] = Field(  # type: ignore
+    velocities: Optional[Array[f"{NUMPY_FLOAT}"]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
         "Angstroms/femtoseconds.",
@@ -172,14 +176,14 @@ class Molecule(ProtoModel):
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
     # Topological data
-    connectivity: Optional[Array[numpy.dtype(f"{numpy_int}, {numpy_int}, {numpy_float}")]] = Field(  # type: ignore
+    connectivity: Optional[Array[numpy.dtype(f"{NUMPY_INT}, {NUMPY_INT}, {NUMPY_FLOAT}")]] = Field(  # type: ignore
         None,
         description="A list of bonds within the molecule. Each entry is a tuple "
         "of ``(atom_index_A, atom_index_B, bond_order)`` where the ``atom_index`` "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Bonds may be freely reordered and inverted.",
     )
-    substructs: Optional[Array[numpy.dtype(f"{numpy_unicode}, {numpy_int}")]] = Field(  # type: ignore
+    substructs: Optional[Array[numpy.dtype(f"{NUMPY_UNI}, {NUMPY_INT}")]] = Field(  # type: ignore
         None,
         description="A list of (name, num) of connected atoms constituting the building block (e.g. monomer) "
         "of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [('ALA', 4), ...] "
