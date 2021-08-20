@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.717.g4d7ee54
+                  0+untagged.721.g2418fc7
                 </div>
               
             
@@ -240,7 +240,7 @@
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
   <h1>Source code for mmelemental.models.collect.mm_traj</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">constr</span>
+<span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">validator</span><span class="p">,</span> <span class="n">root_validator</span><span class="p">,</span> <span class="n">constr</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">mmelemental.types</span> <span class="kn">import</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">mmelemental.models.molecule.mm_mol</span> <span class="kn">import</span> <span class="n">Molecule</span>
@@ -249,6 +249,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Trajectory&quot;</span><span class="p">,</span> <span class="s2">&quot;TrajInput&quot;</span><span class="p">]</span>
@@ -256,11 +257,16 @@
 <span class="n">_trans_nfound_msg</span> <span class="o">=</span> <span class="s2">&quot;MMElemental translation requires mmic_translator. </span><span class="se">\</span>
 <span class="s2">Solve by: pip install mmic_translator&quot;</span>
 
-<span class="c1"># Rounding quantities for hashing</span>
-<span class="n">GEOMETRY_NOISE</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">VELOCITY_NOISE</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">FORCE_NOISE</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">TIMESTEP_NOISE</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="kn">from</span> <span class="nn">mmelemental.util.data</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">float_prep</span><span class="p">,</span>
+    <span class="n">NUMPY_UNI</span><span class="p">,</span>
+    <span class="n">NUMPY_INT</span><span class="p">,</span>
+    <span class="n">NUMPY_FLOAT</span><span class="p">,</span>
+    <span class="n">GEOMETRY_NOISE</span><span class="p">,</span>
+    <span class="n">VELOCITY_NOISE</span><span class="p">,</span>
+    <span class="n">MASS_NOISE</span><span class="p">,</span>
+    <span class="n">CHARGE_NOISE</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">mmschema_trajectory_default</span> <span class="o">=</span> <span class="s2">&quot;mmschema_trajectory&quot;</span>
 
@@ -309,11 +315,11 @@
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">schema_version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="mi">0</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="s2">&quot;my_trajectory&quot;</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Common or human-readable name to assign to this molecule. This field can be arbitrary; see &quot;</span>
         <span class="s2">&quot;``identifiers`` for well-defined labels.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
@@ -324,17 +330,23 @@
     <span class="n">timestep_units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="s2">&quot;fs&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Timestep size units. Defaults to femtoseconds.&quot;</span>
     <span class="p">)</span>
-    <span class="n">nframes_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of frames.&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">natoms</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Array</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">NUMPY_INT</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of atoms. A scalar for closed systems and an array for open (variable N) systems.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">nframes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of frames.&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
     <span class="n">ndim</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="mi">3</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of spatial dimensions.&quot;</span>
     <span class="p">)</span>
+
     <span class="c1"># For storing topological data or time-dependent topologies (e.g. reactive ffs)</span>
     <span class="n">top</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Molecule</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Molecule</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>  <span class="c1"># Molecule.__doc__,</span>
+        <span class="n">description</span><span class="o">=</span><span class="n">Molecule</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1"># Particle dynamical fields</span>
-    <span class="n">geometry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">geometry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">NUMPY_FLOAT</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. &quot;</span>
         <span class="s2">&quot;Storage is sequential in each dimension:</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -347,7 +359,7 @@
     <span class="n">geometry_units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="s2">&quot;angstrom&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Units for atomic geometry. Defaults to Angstroms.&quot;</span>
     <span class="p">)</span>
-    <span class="n">velocities</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">velocities</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">NUMPY_FLOAT</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is &quot;</span>
         <span class="s2">&quot;Angstroms/femtoseconds.&quot;</span><span class="p">,</span>
@@ -356,7 +368,7 @@
         <span class="s2">&quot;angstrom/fs&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Units for atomic velocities. Defaults to Angstroms/femtoseconds.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">forces</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+    <span class="n">forces</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">NUMPY_FLOAT</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is &quot;</span>
         <span class="s2">&quot;kJ/mol*angstrom.&quot;</span><span class="p">,</span>
@@ -379,11 +391,31 @@
         <span class="n">repr_style</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="p">[(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hash</span><span class="p">()[:</span><span class="mi">7</span><span class="p">])]</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;nframes_&quot;</span><span class="p">:</span> <span class="s2">&quot;nframes&quot;</span><span class="p">,</span>
-            <span class="c1"># below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .</span>
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">__repr_args__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ReprArgs&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hash</span><span class="p">()[:</span><span class="mi">7</span><span class="p">])]</span>
+
+
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">,</span> <span class="s2">&quot;velocities&quot;</span><span class="p">,</span> <span class="s2">&quot;forces&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_must_be_n</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">natoms</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;natoms&quot;</span><span class="p">]</span>
+        <span class="n">nframes</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;nframes&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">natoms</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;ndim&quot;</span><span class="p">],</span> <span class="n">nframes</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Array must be castable to shape (natoms,ndim,frames)!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">v</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Array must be either 1D or 2D! Given ndim: </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;ndim&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">nframes</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Array column number (</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) should be equal to ndim * nframes (</span><span class="si">{</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;ndim&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">nframes</span><span class="si">}</span><span class="s2">).&quot;</span>
+
+        <span class="k">assert</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;ndim&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">natoms</span> <span class="o">*</span> <span class="n">nframes</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">v</span>
+        <span class="p">),</span> <span class="s2">&quot;Number of frames is inconsistent with array shape!&quot;</span>
+        <span class="k">return</span> <span class="n">v</span>
 
     <span class="c1"># Properties</span>
     <span class="nd">@property</span>
@@ -401,10 +433,6 @@
             <span class="s2">&quot;nframes&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ndim&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">nframes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nframes_</span>
 
 <div class="viewcode-block" id="Trajectory.get_geometry"><a class="viewcode-back" href="../../../../models.html#mmelemental.models.collect.Trajectory.get_geometry">[docs]</a>    <span class="k">def</span> <span class="nf">get_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns geometry at a specific snapshot/frame.</span>
