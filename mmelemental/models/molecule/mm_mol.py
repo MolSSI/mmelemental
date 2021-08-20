@@ -126,21 +126,21 @@ class Molecule(ProtoModel):
         "model conversions, such as Elemental <-> Molpro and not typically something which should be user "
         "assigned. See the ``comments`` field for general human-consumable text to affix to the molecule.",
     )
-    atomic_numbers_: Optional[Array[numpy.dtype("i8")]] = Field(  # type: ignore
+    atomic_numbers_: Optional[Array[numpy.dtype(NUMPY_INT)]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the ``symbols`` list if not explicitly set. "
         "Ghostedness should be indicated through ``real`` field, not zeros here.",
     )
-    mass_numbers: Optional[Array[numpy.dtype("i8")]] = Field(  # type: ignore
+    mass_numbers: Optional[Array[numpy.dtype(NUMPY_INT)]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic *mass* numbers of shape (nat). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Values are inferred from the most common isotopes of the ``symbols`` list if not explicitly set. "
         "If single isotope not (yet) known for an atom, -1 is placeholder.",
     )
-    masses_: Optional[Array[numpy.dtype("f8")]] = Field(  # type: ignore
+    masses_: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="The ordered array of particle masses. Index order "
         "matches the 0-indexed indices of all other per-atom fields like ``symbols`` and ``real``. If "
@@ -159,14 +159,14 @@ class Molecule(ProtoModel):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to elementary charge."
     )
-    geometry: Optional[Array[numpy.dtype(f"{NUMPY_FLOAT}")]] = Field(  # type: ignore
+    geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[f"{NUMPY_FLOAT}"]] = Field(  # type: ignore
+    velocities: Optional[Array[NUMPY_FLOAT]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
         "Angstroms/femtoseconds.",
