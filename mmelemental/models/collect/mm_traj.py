@@ -1,4 +1,4 @@
-from pydantic import Field, validator, constr
+from pydantic import Field, validator, root_validator, constr
 from typing import Union, Optional, List, Dict, Any
 from mmelemental.types import Array
 from mmelemental.models.molecule.mm_mol import Molecule
@@ -7,6 +7,7 @@ from mmelemental.models.util.output import FileOutput
 from pathlib import Path
 import importlib
 import hashlib
+import numpy
 
 
 __all__ = ["Trajectory", "TrajInput"]
@@ -14,11 +15,16 @@ __all__ = ["Trajectory", "TrajInput"]
 _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
 Solve by: pip install mmic_translator"
 
-# Rounding quantities for hashing
-GEOMETRY_NOISE = 8
-VELOCITY_NOISE = 8
-FORCE_NOISE = 8
-TIMESTEP_NOISE = 6
+from mmelemental.util.data import (
+    float_prep,
+    NUMPY_UNI,
+    NUMPY_INT,
+    NUMPY_FLOAT,
+    GEOMETRY_NOISE,
+    VELOCITY_NOISE,
+    MASS_NOISE,
+    CHARGE_NOISE,
+)
 
 mmschema_trajectory_default = "mmschema_trajectory"
 
@@ -67,11 +73,11 @@ class Trajectory(ProtoModel):
         ),
     )
     schema_version: Optional[int] = Field(  # type: ignore
-        0,
+        1,
         description="The version number of ``schema_name`` to which this model conforms.",
     )
     name: Optional[str] = Field(  # type: ignore
-        "my_trajectory",
+        None,
         description="Common or human-readable name to assign to this molecule. This field can be arbitrary; see "
         "``identifiers`` for well-defined labels.",
     )
@@ -82,17 +88,23 @@ class Trajectory(ProtoModel):
     timestep_units: Optional[str] = Field(
         "fs", description="Timestep size units. Defaults to femtoseconds."
     )
-    nframes_: Optional[int] = Field(1, description="Number of frames.")  # type: ignore
+    natoms: Union[int, Array[numpy.dtype(NUMPY_INT)]] = Field(
+        ...,
+        description="Number of atoms. A scalar for closed systems and an array for open (variable N) systems.",
+    )
+    nframes: int = Field(..., description="Number of frames.")  # type: ignore
+
     ndim: Optional[int] = Field(  # type: ignore
         3, description="Number of spatial dimensions."
     )
+
     # For storing topological data or time-dependent topologies (e.g. reactive ffs)
     top: Optional[Union[Molecule, List[Molecule]]] = Field(  # type: ignore
         None,
-        description="top",  # Molecule.__doc__,
+        description=Molecule.__doc__,
     )
     # Particle dynamical fields
-    geometry: Optional[Array[float]] = Field(  # type: ignore
+    geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. "
         "Storage is sequential in each dimension:\n"
@@ -105,7 +117,7 @@ class Trajectory(ProtoModel):
     geometry_units: Optional[str] = Field(  # type: ignore
         "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
     )
-    velocities: Optional[Array[float]] = Field(  # type: ignore
+    velocities: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is "
         "Angstroms/femtoseconds.",
@@ -114,7 +126,7 @@ class Trajectory(ProtoModel):
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
     )
-    forces: Optional[Array[float]] = Field(  # type: ignore
+    forces: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is "
         "kJ/mol*angstrom.",
@@ -137,11 +149,31 @@ class Trajectory(ProtoModel):
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
         fields = {
             "nframes_": "nframes",
-            # below addresses the draft-04 issue until https://github.com/samuelcolvin/pydantic/issues/1478 .
         }
 
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
+
+
+    @validator("geometry", "velocities", "forces")
+    def _must_be_n(cls, v, values):
+        natoms = values["natoms"]
+        nframes = values["nframes"]
+        try:
+            v.reshape(natoms, values["ndim"], nframes)
+        except (ValueError, AttributeError):
+            raise ValueError("Array must be castable to shape (natoms,ndim,frames)!")
+
+        if v.ndim > 1:
+            assert v.ndim == 2, f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
+            assert (
+                v.shape[1] == values["ndim"] * nframes
+            ), f"Array column number ({v.shape[1]}) should be equal to ndim * nframes ({values['ndim'] * nframes})."
+
+        assert values["ndim"] * natoms * nframes == len(
+            v
+        ), "Number of frames is inconsistent with array shape!"
+        return v
 
     # Properties
     @property
@@ -159,10 +191,6 @@ class Trajectory(ProtoModel):
             "nframes",
             "ndim",
         ]
-
-    @property
-    def nframes(self):
-        return self.nframes_
 
     def get_geometry(self, frame: int):
         """Returns geometry at a specific snapshot/frame.
