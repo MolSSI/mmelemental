@@ -131,7 +131,7 @@
               
               
                 <div class="version">
-                  0+untagged.737.g3e89c22
+                  0+untagged.741.g0183ae5
                 </div>
               
             
@@ -410,6 +410,9 @@
 
     <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">,</span> <span class="s2">&quot;velocities&quot;</span><span class="p">,</span> <span class="s2">&quot;forces&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_must_be_n</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">v</span>
+
         <span class="n">natoms</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;natoms&quot;</span><span class="p">]</span>
         <span class="n">nframes</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="s2">&quot;nframes&quot;</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
