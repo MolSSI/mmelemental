@@ -8,6 +8,7 @@ import json
 
 # MM models
 from mmelemental.models.util.output import FileOutput
+from mmelemental.models.molecule.topology import Topology
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
@@ -367,6 +368,20 @@ class Molecule(ProtoModel):
             )
 
         return self.get_hash() == other.get_hash()
+
+    def get_topology(self):
+
+        return Topology(
+            symbols=self.symbols,
+            atom_labels=self.atom_labels,
+            atomic_numbers=self.atomic_numbers,
+            mass_numbers=self.mass_numbers,
+            masses=self.masses,
+            masses_units=self.masses_units,
+            molecular_charge=self.molecular_charge,
+            molecular_charge_units=self.molecular_charge_units,
+            connectivity=self.connectivity,
+        )
 
     def get_molecular_formula(self, order: Optional[str] = "alphabetical") -> str:
         """
