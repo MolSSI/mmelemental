@@ -237,7 +237,6 @@ class Trajectory(ProtoModel):
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
 
-
     # Constructors
     @classmethod
     def from_file(
