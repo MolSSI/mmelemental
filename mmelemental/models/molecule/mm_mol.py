@@ -275,11 +275,11 @@ class Molecule(ProtoModel):
                 v.reshape(n, values["ndim"])
             except (ValueError, AttributeError):
                 raise ValueError("Array must be castable to shape (natom,ndim)!")
-        if v.ndim > 1:
-            assert v.ndim == 2, f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
-            assert (
-                v.shape[1] == values["ndim"]
-            ), f"Array column number ({v.shape[1]}) should be equal to ndim ({values['ndim']})."
+            if v.ndim > 1:
+                assert v.ndim == 2, f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
+                assert (
+                    v.shape[1] == values["ndim"]
+                ), f"Array column number ({v.shape[1]}) should be equal to ndim ({values['ndim']})."
         return v
 
     @root_validator
