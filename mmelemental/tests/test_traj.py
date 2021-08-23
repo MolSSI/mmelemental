@@ -56,6 +56,7 @@ def test_mmelemental_traj(data):
     assert fpath.is_file()
     fpath.unlink()
 
+
 @pytest.mark.parametrize(
     "mfile",
     [mol for mol in mm_data.mols.values() if mol.endswith(".json")],
@@ -80,6 +81,7 @@ def test_mmelemental_toptraj(mfile):
     traj.to_file(fpath.name, indent=4)
     assert fpath.is_file()
     fpath.unlink()
+
 
 @pytest.mark.parametrize("ext", file_extensions)
 def test_mmelemental_traj_files(ext):
