@@ -168,6 +168,9 @@ class Trajectory(ProtoModel):
 
     @validator("geometry", "velocities", "forces")
     def _must_be_n(cls, v, values):
+        if v is None:
+            return v
+
         natoms = values["natoms"]
         nframes = values["nframes"]
         try:
