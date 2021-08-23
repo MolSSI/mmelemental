@@ -1,5 +1,5 @@
 import pytest
-from mmelemental.models import Molecule, Trajectory
+from mmelemental.models import Trajectory, Molecule
 from cmselemental.util import yaml_import, which_import
 import numpy
 from pathlib import Path
@@ -53,6 +53,30 @@ def test_mmelemental_traj(data):
     traj = Trajectory(**data)
     traj.to_file("traj.json", indent=4)
 
+
+@pytest.mark.parametrize(
+    "mfile",
+    [mol for mol in mm_data.mols.values() if mol.endswith(".json")],
+)
+def test_mmelemental_toptraj(mfile):
+    mol = Molecule.from_file(mfile)
+    top = mol.get_topology()
+    natoms = len(top.symbols)
+    nframes = 20
+    ndim = 3
+
+    data = {
+        "top": top,
+        "geometry": numpy.random.rand(natoms * ndim * nframes),
+        "nframes": nframes,
+        "ndim": ndim,
+        "natoms": natoms,
+        "timestep": 0.2,
+    }
+    traj = Trajectory(**data)
+    traj.to_file("traj.json", indent=4)
+
+
 @pytest.mark.parametrize("ext", file_extensions)
 def test_mmelemental_traj_files(ext):
     for filen, filep in mm_data.trajs.items():
@@ -64,3 +88,5 @@ def test_mmelemental_traj_files(ext):
             mm_traj.to_file(fpath.name)
             assert fpath.is_file()
             fpath.unlink()
+
+test_mmelemental_toptraj(mm_data.mols["alanine.json"])
