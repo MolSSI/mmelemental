@@ -51,8 +51,10 @@ file_extensions = [
 )
 def test_mmelemental_traj(data):
     traj = Trajectory(**data)
-    traj.to_file("traj.json", indent=4)
-
+    fpath = Path("tmp.json")
+    traj.to_file(fpath.name, indent=4)
+    assert fpath.is_file()
+    fpath.unlink()
 
 @pytest.mark.parametrize(
     "mfile",
@@ -74,8 +76,10 @@ def test_mmelemental_toptraj(mfile):
         "timestep": 0.2,
     }
     traj = Trajectory(**data)
-    traj.to_file("traj.json", indent=4)
-
+    fpath = Path("tmp.json")
+    traj.to_file(fpath.name, indent=4)
+    assert fpath.is_file()
+    fpath.unlink()
 
 @pytest.mark.parametrize("ext", file_extensions)
 def test_mmelemental_traj_files(ext):
