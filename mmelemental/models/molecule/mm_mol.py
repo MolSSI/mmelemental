@@ -276,11 +276,13 @@ class Molecule(ProtoModel):
             except (ValueError, AttributeError):
                 raise ValueError("Array must be castable to shape (natom,ndim)!")
             if v.ndim > 1:
-                assert v.ndim == 2, f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
+                assert (
+                    v.ndim == 2
+                ), f"Array must be either 1D or 2D! Given ndim: {v.ndim}."
                 assert (
                     v.shape[1] == values["ndim"]
                 ), f"Array column number ({v.shape[1]}) should be equal to ndim ({values['ndim']})."
-        return v
+            return v.flatten()
 
     @root_validator
     def _must_be_n(cls, values):
@@ -382,6 +384,12 @@ class Molecule(ProtoModel):
             molecular_charge_units=self.molecular_charge_units,
             connectivity=self.connectivity,
         )
+
+    def get_substructs(self) -> List:
+        """Removes duplicate entries substructs while preserving the order."""
+        seen = set()
+        seen_add = seen.add
+        return [x for x in self.substructs.tolist() if not (x in seen or seen_add(x))]
 
     def get_molecular_formula(self, order: Optional[str] = "alphabetical") -> str:
         """
