@@ -1,19 +1,13 @@
 from pydantic import Field, validator, root_validator, constr
 from typing import Union, Optional, List, Dict, Any
 from mmelemental.types import Array
-from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models.molecule.topology import Topology
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
 from pathlib import Path
 import importlib
 import hashlib
 import numpy
-
-
-__all__ = ["Trajectory", "TrajInput"]
-
-_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
-Solve by: pip install mmic_translator"
 
 from mmelemental.util.data import (
     float_prep,
@@ -25,6 +19,12 @@ from mmelemental.util.data import (
     MASS_NOISE,
     CHARGE_NOISE,
 )
+
+__all__ = ["Trajectory", "TrajInput"]
+
+_trans_nfound_msg = "MMElemental translation requires mmic_translator. \
+Solve by: pip install mmic_translator"
+
 
 mmschema_trajectory_default = "mmschema_trajectory"
 
@@ -99,9 +99,9 @@ class Trajectory(ProtoModel):
     )
 
     # For storing topological data or time-dependent topologies (e.g. reactive ffs)
-    top: Optional[Union[Molecule, List[Molecule]]] = Field(  # type: ignore
+    top: Optional[Union[Topology, List[Topology]]] = Field(  # type: ignore
         None,
-        description=Molecule.__doc__,
+        description=Topology.__doc__,
     )
     # Particle dynamical fields
     geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
@@ -120,7 +120,13 @@ class Trajectory(ProtoModel):
     velocities: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is "
-        "Angstroms/femtoseconds.",
+        "Angstroms/femtoseconds."
+        "Storage is sequential in each dimension:\n"
+        "[\n"
+        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
+        "   ...,\n"
+        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "]",
     )
     velocities_units: Optional[str] = Field(  # type: ignore
         "angstrom/fs",
@@ -129,7 +135,13 @@ class Trajectory(ProtoModel):
     forces: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is "
-        "kJ/mol*angstrom.",
+        "kJ/mol*angstrom."
+        "Storage is sequential in each dimension:\n"
+        "[\n"
+        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
+        "   ...,\n"
+        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "]",
     )
     forces_units: Optional[str] = Field(  # type: ignore
         "kJ/mol*angstrom",
@@ -153,7 +165,6 @@ class Trajectory(ProtoModel):
 
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
-
 
     @validator("geometry", "velocities", "forces")
     def _must_be_n(cls, v, values):
@@ -204,11 +215,13 @@ class Trajectory(ProtoModel):
             Geometry 1D numpy array of length natoms * ndim
 
         """
+        if frame >= self.nframes:
+            raise ValueError("Frame number cannot exceed total number of frames!")
+
         if self.geometry is not None:
             nfree = self.ndim * self.natoms
             return self.geometry[frame * nfree : (frame + 1) * nfree]
-        else:
-            return self.top[frame].geometry
+        return None
 
     # Helper methods
     def get_hash(self):
@@ -224,11 +237,6 @@ class Trajectory(ProtoModel):
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
 
-    # Validators
-    @validator("geometry")
-    def _valid_geometry(cls, v, values):
-        assert not values.get("top")
-        return v
 
     # Constructors
     @classmethod
