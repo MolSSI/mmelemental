@@ -19,6 +19,7 @@ from mmelemental.util.data import (
     MASS_NOISE,
     CHARGE_NOISE,
 )
+from cmselemental.util import which_import
 
 __all__ = ["Trajectory", "TrajInput"]
 
@@ -441,6 +442,54 @@ class Trajectory(ProtoModel):
             tk_traj = self.to_data(translator=translator, **kwargs)
             tk_traj.to_file(filename, dtype=dtype, **kwargs)  # pass dtype?
 
-    def to_data(self, dtype: str):
-        """Converts Trajectory to toolkit-specific trajectory object."""
-        raise NotImplementedError(f"Data type {dtype} not available.")
+    def to_data(
+        self,
+        dtype: Optional[str] = None,
+        *,
+        translator: Optional[str] = None,
+        **kwargs: Optional[Dict[str, Any]],
+    ) -> "ToolkitModel":
+        """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+        Parameters
+        ----------
+        dtype: str, optional
+            The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.
+        translator: Optional[str], optional
+            Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+            MMElemental attempts to find an appropriate translator if it is registered
+            in the :class:``TransComponent`` class.
+        **kwargs: Optional[Dict[str, Any]], optional
+            Additional kwargs to pass to the constructor.
+        Returns
+        -------
+        ToolkitModel
+            Toolkit-specific molecule model
+        """
+        try:
+            from mmic_translator.components import TransComponent
+        except Exception:
+            TransComponent = None
+
+        if not translator:
+            if not TransComponent:
+                raise ModuleNotFoundError(_trans_nfound_msg)
+            if not dtype:
+                raise ValueError(
+                    f"Either translator or dtype must be supplied when calling {__name__}."
+                )
+            translator = TransComponent.find_trans(dtype)
+
+        if which_import(translator, return_bool=True):
+            mod = importlib.import_module(translator)
+            tkmol = mod._classes_map.get("Trajectory")
+
+            if not tkmol:
+                raise ValueError(
+                    f"No Molecule model found while looking in translator: {translator}."
+                )
+
+            return tkmol.from_schema(self)
+        else:
+            raise NotImplementedError(
+                f"translator {translator} not available. Make sure it is properly installed."
+            )
