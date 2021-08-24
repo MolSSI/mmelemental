@@ -3,9 +3,9 @@ import importlib
 import hashlib
 import json
 from typing import Any, List, Dict, Tuple, Optional, Union
-import qcelemental
 import numpy
 from pathlib import Path
+from cmselemental.types import Array
 
 # MM models
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
@@ -23,9 +23,9 @@ __all__ = ["ForceField", "ForcesInput"]
 
 
 class ImproperDihedrals(ProtoModel):
-    im_dihedrals: Optional[
-        qcelemental.models.types.Array[qcelemental.models.types.Array[float]]
-    ] = Field(None, description="Improper dihedral/torsion parameters.")
+    im_dihedrals: Optional[Array[Array[float]]] = Field(
+        None, description="Improper dihedral/torsion parameters."
+    )
     im_dihedrals_type: Optional[List[str]] = Field(
         None,
         description="Improper dihedral potential form e.g. harmonic, fourier, etc.",
@@ -81,11 +81,11 @@ class ForceField(ProtoModel):
     # im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
     #    None, description="Improper dihedral bond model."
     # )
-    charges: Optional[qcelemental.models.types.Array[float]] = Field(
+    charges: Optional[Array[float]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
     charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
-    masses: Optional[qcelemental.models.types.Array[float]] = Field(  # type: ignore
+    masses: Optional[Array[float]] = Field(  # type: ignore
         None,
         description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
         "If this is provided, it must be the same length as ``symbols``.",
@@ -94,7 +94,7 @@ class ForceField(ProtoModel):
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
     )
-    charge_groups: Optional[qcelemental.models.types.Array[int]] = Field(
+    charge_groups: Optional[Array[int]] = Field(
         None, description="Charge groups per atom. Length of the array must be natoms."
     )
     exclusions: Optional[str] = Field(  # type: ignore
@@ -127,12 +127,14 @@ class ForceField(ProtoModel):
         description="A list of substructure names the particles belong to. E.g. [('ALA', 4), ('ACE', 0)] means atom1 belong to residue ALA (alanine) "
         "with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.",
     )
+    templates: Optional[Dict[str, List[str]]] = Field(
+        None,
+        description="A list of template definitions typically in terms of atom types. E.g. {'ACE': ['HH31', 'CH3', 'HH32', 'HH33', 'C', 'O']}.",
+    )
     combination_rule: Optional[str] = Field(
         "Lorentz-Berthelot", description="Combination rule for the force field."
     )
-    atomic_numbers: Optional[
-        qcelemental.models.types.Array[numpy.int16]
-    ] = Field(  # type: ignore
+    atomic_numbers: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
         description="An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index "
         "matches the 0-indexed indices of all other per-atom settings like ``symbols``. "
@@ -460,7 +462,7 @@ class ForceField(ProtoModel):
             data = getattr(self, field)
             if data is not None:
                 if field == "symbols":
-                    # data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+                    # data = float_prep(data, GEOMETRY_NOISE)
                     concat += json.dumps(data, default=lambda x: x.ravel().tolist())
 
         m.update(concat.encode("utf-8"))
