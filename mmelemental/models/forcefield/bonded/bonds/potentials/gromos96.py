@@ -1,7 +1,7 @@
 from pydantic import Field, validator
 from typing import Optional
-import qcelemental
 from mmelemental.models.base import ProtoModel
+from cmselemental.types import Array
 
 __all__ = ["Gromos96"]
 
@@ -11,7 +11,7 @@ class Gromos96(ProtoModel):
     GROMOS-96 spring bond model: Energy = 1/4 * spring * (distance**2 - length**2)**2. "
     """
 
-    spring: qcelemental.models.types.Array[float] = Field(
+    spring: Array[float] = Field(
         ..., description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
     )
     spring_units: Optional[str] = Field(

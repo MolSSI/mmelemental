@@ -1,14 +1,14 @@
 from pydantic import Field, root_validator
 from typing import Optional
-import qcelemental
 from mmelemental.models.base import ProtoModel
+from cmselemental.types import Array
 
 __all__ = ["LennardJones"]
 
 
 class LennardJones(ProtoModel):
 
-    epsilon: qcelemental.models.types.Array[float] = Field(
+    epsilon: Array[float] = Field(
         ...,
         description="The epsilon (well depth) Lennard-Jones parameter. Default unit is kJ/mol.",
     )
@@ -16,7 +16,7 @@ class LennardJones(ProtoModel):
         "kJ/mol",
         description="Units for the Lennard-Jones epsilon (well depth) constant.",
     )
-    sigma: qcelemental.models.types.Array[float] = Field(
+    sigma: Array[float] = Field(
         ...,
         description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
     )

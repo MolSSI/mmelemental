@@ -1,7 +1,7 @@
 from pydantic import Field
 from mmelemental.models.forcefield.params import Params
 from typing import Optional, List, Tuple, Union
-import qcelemental
+from cmselemental.types import Array
 import os
 import pathlib
 
@@ -9,7 +9,7 @@ __all__ = ["Bonds"]
 
 
 class Bonds(Params):
-    lengths: qcelemental.models.types.Array[float] = Field(
+    lengths: Array[float] = Field(
         ..., description="Equilibrium bond lengths. Default unit is Angstroms."
     )
     lengths_units: Optional[str] = Field(

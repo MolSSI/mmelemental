@@ -148,7 +148,7 @@ class Params(ProtoModel):
             data = getattr(self, field)
             if data is not None and field != "params":
                 # if field == "nonbonded":
-                #    data = qcelemental.models.molecule.float_prep(data, GEOMETRY_NOISE)
+                #    data = float_prep(data, GEOMETRY_NOISE)
 
                 concat += json.dumps(data, default=lambda x: x.ravel().tolist())
 

@@ -1,7 +1,7 @@
 from pydantic import Field, validator
 from typing import Optional
-import qcelemental
 from mmelemental.models.base import ProtoModel
+from cmselemental.types import Array
 
 __all__ = ["Harmonic"]
 
@@ -11,7 +11,7 @@ class Harmonic(ProtoModel):
     Linear spring bond model: Energy = 1/2 * spring * (distance - length)**2. "
     """
 
-    spring: qcelemental.models.types.Array[float] = Field(
+    spring: Array[float] = Field(
         ..., description="Bond spring constant. Default unit is kJ/(mol*angstrom**2)."
     )
     spring_units: Optional[str] = Field(

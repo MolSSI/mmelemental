@@ -1,28 +1,28 @@
 from pydantic import Field, root_validator
 from typing import Optional
-import qcelemental
 from mmelemental.models.base import ProtoModel
+from cmselemental.types import Array
 
 __all__ = ["EAM"]
 
 
 class EAM(ProtoModel):
 
-    embed: qcelemental.models.types.Array[float] = Field(
+    embed: Array[float] = Field(
         ...,
         description="Array of embedding (discretized) energy terms. Default unit is kJ/mol.",
     )
     embed_units: Optional[str] = Field(
         "kJ/mol", description="Units for the embedding energy term."
     )
-    potential: qcelemental.models.types.Array[float] = Field(
+    potential: Array[float] = Field(
         ...,
         description="Array of (discretized) pair potential interaction functions. Default unit is kJ/mol.",
     )
     pair_units: Optional[str] = Field(
         "kJ/mol", description="Units for the pair potential interaction term."
     )
-    density: qcelemental.models.types.Array[float] = Field(
+    density: Array[float] = Field(
         ..., description="Array of (discretized) atomic electron densities."
     )
 
