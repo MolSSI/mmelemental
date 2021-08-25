@@ -7,6 +7,16 @@ import numpy
 from pathlib import Path
 from cmselemental.types import Array
 
+from mmelemental.util.data import (
+    float_prep,
+    NUMPY_UNI,
+    NUMPY_INT,
+    NUMPY_FLOAT,
+    GEOMETRY_NOISE,
+    MASS_NOISE,
+    CHARGE_NOISE,
+)
+
 # MM models
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
@@ -62,7 +72,7 @@ class ForceField(ProtoModel):
         None,
         description="Additional comments for this model. Intended for pure human/user consumption and clarity.",
     )
-    symbols: List[str] = Field(  # type: ignore
+    symbols: Array[str] = Field(  # type: ignore
         ...,
         description="An ordered (natom,) list of particle (e.g. atomic elemental) symbols.",
     )
@@ -81,11 +91,11 @@ class ForceField(ProtoModel):
     # im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
     #    None, description="Improper dihedral bond model."
     # )
-    charges: Optional[Array[float]] = Field(
+    charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
     charges_units: Optional[str] = Field("e", description="Atomic charge unit.")
-    masses: Optional[Array[float]] = Field(  # type: ignore
+    masses: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. "
         "If this is provided, it must be the same length as ``symbols``.",
@@ -94,7 +104,7 @@ class ForceField(ProtoModel):
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
     )
-    charge_groups: Optional[Array[int]] = Field(
+    charge_groups: Optional[Array[numpy.dtype(NUMPY_INT)]] = Field(
         None, description="Charge groups per atom. Length of the array must be natoms."
     )
     exclusions: Optional[str] = Field(  # type: ignore
@@ -208,6 +218,7 @@ class ForceField(ProtoModel):
     ) -> "ForceField":
         """
         Constructs a ForceField object from a file.
+
         Parameters
         ----------
         filename: str
@@ -223,6 +234,7 @@ class ForceField(ProtoModel):
         -------
         ForceField
             A constructed ForceField object.
+
         """
 
         file_ext = Path(filename).suffix if filename else None
@@ -289,16 +301,19 @@ class ForceField(ProtoModel):
     def from_data(cls, data: Any, **kwargs) -> "ForceField":
         """
         Constructs a ForceField object from a data object.
+
         Parameters
         ----------
         data: Any
             Data to construct ForceField from.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructors.
+
         Returns
         -------
         ForceField
             A constructed ForceField object.
+
         """
         if isinstance(data, dict):
             kwargs.pop("dtype", None)  # remove dtype if supplied
@@ -315,6 +330,7 @@ class ForceField(ProtoModel):
         **kwargs: Dict[str, Any],
     ) -> None:
         """Writes the ForceField to a file.
+
         Parameters
         ----------
         filename : str
@@ -327,6 +343,7 @@ class ForceField(ProtoModel):
             to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
         **kwargs: Optional[str, Dict], optional
             Additional kwargs to pass to the constructor.
+
         """
         if not dtype:
             from pathlib import Path
@@ -373,6 +390,7 @@ class ForceField(ProtoModel):
         """
         Constructs a toolkit-specific forcefield from MMSchema ForceField.
         Which toolkit-specific component is called depends on which package is installed on the system.
+
         Parameters
         ----------
         translator: Optional[str], optional
@@ -386,6 +404,7 @@ class ForceField(ProtoModel):
         -------
         ToolkitModel
             Toolkit-specific ForceField object
+
         """
         try:
             from mmic_translator.components import TransComponent
@@ -421,6 +440,7 @@ class ForceField(ProtoModel):
         Checks if two models are identical. This is a forcefield identity defined
         by scientific terms, and not programing terms, so it's less rigorous than
         a programmatic equality or a memory equivalent `is`.
+
         """
 
         if isinstance(other, dict):
@@ -439,12 +459,15 @@ class ForceField(ProtoModel):
         return [
             "symbols",
             "masses",
-            "atomic_numbers",
+            "masses_units",
+            "charges",
+            "charges_units",
             "nonbonded",
             "bonds",
             "angles",
             "dihedrals",
             # "im_dihedrals",
+            "combination_rule",
             "exclusions",
             "inclusions",
         ]
@@ -462,7 +485,22 @@ class ForceField(ProtoModel):
             data = getattr(self, field)
             if data is not None:
                 if field == "symbols":
-                    # data = float_prep(data, GEOMETRY_NOISE)
+                    concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                if field == "charges":
+                    data = float_prep(data, CHARGE_NOISE)
+                    concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                if field == "masses":
+                    data = float_prep(data, MASS_NOISE)
+                    concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                if field in (
+                    "nonbonded",
+                    "bonds",
+                    "angles",
+                    "dihedrals",
+                    "im_dihedrals",
+                ):
+                    if not isinstance(data, dict):
+                        data = data.dict()
                     concat += json.dumps(data, default=lambda x: x.ravel().tolist())
 
         m.update(concat.encode("utf-8"))
@@ -470,4 +508,5 @@ class ForceField(ProtoModel):
 
     @property
     def is_topology(self):
+        """Returns True if model contains "topological" data rather than forcefield definition."""
         return True if self.defs is None else False
