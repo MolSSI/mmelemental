@@ -17,6 +17,10 @@ __all__ = ["Topology"]
 
 
 class Topology(ProtoModel):
+    """A topological representation of a Molecule in MM. In addition to connectivity, this model contains data for particle
+    symbols/labels, masses, and net charge. Useful for creating :class:``Trajectory`` objects.
+    """
+
     symbols: Optional[Array[NUMPY_UNI]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of particle symbols. The index of "
