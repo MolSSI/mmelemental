@@ -21,7 +21,3 @@ class Bonds(Params):
         min_items=1,
     )
     _path = os.path.join(pathlib.Path(__file__).parent.absolute(), "potentials", "*.py")
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)

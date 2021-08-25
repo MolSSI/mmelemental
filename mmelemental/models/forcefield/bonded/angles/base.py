@@ -27,7 +27,3 @@ class Angles(Params):
     def _angles_length(cls, v, values):
         assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
         return v
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)
