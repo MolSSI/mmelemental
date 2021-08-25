@@ -59,10 +59,7 @@ class TrajInput(ProtoModel):
 
 
 class Trajectory(ProtoModel):
-    """
-    Representation of trajectories in classical mechanics.
-    By default, this model loads a single frame in memory.
-    """
+    """Representation of trajectories in classical mechanics. By default, this model loads a single frame in memory."""
 
     # Basic field
     schema_name: constr(
@@ -102,7 +99,7 @@ class Trajectory(ProtoModel):
     # For storing topological data or time-dependent topologies (e.g. reactive ffs)
     top: Optional[Union[Topology, List[Topology]]] = Field(  # type: ignore
         None,
-        description=Topology.__doc__,
+        description=Topology.__doc__.split("\n\n\n").pop(0),
     )
     # Particle dynamical fields
     geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
@@ -110,9 +107,9 @@ class Trajectory(ProtoModel):
         description="An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. "
         "Storage is sequential in each dimension:\n"
         "[\n"
-        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
-        "   ...,\n"
-        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "x1o,...,xno, y1o,...,yno, z1o,...,zno,\n"
+        "...,\n"
+        "x1f,...,xnf, y1f,...,ynf, z1f,...,znf,\n"
         "]",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
@@ -124,9 +121,9 @@ class Trajectory(ProtoModel):
         "Angstroms/femtoseconds."
         "Storage is sequential in each dimension:\n"
         "[\n"
-        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
-        "   ...,\n"
-        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "x1o,...,xno, y1o,...,yno, z1o,...,zno,\n"
+        "...,\n"
+        "x1f,...,xnf, y1f,...,ynf, z1f,...,znf,\n"
         "]",
     )
     velocities_units: Optional[str] = Field(  # type: ignore
@@ -139,9 +136,9 @@ class Trajectory(ProtoModel):
         "kJ/mol*angstrom."
         "Storage is sequential in each dimension:\n"
         "[\n"
-        "   x1o,...,xno, y1o,...,yno, z1o,...,zno, # 1st frame \n"
-        "   ...,\n"
-        "   x1f,...,xnf, y1f,...,ynf, z1f,...,znf,# final frame \n"
+        "x1o,...,xno, y1o,...,yno, z1o,...,zno,\n"
+        "...,\n"
+        "x1f,...,xnf, y1f,...,ynf, z1f,...,znf,\n"
         "]",
     )
     forces_units: Optional[str] = Field(  # type: ignore
@@ -209,10 +206,12 @@ class Trajectory(ProtoModel):
 
     def get_geometry(self, frame: int):
         """Returns geometry at a specific snapshot/frame.
+
         Parameters
         ----------
         frame: int
             Frame number ranges from 0 ... nframes-1
+
         Returns
         -------
         Array[float]
@@ -229,9 +228,7 @@ class Trajectory(ProtoModel):
 
     # Helper methods
     def get_hash(self):
-        """
-        Returns the hash of a single frame in a trajectory.
-        """
+        """Returns the hash of a single frame in a trajectory."""
 
         m = hashlib.sha1()
         concat = ""
@@ -255,6 +252,7 @@ class Trajectory(ProtoModel):
     ) -> "Trajectory":
         """
         Constructs a Trajectory object from an input file.
+
         Parameters
         ----------
         traj_filename : str
@@ -266,15 +264,17 @@ class Trajectory(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         all_frames: bool, optional
             Reads all frames in memory.
         **kwargs: Dict[str, Any], optional
             Additional kwargs to pass to the constructors.
+
         Returns
         -------
         Trajectory
             A constructed Trajectory class.
+
         """
         file_ext = Path(traj_filename).suffix
         dtype = dtype or file_ext.strip(".")
@@ -364,6 +364,7 @@ class Trajectory(ProtoModel):
     ) -> "Trajectory":
         """
         Constructs a Trajectory object from a data object.
+
         Parameters
         ----------
         data: Any
@@ -373,10 +374,12 @@ class Trajectory(ProtoModel):
             Possible values: mdanalysis, mdraj, pytraj
         **kwargs: Dict[str, Any]
             Additional kwargs to pass to the constructors. kwargs take precedence over data.
+
         Returns
         -------
         Trajectory
             A constructed Trajectory class.
+
         """
         if isinstance(data, dict):
             kwargs.pop("dtype", None)  # remove dtype if supplied
@@ -393,7 +396,9 @@ class Trajectory(ProtoModel):
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> None:
-        """Writes the Trajectory to a file.
+        """
+        Writes the Trajectory to a file.
+
         Parameters
         ----------
         filename : str
@@ -403,9 +408,10 @@ class Trajectory(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
+
         """
         if not dtype:
             from pathlib import Path
@@ -449,7 +455,9 @@ class Trajectory(ProtoModel):
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> "ToolkitModel":
-        """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+        """
+        Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+
         Parameters
         ----------
         dtype: str, optional
@@ -457,13 +465,15 @@ class Trajectory(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
+
         Returns
         -------
         ToolkitModel
             Toolkit-specific molecule model
+
         """
         try:
             from mmic_translator.components import TransComponent
