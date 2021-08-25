@@ -105,13 +105,12 @@ class Molecule(ProtoModel):
     )
     name: Optional[str] = Field(  # type: ignore
         None,
-        description="Common or human-readable name to assign to this molecule. This field can be arbitrary; see "
-        "``identifiers`` for well-defined labels.",
+        description="Common or human-readable name to assign to this molecule. This field can be arbitrary.",
     )
     identifiers: Optional[Identifiers] = Field(  # type: ignore
         None,
         description="An optional dictionary of additional identifiers by which this molecule can be referenced, "
-        "such as INCHI, canonical SMILES, etc. See the :class:``Identifiers`` model for more details.",
+        "such as INCHI, canonical SMILES, etc. See the :class:`Identifiers` model for more details.",
     )
     comment: Optional[str] = Field(  # type: ignore
         None,
@@ -501,6 +500,7 @@ class Molecule(ProtoModel):
     ) -> "Molecule":
         """
         Constructs a Molecule object from a file.
+
         Parameters
         ----------
         filename : str
@@ -512,13 +512,15 @@ class Molecule(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor
+
         Returns
         -------
         Molecule
             A constructed Molecule class.
+
         """
         file_ext = Path(filename).suffix if filename else None
 
@@ -605,23 +607,16 @@ class Molecule(ProtoModel):
                 + repr(e)
             )
 
-        if kwargs.get("debug"):
-            print(
-                "===============================================================================\n"
-                f"Printing debug info from {__name__}.{cls.__name__}.{cls.from_file.__name__}:\n"
-                "==============================================================================="
-            )
-            print(
-                f"Translator selected: ('{translator}', '{mod.__version__}').\n"
-                "------------------------------------------------------------"
-            )
-            print(
-                f"Engine used: {tkmol_class.engine()}.\n"
-                "------------------------------------------------------------"
-            )
-            print(
-                f"Intermediate model: {tkmol_class}.\n"
-                "------------------------------------------------------------"
+        if kwargs.pop("debug", None):
+            kwargs.update(
+                extras={
+                    "debug": {
+                        "routine": f"{__name__}.{cls.__name__}.{cls.from_file.__name__}",
+                        "translator": f"{translator}, {mod.__version__}",
+                        "engine": f"{tkmol_class.engine()}",
+                        "model": f"{tkmol_class}",
+                    }
+                }
             )
 
         tkmol = tkmol_class.from_file(
@@ -642,6 +637,7 @@ class Molecule(ProtoModel):
     ) -> "Molecule":
         """
         Constructs a Molecule object from a data object.
+
         Parameters
         ----------
         data: Any, optional
@@ -650,12 +646,27 @@ class Molecule(ProtoModel):
             How to interpret the data, if not passed attempts to discover this based on input type.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructors.
+
         Returns
         -------
         Molecule
             A constructed Molecule class.
+
         """
         if isinstance(data, str):
+
+            if kwargs.pop("debug", None):
+                kwargs.update(
+                    extras={
+                        "debug": {
+                            "routine": f"{__name__}.{cls.__name__}.{cls.from_data.__name__}",
+                            "translator": None,
+                            "engine": None,
+                            "model": None,
+                        }
+                    }
+                )
+
             if not dtype:
                 raise ValueError(
                     "You must supply dtype for proper interpretation of string data e.g. smiles, yaml, json, etc."
@@ -722,7 +733,9 @@ class Molecule(ProtoModel):
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> None:
-        """Writes the Molecule to a file.
+        """
+        Writes the Molecule to a file.
+
         Parameters
         ----------
         filename : str
@@ -733,9 +746,10 @@ class Molecule(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
+
         """
         if not dtype:
             dtype = Path(filename).suffix[1:]
@@ -771,7 +785,9 @@ class Molecule(ProtoModel):
         translator: Optional[str] = None,
         **kwargs: Optional[Dict[str, Any]],
     ) -> "ToolkitModel":
-        """Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+        """
+        Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).
+
         Parameters
         ----------
         dtype: str, optional
@@ -779,13 +795,15 @@ class Molecule(ProtoModel):
         translator: Optional[str], optional
             Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
             MMElemental attempts to find an appropriate translator if it is registered
-            in the :class:``TransComponent`` class.
+            in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Additional kwargs to pass to the constructor.
+
         Returns
         -------
         ToolkitModel
             Toolkit-specific molecule model
+
         """
         try:
             from mmic_translator.components import TransComponent
