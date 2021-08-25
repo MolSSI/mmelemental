@@ -59,7 +59,6 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
                 "symbols": ["H", "H", "O"],
                 "charges": [-0.834, 0.417, 0.417],
                 "masses": [16.0, 1.008, 1.008],
-                "exclusions": "3",
                 "defs": ["OW", "HW", "HW"],
             }
         )
@@ -74,11 +73,36 @@ The methods ``to_data`` and ``to_file`` enable converting a force field to data 
 
 NonBonded
 ---------
-To be completed.
+The `NonBonded` model describes potentials for non-connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
+
+.. code-block:: python
+
+    >>> nb = mmelemental.models.forcefield.NonBonded(
+            **{
+                "form": "LennardJones",
+                "params": {"epsilon": [0.636386, 0.0, 0.0], "sigma": [1.575305, 0.0, 0.0]},
+            }
+        )
+
+This model can be used as an input to `ForceField` for an extended description of non-bonded interactions.
+
+.. code-block:: python
+
+    >>> ff = mmelemental.models.ForceField(
+            **{
+                "symbols": ["H", "H", "O"],
+                "charges": [-0.834, 0.417, 0.417],
+                "masses": [16.0, 1.008, 1.008],
+                "defs": ["OW", "HW", "HW"],
+                "nonbonded": nb,
+            }
+        )
+    >>> ff
+     ForceField(name='forcefield', form=['NonBonded'], hash='0cbf0de')
 
 Bonds
 -----
-The `Bonds` model describes pairwise potentials for 2 connected atoms. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
+The `Bonds` model describes pairwise potentials for 2 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
 .. code-block:: python
 
@@ -91,7 +115,7 @@ The `Bonds` model describes pairwise potentials for 2 connected atoms. Model cre
             }
         )
 
-This model can be used as an input to `ForceField` for an added descrition of bonded potentials.
+This model can be used as an input to `ForceField` for an extended description of chemical bonds.
 
 .. code-block:: python
 
@@ -102,11 +126,12 @@ This model can be used as an input to `ForceField` for an added descrition of bo
                 "masses": [16.0, 1.008, 1.008],
                 "exclusions": "3",
                 "defs": ["OW", "HW", "HW"],
+                "nonbonded": nb,
                 "bonds": bonds,
             }
         )
     >>> ff
-     ForceField(name='forcefield', form=['Bonds'], hash='dfbbf4a')
+     ForceField(name='forcefield', form=['NonBonded', 'Bonds'], hash='236e292')
 
 Angles
 ------
