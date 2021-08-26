@@ -58,6 +58,7 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
 
     >>> ff = mmelemental.models.ForceField(
             **{
+                "name": "water_ff",
                 "symbols": ["H", "H", "O"],
                 "charges": [-0.834, 0.417, 0.417],
                 "masses": [16.0, 1.008, 1.008],
@@ -65,7 +66,7 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
             }
         )
     >>> ff
-     ForceField(name='forcefield', form=[], hash='8352e99')
+     ForceField(name='water_ff', form=[], hash='8352e99')
 
 Note that this force field object has no form since we did not define any bonded (or non-bonded) terms as part of the interaction. This can be specified using
 additional models explained in the next subsections.
@@ -92,6 +93,7 @@ This model can be used as an input to `ForceField` for an extended description o
 
     >>> ff = mmelemental.models.ForceField(
             **{
+                "name": "water_ff",
                 "symbols": ["H", "H", "O"],
                 "charges": [-0.834, 0.417, 0.417],
                 "masses": [16.0, 1.008, 1.008],
@@ -100,7 +102,7 @@ This model can be used as an input to `ForceField` for an extended description o
             }
         )
     >>> ff
-     ForceField(name='forcefield', form=['NonBonded'], hash='0cbf0de')
+     ForceField(name='water_ff', form=['NonBonded'], hash='0cbf0de')
 
 Bonds
 -----
@@ -123,6 +125,7 @@ This model can be used as an input to `ForceField` for an extended description o
 
     >>> ff = mmelemental.models.ForceField(
             **{
+                "name": "water_ff",
                 "symbols": ["H", "H", "O"],
                 "charges": [-0.834, 0.417, 0.417],
                 "masses": [16.0, 1.008, 1.008],
@@ -133,7 +136,7 @@ This model can be used as an input to `ForceField` for an extended description o
             }
         )
     >>> ff
-     ForceField(name='forcefield', form=['NonBonded', 'Bonds'], hash='236e292')
+     ForceField(name='water_ff', form=['NonBonded', 'Bonds'], hash='236e292')
 
 Angles
 ------
@@ -152,12 +155,13 @@ The `Angles` model describes 3-body angle potentials for 3 connected particles. 
             }
         )
 
-This model can be used as an input to `ForceField` for an extended description of chemical bonds.
+This model can be used as an input to `ForceField` for an extended description of 3-angle terms in the force field.
 
 .. code-block:: python
 
     >>> ff = mmelemental.models.ForceField(
             **{
+                "name": "water_ff",
                 "symbols": ["H", "H", "O"],
                 "charges": [-0.834, 0.417, 0.417],
                 "masses": [16.0, 1.008, 1.008],
@@ -169,7 +173,7 @@ This model can be used as an input to `ForceField` for an extended description o
             }
         )
     >>> ff
-     ForceField(name='forcefield', form=['NonBonded', 'Bonds', 'Angles'], hash='6bdf578')
+     ForceField(name='water_ff', form=['NonBonded', 'Bonds', 'Angles'], hash='6bdf578')
 
 Dihedrals
 ---------
