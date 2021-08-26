@@ -227,7 +227,7 @@ class ForceField(ProtoModel):
             The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.
         translator: Optional[str], optional
             Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
+            to find an appropriate translator if it is registered in the :class:`TransComponent` class.
         **kwargs: Optional[Dict[str, Any]], optional
             Any additional keywords to pass to the constructor.
         Returns
@@ -340,7 +340,7 @@ class ForceField(ProtoModel):
             file extension if not provided.
         translator: Optional[str], optional
             Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
+            to find an appropriate translator if it is registered in the :class:`TransComponent` class.
         **kwargs: Optional[str, Dict], optional
             Additional kwargs to pass to the constructor.
 
@@ -395,7 +395,7 @@ class ForceField(ProtoModel):
         ----------
         translator: Optional[str], optional
             Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-            to find an appropriate translator if it is registered in the :class:``TransComponent`` class.
+            to find an appropriate translator if it is registered in the :class:`TransComponent` class.
         dtype: str, optional
             Data type e.g. mdanalysis, parmed, etc.
         **kwargs: Optional[Dict[str, Any]]
