@@ -14,7 +14,9 @@ dependencies:
   - pip:
     - qcelemental
     - pyyaml
-    - sphinx
-    - asteroid-sphinx-theme
     - git+https://github.com/MolSSI/mm_data
     - git+https://github.com/MolSSI/cmselemental@v0.2.0
+    - sphinx
+    - sphinx-rtd-theme
+    - sphinx_autodoc_typehints
+    - sphinx_automodapi
