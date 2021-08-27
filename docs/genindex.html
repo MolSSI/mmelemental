@@ -55,9 +55,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MMElemental
+            <a href="index.html">
           
 
+          
+            
+            <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -83,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
@@ -97,23 +100,36 @@
 <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="molecules.html#molecule">Molecule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#molecule">Molecule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#description">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecules.html#module-mmelemental.models.molecule">API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="molecules.html#id1">API</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a></li>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#bonds">Bonds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#angles">Angles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id2">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#bonds">Bonds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id3">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#angles">Angles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id5">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id6">API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id7">API</a></li>
 </ul>
 </li>
 </ul>
@@ -129,8 +145,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials_top.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
 </ul>
 
             
@@ -200,16 +218,35 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#D"><strong>D</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="forcefields.html#mmelemental.models.forcefield.bonded.angles.Angles">Angles (class in mmelemental.models.forcefield.bonded.angles)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="forcefields.html#mmelemental.models.forcefield.bonded.bonds.Bonds">Bonds (class in mmelemental.models.forcefield.bonded.bonds)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -297,6 +334,20 @@
 </li>
       </ul></li>
       <li>
+    mmelemental.models.forcefield.bonded.angles
+
+      <ul>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.bonded.angles">module</a>
+</li>
+      </ul></li>
+      <li>
+    mmelemental.models.forcefield.bonded.bonds
+
+      <ul>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.bonded.bonds">module</a>
+</li>
+      </ul></li>
+      <li>
     mmelemental.models.forcefield.bonded.dihedrals
 
       <ul>
@@ -304,17 +355,17 @@
 </li>
       </ul></li>
       <li>
-    mmelemental.models.forcefield.Dihedrals(**data)
-
-      <ul>
-        <li><a href="molecules.html#module-mmelemental.models.forcefield.Dihedrals-data">module</a>
-</li>
-      </ul></li>
-      <li>
     mmelemental.models.forcefield.mm_ff
 
       <ul>
         <li><a href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">module</a>
+</li>
+      </ul></li>
+      <li>
+    mmelemental.models.forcefield.nonbonded
+
+      <ul>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.nonbonded">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -332,16 +383,28 @@
       <ul>
         <li><a href="collections.html#module-mmelemental.models.collect">mmelemental.models.collect</a>
 </li>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.bonded.angles">mmelemental.models.forcefield.bonded.angles</a>
+</li>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.bonded.bonds">mmelemental.models.forcefield.bonded.bonds</a>
+</li>
         <li><a href="forcefields.html#module-mmelemental.models.forcefield.bonded.dihedrals">mmelemental.models.forcefield.bonded.dihedrals</a>
 </li>
-        <li><a href="molecules.html#module-mmelemental.models.forcefield.Dihedrals-data">mmelemental.models.forcefield.Dihedrals(**data)</a>
-</li>
         <li><a href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">mmelemental.models.forcefield.mm_ff</a>
+</li>
+        <li><a href="forcefields.html#module-mmelemental.models.forcefield.nonbonded">mmelemental.models.forcefield.nonbonded</a>
 </li>
         <li><a href="molecules.html#module-mmelemental.models.molecule">mmelemental.models.molecule</a>
 </li>
       </ul></li>
       <li><a href="molecules.html#mmelemental.models.molecule.Molecule">Molecule (class in mmelemental.models.molecule)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="forcefields.html#mmelemental.models.forcefield.nonbonded.NonBonded">NonBonded (class in mmelemental.models.forcefield.nonbonded)</a>
 </li>
   </ul></td>
 </tr></table>

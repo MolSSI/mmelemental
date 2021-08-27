@@ -57,9 +57,12 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> MMElemental
+            <a href="index.html">
           
 
+          
+            
+            <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -85,7 +88,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
@@ -99,23 +102,36 @@
 <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Molecules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#topology">Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#molecule">Molecule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#topology">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecule">Molecule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.molecule">API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">API</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a></li>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#bonds">Bonds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#angles">Angles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id2">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#bonds">Bonds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id3">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#angles">Angles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id5">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id6">API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id7">API</a></li>
 </ul>
 </li>
 </ul>
@@ -131,8 +147,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials_top.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
 </ul>
 
             
@@ -206,8 +224,11 @@
 <div class="section" id="topology">
 <h2>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h2>
 <p>To be completed soon.</p>
+</div>
 <div class="section" id="molecule">
-<h3>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline">¶</a></h3>
+<h2>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
 <p>The <cite>Molecule</cite> model describes particle systems such as atomistic, coarse-grained, and symbolic (e.g. smiles) molecules.
 Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
@@ -257,7 +278,7 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <li><p><strong>velocities_units</strong> (<em>str</em><em>, </em><em>Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
 <li><p><strong>connectivity</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of bonds within the molecule. Each entry is a tuple of <code class="docutils literal notranslate"><span class="pre">(atom_index_A,</span> <span class="pre">atom_index_B,</span> <span class="pre">bond_order)</span></code> where the <code class="docutils literal notranslate"><span class="pre">atom_index</span></code> matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Bonds may be freely reordered and inverted.</p></li>
 <li><p><strong>substructs</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.767.gd5567bf.dirty’, ‘routine’: ‘mmelemental.models.molecule.mm_mol’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.775.gb540d69’, ‘routine’: ‘mmelemental.models.molecule.mm_mol’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -436,48 +457,6 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 
 </dd></dl>
 
-<p>To be completed.</p>
-</div>
-<div class="section" id="id1">
-<h3>API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-mmelemental.models.forcefield.Dihedrals-data"><span id="module-mmelemental.models.forcefield.Dihedrals(**data)"></span></span><dl class="field-list simple">
-<dt class="field-odd">param form</dt>
-<dd class="field-odd"><p>Name or form of the potential. See cls.supported_potentials() for available potentials.</p>
-</dd>
-<dt class="field-even">type form</dt>
-<dd class="field-even"><p>str</p>
-</dd>
-<dt class="field-odd">param params</dt>
-<dd class="field-odd"><p>Specific force field parameters model.</p>
-</dd>
-<dt class="field-even">type params</dt>
-<dd class="field-even"><p>Any</p>
-</dd>
-<dt class="field-odd">param angles</dt>
-<dd class="field-odd"><p>Equilibrium dihedral angles. Default unit is degrees.</p>
-</dd>
-<dt class="field-even">type angles</dt>
-<dd class="field-even"><p>Array, Optional</p>
-</dd>
-<dt class="field-odd">param angles_units</dt>
-<dd class="field-odd"><p>Equilibrium dihedral angle units.</p>
-</dd>
-<dt class="field-even">type angles_units</dt>
-<dd class="field-even"><p>str, Default: degrees</p>
-</dd>
-<dt class="field-odd">param connectivity</dt>
-<dd class="field-odd"><p>Particle indices for each dihedral angle.</p>
-</dd>
-<dt class="field-even">type connectivity</dt>
-<dd class="field-even"><p>List[Tuple[Union[int, str], Union[int, str], Union[int, str], Union[int, str]]]</p>
-</dd>
-<dt class="field-odd">param weights</dt>
-<dd class="field-odd"><p>Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.</p>
-</dd>
-<dt class="field-even">type weights</dt>
-<dd class="field-even"><p>Array, Optional</p>
-</dd>
-</dl>
 </div>
 </div>
 </div>

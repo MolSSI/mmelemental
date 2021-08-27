@@ -56,9 +56,12 @@
           
 
           
-            <a href="#" class="icon icon-home"> MMElemental
+            <a href="#">
           
 
+          
+            
+            <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -84,7 +87,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
@@ -98,23 +101,36 @@
 <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="molecules.html#molecule">Molecule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#molecule">Molecule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#description">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecules.html#module-mmelemental.models.molecule">API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="molecules.html#id1">API</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a></li>
-<li class="toctree-l2"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#bonds">Bonds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#angles">Angles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id2">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#bonds">Bonds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id3">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#angles">Angles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id5">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id6">API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id7">API</a></li>
 </ul>
 </li>
 </ul>
@@ -130,8 +146,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials_top.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
 </ul>
 
             
@@ -201,8 +219,12 @@
             
   <div class="section" id="mmelemental-documentation">
 <h1>MMElemental documentation<a class="headerlink" href="#mmelemental-documentation" title="Permalink to this headline">¶</a></h1>
+<p>MMElemental is an implementation of <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a>. Specifically, MMElemental is a python package that provides <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> models for molecular mechanics (MM).
+MMElemental makes it easy to standardize MM applications and workflows in python based on the MMSchema specification, and it provides interoperability capabilities
+that allow conversion between different representations of MM objects or file formats.</p>
+<a class="reference internal image-reference" href="images/mmel_mmschema.png"><img alt="images/mmel_mmschema.png" class="align-center" src="images/mmel_mmschema.png" style="width: 156.20000000000002px; height: 510.40000000000003px;" /></a>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
@@ -225,8 +247,10 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials_top.html">Topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
 </ul>
 </div>
 </div>
