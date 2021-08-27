@@ -1,161 +1,84 @@
 
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
   
-  <title>Prerequisites &mdash; MMElemental  documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-
-  
-  
-  
+  <title>Prerequisites &mdash; MMElemental</title>
   
 
   
-
-  
-  
-    
-
-  
-
   <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
-  <!-- <link rel="stylesheet" href="static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Models" href="models.html" />
     <link rel="prev" title="MMElemental documentation" href="index.html" /> 
-
-  
-  <script src="static/js/modernizr.min.js"></script>
-
-  <!-- Preload the theme fonts -->
-
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-
-<!-- Preload the katex fonts -->
-
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 </head>
 
-<div class="container-fluid header-holder tutorials-header" id="header-holder">
-  <div class="container">
-    <div class="header-container">
-      <a class="header-logo" href="https://molssi.github.io/mmelemental" aria-label="PyTorch">
-       <!-- <img class="call-to-action-img" src="static/images/molssi_logo_dark.png"/> -->
-      </a>
-
-      <div class="main-menu">
-        <ul>
-          <li>
-            <a href="get_started.html">Get Started</a>
-          </li>
-
-          <li>
-            <div class="resources-dropdown">
-              <a id="resourcesDropdownButton1" data-toggle="resources-dropdown">
-                Tutorials
-              </a>
-              <div class="resources-dropdown-menu">
-                <a class="nav-dropdown-item" href="tutorials_top.html">
-                  <span class=dropdown-title>Topology</span>
-                  <p>Learn about MMElemental's topological models and features</p>
-                </a>
-
-                <a class="nav-dropdown-item" href="tutorials_ff.html">
-                  <span class=dropdown-title>Forcefields</span>
-                  <p>Learn about MMElemental's force field models and features</p>
-                </a>
-
-                <a class="nav-dropdown-item" href="">
-                  <span class=dropdown-title>Components</span>
-                  <p>Learn about MMElemental's support for MMIC components</p>
-                </a>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <a href="">Docs</a>
-          </li>
-
-          <li>
-            <a href="https://github.com/MolSSI/mmelemental">Github</a>
-          </li>
-        </ul>
-      </div>
-
-      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
-    </div>
-
-  </div>
-</div>
-
-
-<body class="pytorch-body">
+<body class="wy-body-for-nav">
 
    
-
+  <div class="wy-grid-for-nav">
     
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: light-blue" >
+          
 
-    <div class="table-of-contents-link-wrapper">
-      <span>Table of Contents</span>
-      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
-    </div>
+          
+            <a href="index.html" class="icon icon-home"> MMElemental
+          
 
-    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
-      <div class="pytorch-side-scroll">
-        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          <div class="pytorch-left-menu-search">
-            
+          
+          </a>
 
-            
-              
-              
-                <div class="version">
-                  0+untagged.759.g6352e90
-                </div>
-              
-            
+          
 
-            
-
-
-  
-
-
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
 
-            
-          </div>
+          
+        </div>
 
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
@@ -164,9 +87,47 @@
             
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Prerequisites</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Prerequisites</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-installation">Quick Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dev-installation">Dev Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#molecule">Molecule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#module-mmelemental.models.molecule">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#id1">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#bonds">Bonds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#angles">Angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#trajectory">Trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#ensemble">Ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="collections.html#module-mmelemental.models.collect">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
@@ -177,13 +138,28 @@
             
           
         </div>
+        
       </div>
     </nav>
 
-    <div class="pytorch-container">
-      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
-        <div class="pytorch-breadcrumbs-wrapper">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MMElemental</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
           
+
+
 
 
 
@@ -201,24 +177,17 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
 
-  <ul class="pytorch-breadcrumbs">
+  <ul class="wy-breadcrumbs">
     
-      <li>
-        <a href="index.html">
-          
-            Docs
-          
-        </a> &gt;
-      </li>
-
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Prerequisites</li>
     
     
-      <li class="pytorch-breadcrumbs-aside">
+      <li class="wy-breadcrumbs-aside">
         
-            
-            <a href="sources/get_started.rst.txt" rel="nofollow"><img src="static/images/view-page-source-icon.svg"></a>
+          
+            <a href="sources/get_started.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -226,41 +195,28 @@
   </ul>
 
   
+  <hr/>
 </div>
-        </div>
-
-        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
-          Shortcuts
-        </div>
-      </div>
-
-      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
-        <div class="pytorch-content-left">
-
-        
-          
-          <div class="rst-content">
-          
-            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
-             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
-              
-  <section id="prerequisites">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="prerequisites">
 <h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h1>
-<section id="quick-installation">
+<div class="section" id="quick-installation">
 <h2>Quick Installation<a class="headerlink" href="#quick-installation" title="Permalink to this headline">¶</a></h2>
 <p>Once MMElemental is released, it will be available from <a class="reference external" href="https://pypi.org">PyPi</a> i.e. you can easily install it with <cite>pip</cite>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install mmelemental
 </pre></div>
 </div>
-</section>
-<section id="dev-installation">
+</div>
+<div class="section" id="dev-installation">
 <h2>Dev Installation<a class="headerlink" href="#dev-installation" title="Permalink to this headline">¶</a></h2>
 <p>For developers who would like to install MMElemental from source:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MolSSI</span><span class="o">/</span><span class="n">mmelemental</span>
 </pre></div>
 </div>
-</section>
-<section id="requirements">
+</div>
+<div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a></p></li>
@@ -268,270 +224,67 @@
 <li><p><a class="reference external" href="https://pytest.org">pytest</a> (optional)</p></li>
 <li><p><a class="reference external" href="https://github.com/MolSSI/mm_data">mm_data</a> (optional)</p></li>
 </ul>
-</section>
-</section>
+</div>
+</div>
 
 
-             </article>
-             
-            </div>
-            <footer>
-  
+           </div>
+           
+          </div>
+          <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <img src="static/images/chevron-right-orange.svg" class="next-page"></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral" title="MMElemental documentation" accesskey="p" rel="prev"><img src="static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
-      
+        <a href="models.html" class="btn btn-neutral float-right" title="Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="MMElemental documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
-  
-
-    <hr>
-
-  
+  <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
+        &#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
 
     </p>
   </div>
     
-      <div>
-        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-      </div>
-     
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
-          </div>
         </div>
+      </div>
 
-        <div class="pytorch-content-right" id="pytorch-content-right">
-          <div class="pytorch-right-menu" id="pytorch-right-menu">
-            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
-              <ul>
-<li><a class="reference internal" href="#">Prerequisites</a><ul>
-<li><a class="reference internal" href="#quick-installation">Quick Installation</a></li>
-<li><a class="reference internal" href="#dev-installation">Dev Installation</a></li>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-</ul>
-</li>
-</ul>
+    </section>
 
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
+  </div>
   
-
-
-  
-
-     
-       <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
-         <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
-         <script src="static/jquery.js"></script>
-         <script src="static/underscore.js"></script>
-         <script src="static/doctools.js"></script>
-     
-
-  
-
-  <script type="text/javascript" src="static/js/vendor/popper.min.js"></script>
-  <script type="text/javascript" src="static/js/vendor/bootstrap.min.js"></script>
-  <script type="text/javascript" src="static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
-  <!-- Begin Footer -->
-
-  <div class="container-fluid" id="docs-tutorials-resources">
-    <div class="container">
-      <div class="row">
-        <!--
-        <div class="col-md-4 text-center">
-          <h2>Docs</h2>
-          <p>Access comprehensive developer documentation for PyTorch</p>
-          <a class="with-right-arrow" href="">View Docs</a>
-        </div>
-
-        <div class="col-md-4 text-center">
-          <h2>Tutorials</h2>
-          <p>Get in-depth tutorials for beginners and advanced developers</p>
-          <a class="with-right-arrow" href="">View Tutorials</a>
-        </div>
-
-        <div class="col-md-4 text-center">
-          <h2>Resources</h2>
-          <p>Find development resources and get your questions answered</p>
-          <a class="with-right-arrow" href="https://pytorch.org/resources">View Resources</a>
-        </div>
-        -->
-      </div>
-    </div>
-  </div>
-
-
-  <!-- <footer class="site-footer">
-    <div class="container footer-container">
-      <div class="footer-logo-wrapper">
-        <a href="https://molssi.github.io/mmelemental" class="footer-logo"></a>
-      </div>
-
-      <div class="footer-links-wrapper">
-
-        <div class="footer-logo-col">
-          <img class="footer-logo-img" src="static/images/dark_asteroid_logo.svg"/>
-        </div>
-
-        <div class="footer-links-col">
-          <ul>
-            <li class="list-title"><a href="https://molssi.github.io/mmelemental">Asteroid</a></li>
-            <li><a href="">Get Started</a></li>
-            <li><a href="https://pytorch.org/features">Features</a></li>
-            <li><a href="">Ecosystem</a></li>
-            <li><a href="https://pytorch.org/blog/">Blog</a></li>
-            <li><a href="https://pytorch.org/resources">Resources</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-col">
-          <ul>
-            <li class="list-title"><a href="https://pytorch.org/support">Support</a></li>
-            <li><a href="">Tutorials</a></li>
-            <li><a href="">Docs</a></li>
-            <li><a href="https://discuss.pytorch.org" target="_blank">Discuss</a></li>
-            <li><a href="https://github.com/MolSSI/mmelemental/issues" target="_blank">Github Issues</a></li>
-            <li><a href="" target="_blank">Slack</a></li>
-            <li><a href="https://github.com/MolSSI/mmelemental/blob/master/CONTRIBUTING.md" target="_blank">Contributing</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-col follow-us-col">
-          <ul>
-            <li class="list-title">Follow Us</li>
-            <li>
-              <div id="mc_embed_signup">
-                <form
-                  action="https://twitter.us14.list-manage.com/subscribe/post?u=75419c71fe0a935e53dfa4a3f&id=91d0dccd39"
-                  method="post"
-                  id="mc-embedded-subscribe-form"
-                  name="mc-embedded-subscribe-form"
-                  class="email-subscribe-form validate"
-                  target="_blank"
-                  novalidate>
-                  <div id="mc_embed_signup_scroll" class="email-subscribe-form-fields-wrapper">
-                    <div class="mc-field-group">
-                      <label for="mce-EMAIL" style="display:none;">Email Address</label>
-                      <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
-                    </div>
-
-                    <div id="mce-responses" class="clear">
-                      <div class="response" id="mce-error-response" style="display:none"></div>
-                      <div class="response" id="mce-success-response" style="display:none"></div>
-                    </div>
-
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_75419c71fe0a935e53dfa4a3f_91d0dccd39" tabindex="-1" value=""></div>
-
-                    <div class="clear">
-                      <input type="submit" value="" name="subscribe" id="mc-embedded-subscribe" class="button email-subscribe-button">
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-            </li>
-          </ul>
-
-          <div class="footer-social-icons">
-            <a href="" target="_blank" class="facebook"></a>
-            <a href="https://twitter.com" target="_blank" class="twitter"></a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </footer> -->
-
-
-  <!-- End Footer -->
-
-  <!-- Begin Mobile Menu -->
-
-  <div class="mobile-main-menu">
-    <div class="container-fluid">
-      <div class="container">
-        <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="https://molssi.github.io/mmelemental" aria-label="PyTorch Lightning"></a>
-          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-main-menu-links-container">
-      <div class="main-menu">
-        <ul>
-          <li>
-            <a href="">Get Started</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/features">Features</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/blog/">Blog</a>
-          </li>
-
-          <li>
-            <a href="">Tutorials</a>
-          </li>
-
-          <li>
-            <a href="">Docs</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/resources">Resources</a>
-          </li>
-
-          <li>
-            <a href="https://github.com/MolSSI/mmelemental">Github</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- End Mobile Menu -->
-
-  <script type="text/javascript" src="static/js/vendor/anchor.min.js"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function() {
-      mobileMenu.bind();
-      mobileTOC.bind();
-      pytorchAnchors.bind();
-      sideMenus.bind();
-      scrollToAnchor.bind();
-      highlightNavigation.bind();
-      mainMenuDropdown.bind();
-
-      // Add class to links that have code blocks, since we cannot create links in code blocks
-      $("article.pytorch-article a span.pre").each(function(e) {
-        $(this).closest("a").addClass("has-code");
-      });
-    })
   </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #033e57;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #080f14;
+    }
+  </style>
+
+
 </body>
 </html>

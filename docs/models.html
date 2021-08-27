@@ -1,161 +1,84 @@
 
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
   
-  <title>Models &mdash; MMElemental  documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-
-  
-  
-  
+  <title>Models &mdash; MMElemental</title>
   
 
   
-
-  
-  
-    
-
-  
-
   <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
-  <!-- <link rel="stylesheet" href="static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Components" href="components.html" />
     <link rel="prev" title="Prerequisites" href="get_started.html" /> 
-
-  
-  <script src="static/js/modernizr.min.js"></script>
-
-  <!-- Preload the theme fonts -->
-
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-
-<!-- Preload the katex fonts -->
-
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 </head>
 
-<div class="container-fluid header-holder tutorials-header" id="header-holder">
-  <div class="container">
-    <div class="header-container">
-      <a class="header-logo" href="https://molssi.github.io/mmelemental" aria-label="PyTorch">
-       <!-- <img class="call-to-action-img" src="static/images/molssi_logo_dark.png"/> -->
-      </a>
-
-      <div class="main-menu">
-        <ul>
-          <li>
-            <a href="get_started.html">Get Started</a>
-          </li>
-
-          <li>
-            <div class="resources-dropdown">
-              <a id="resourcesDropdownButton1" data-toggle="resources-dropdown">
-                Tutorials
-              </a>
-              <div class="resources-dropdown-menu">
-                <a class="nav-dropdown-item" href="tutorials_top.html">
-                  <span class=dropdown-title>Topology</span>
-                  <p>Learn about MMElemental's topological models and features</p>
-                </a>
-
-                <a class="nav-dropdown-item" href="tutorials_ff.html">
-                  <span class=dropdown-title>Forcefields</span>
-                  <p>Learn about MMElemental's force field models and features</p>
-                </a>
-
-                <a class="nav-dropdown-item" href="">
-                  <span class=dropdown-title>Components</span>
-                  <p>Learn about MMElemental's support for MMIC components</p>
-                </a>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <a href="">Docs</a>
-          </li>
-
-          <li>
-            <a href="https://github.com/MolSSI/mmelemental">Github</a>
-          </li>
-        </ul>
-      </div>
-
-      <a class="main-menu-open-button" href="#" data-behavior="open-mobile-menu"></a>
-    </div>
-
-  </div>
-</div>
-
-
-<body class="pytorch-body">
+<body class="wy-body-for-nav">
 
    
-
+  <div class="wy-grid-for-nav">
     
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: light-blue" >
+          
 
-    <div class="table-of-contents-link-wrapper">
-      <span>Table of Contents</span>
-      <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
-    </div>
+          
+            <a href="index.html" class="icon icon-home"> MMElemental
+          
 
-    <nav data-toggle="wy-nav-shift" class="pytorch-left-menu" id="pytorch-left-menu">
-      <div class="pytorch-side-scroll">
-        <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          <div class="pytorch-left-menu-search">
-            
+          
+          </a>
 
-            
-              
-              
-                <div class="version">
-                  0+untagged.759.g6352e90
-                </div>
-              
-            
+          
 
-            
-
-
-  
-
-
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search Docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
 
-            
-          </div>
+          
+        </div>
 
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
@@ -164,9 +87,47 @@
             
               <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#dev-installation">Dev Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#requirements">Requirements</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#molecule">Molecule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#module-mmelemental.models.molecule">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#id1">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#bonds">Bonds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#angles">Angles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#trajectory">Trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#ensemble">Ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="collections.html#module-mmelemental.models.collect">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
@@ -177,13 +138,28 @@
             
           
         </div>
+        
       </div>
     </nav>
 
-    <div class="pytorch-container">
-      <div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
-        <div class="pytorch-breadcrumbs-wrapper">
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MMElemental</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
           
+
+
 
 
 
@@ -201,24 +177,17 @@
 
 <div role="navigation" aria-label="breadcrumbs navigation">
 
-  <ul class="pytorch-breadcrumbs">
+  <ul class="wy-breadcrumbs">
     
-      <li>
-        <a href="index.html">
-          
-            Docs
-          
-        </a> &gt;
-      </li>
-
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Models</li>
     
     
-      <li class="pytorch-breadcrumbs-aside">
+      <li class="wy-breadcrumbs-aside">
         
-            
-            <a href="sources/models.rst.txt" rel="nofollow"><img src="static/images/view-page-source-icon.svg"></a>
+          
+            <a href="sources/models.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -226,1098 +195,77 @@
   </ul>
 
   
+  <hr/>
 </div>
-        </div>
-
-        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
-          Shortcuts
-        </div>
-      </div>
-
-      <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
-        <div class="pytorch-content-left">
-
-        
-          
-          <div class="rst-content">
-          
-            <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
-             <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
-              
-  <section id="models">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="models">
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
 <p>MMElemental provides models based on the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification. These models
 provide serialization and data validation based on the <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> library. Each model
 has a set of fields that, when suitable, are used to automatically generate a unique hash
 that enables each object to be uniquely identified.</p>
-<section id="molecules">
-<h2>Molecules<a class="headerlink" href="#molecules" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#module-mmelemental.models.molecule" title="mmelemental.models.molecule"><code class="xref py py-mod docutils literal notranslate"><span class="pre">molecule</span></code></a> submodule provides models that describe molecular topology and conformation.</p>
-<section id="topology">
-<h3>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h3>
-<p>To be completed soon.</p>
-</section>
-<section id="molecule">
-<h3>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>Molecule</cite> model describes particle systems such as atomistic, coarse-grained, and symbolic (e.g. smiles) molecules.
-Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
-<span class="go">            &quot;geometry&quot;: [2.0, 2.09, 0.0, 2.82, 2.09, 0.58, 1.18, 2.09, 0.58],</span>
-<span class="go">            &quot;connectivity&quot;: [(0, 1, 1.0), (0, 2, 1.0)],</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
-<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;704898f&#39;)</span>
-</pre></div>
 </div>
-<p>In addition, <cite>Molecule</cite> provides <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_data" title="mmelemental.models.molecule.Molecule.from_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_file" title="mmelemental.models.molecule.Molecule.from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code></a> methods to create a molecule from data (e.g. MDAnalysis.Universe) or file objects.
-The methods <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_data" title="mmelemental.models.molecule.Molecule.to_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_file" title="mmelemental.models.molecule.Molecule.to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code></a> enable converting a molecule to data and file objects, respectively. See the API for more details.</p>
-</section>
-<section id="module-mmelemental.models.molecule">
-<span id="api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.molecule" title="Permalink to this headline">¶</a></h3>
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.molecule.mm_mol.ConstrainedStrValue</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'mmschema_molecule'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifiers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.molecule.mm_mol.Identifiers</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass_numbers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'amu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecular_charge</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecular_charge_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom/fs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substructs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provenance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.base.Provenance</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{'creator':</span> <span class="pre">'MMElemental',</span> <span class="pre">'routine':</span> <span class="pre">'mmelemental.models.molecule.mm_mol',</span> <span class="pre">'version':</span> <span class="pre">'0+untagged.759.g6352e90'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,</dt><dd><p>residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
-and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue, Default: mmschema_molecule</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_molecule.</p></li>
-<li><p><strong>schema_version</strong> (<em>int, Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
-<li><p><strong>symbols</strong> (<em>Array, Optional</em>) – An ordered (natom,) array-like object of particle symbols. The index of this attribute sets the order for all other per-particle setting like <code class="docutils literal notranslate"><span class="pre">geometry</span></code> and the first dimension of <code class="docutils literal notranslate"><span class="pre">geometry</span></code>.</p></li>
-<li><p><strong>name</strong> (<em>str, Optional</em>) – Common or human-readable name to assign to this molecule. This field can be arbitrary.</p></li>
-<li><p><strong>identifiers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code>, Optional) – An optional dictionary of additional identifiers by which this molecule can be referenced, such as INCHI, canonical SMILES, etc. See the <code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code> model for more details.</p></li>
-<li><p><strong>comment</strong> (<em>str, Optional</em>) – Additional comments for this molecule. Intended for pure human/user consumption and clarity.</p></li>
-<li><p><strong>ndim</strong> (<em>int, Default: 3</em>) – Number of spatial dimensions.</p></li>
-<li><p><strong>atom_labels</strong> (<em>Array, Optional</em>) – Additional per-atom labels as an array of strings. Typical use is in model conversions, such as Elemental &lt;-&gt; Molpro and not typically something which should be user assigned. See the <code class="docutils literal notranslate"><span class="pre">comments</span></code> field for general human-consumable text to affix to the molecule.</p></li>
-<li><p><strong>atomic_numbers_</strong> (<em>Array, Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. Ghostedness should be indicated through <code class="docutils literal notranslate"><span class="pre">real</span></code> field, not zeros here.</p></li>
-<li><p><strong>mass_numbers</strong> (<em>Array, Optional</em>) – An optional ordered 1-D array-like object of atomic <em>mass</em> numbers of shape (nat). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the most common isotopes of the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. If single isotope not (yet) known for an atom, -1 is placeholder.</p></li>
-<li><p><strong>masses_</strong> (<em>Array, Optional</em>) – The ordered array of particle masses. Index order matches the 0-indexed indices of all other per-atom fields like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. If this is not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code> but can accept <code class="docutils literal notranslate"><span class="pre">None</span></code> entries for standard masses to infer from the same index in the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> field.</p></li>
-<li><p><strong>masses_units</strong> (<em>str, Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
-<li><p><strong>molecular_charge</strong> (<em>float, Default: 0.0</em>) – The net electrostatic charge of the molecule. Default unit is elementary charge.</p></li>
-<li><p><strong>molecular_charge_units</strong> (<em>str, Default: e</em>) – Units for molecular charge. Defaults to elementary charge.</p></li>
-<li><p><strong>geometry</strong> (<em>Array, Optional</em>) – An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.</p></li>
-<li><p><strong>geometry_units</strong> (<em>str, Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
-<li><p><strong>velocities</strong> (<em>Array, Optional</em>) – An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is Angstroms/femtoseconds.</p></li>
-<li><p><strong>velocities_units</strong> (<em>str, Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
-<li><p><strong>connectivity</strong> (<em>Array, Optional</em>) – A list of bonds within the molecule. Each entry is a tuple of <code class="docutils literal notranslate"><span class="pre">(atom_index_A,</span> <span class="pre">atom_index_B,</span> <span class="pre">bond_order)</span></code> where the <code class="docutils literal notranslate"><span class="pre">atom_index</span></code> matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Bonds may be freely reordered and inverted.</p></li>
-<li><p><strong>substructs</strong> (<em>Array, Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.759.g6352e90’, ‘routine’: ‘mmelemental.models.molecule.mm_mol’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
-<li><p><strong>extras</strong> (<em>Dict[Any], Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.mm_mol.Molecule"><span class="pre">mmelemental.models.molecule.mm_mol.Molecule</span></a></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Molecule object from a data object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>Any, optional</em>) – Data to construct Molecule from such as a data object (e.g. MDAnalysis.Universe) or dict.</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – How to interpret the data, if not passed attempts to discover this based on input type.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructors.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Molecule class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.mm_mol.Molecule"><span class="pre">mmelemental.models.molecule.mm_mol.Molecule</span></a></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Molecule object from a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The molecular structure filename to read</p></li>
-<li><p><strong>top_filename</strong> (<em>str, optional</em>) – The topology i.e. connectivity filename to read</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – The type of file to interpret. If not set, mmelemental attempts to discover the file type.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Any additional keywords to pass to the constructor</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Molecule class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_hash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the hash of the molecule.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_molecular_formula">
-<span class="sig-name descname"><span class="pre">get_molecular_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'alphabetical'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_molecular_formula" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the molecular formula for a molecule.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>order</strong> (<em>str, optional</em>) – Sorting order of the formula. Valid choices are “alphabetical” and “hill”.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The molecular formula.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">H      0.5288      0.1610      0.9359</span>
-<span class="gp">... </span><span class="s1">C      0.0000      0.0000      0.0000</span>
-<span class="gp">... </span><span class="s1">H      0.2051      0.8240     -0.6786</span>
-<span class="gp">... </span><span class="s1">H      0.3345     -0.9314     -0.4496</span>
-<span class="gp">... </span><span class="s1">H     -1.0685     -0.0537      0.1921</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
-<span class="go">CH4</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">H      0.0000      0.0000      0.0000</span>
-<span class="gp">... </span><span class="s1">Cl     0.0000      0.0000      1.2000</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
-<span class="go">ClH</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_substructs">
-<span class="sig-name descname"><span class="pre">get_substructs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes duplicate entries substructs while preserving the order.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ngl_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">nglview.NGLWidget</span></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
-images (<cite>.png</cite>).
-:Parameters: <strong>ngl_kwargs</strong> – Addition nglview NGLWidget kwargs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A nglview view of the molecule</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nglview.NGLWidget</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ToolkitModel</span></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Toolkit-specific molecule model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ToolkitModel</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the Molecule to a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
-<li><p><strong>dtype</strong> (<em>Optional[str], optional</em>) – The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
-file extension if not provided.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-</section>
-<section id="force-fields">
-<h2>Force fields<a class="headerlink" href="#force-fields" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>mmelemental.models.forcefield</cite> submodule provides models that describe force field definitions or parametrized molecules (e.g. data stored in “topology” files).</p>
-<section id="forcefield">
-<h3>ForceField<a class="headerlink" href="#forcefield" title="Permalink to this headline">¶</a></h3>
-<p>This is the most basic model for storing force field data that describe atomistic or coarse-grained inter-particle potentials.
-Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;symbols&quot;: [&quot;H&quot;, &quot;H&quot;, &quot;O&quot;],</span>
-<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
-<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
-<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
-<span class="go"> ForceField(name=&#39;forcefield&#39;, form=[], hash=&#39;8352e99&#39;)</span>
-</pre></div>
-</div>
-<p>Note that this force field object has no form since we did not define any bonded (or non-bonded) terms as part of the interaction. This can be specified using
-additional models explained in the next subsections.</p>
-<p>In addition, <cite>ForceField</cite> provides <a class="reference internal" href="#mmelemental.models.forcefield.ForceField.from_data" title="mmelemental.models.forcefield.ForceField.from_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.forcefield.ForceField.from_file" title="mmelemental.models.forcefield.ForceField.from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code></a> methods to create a forcefield from data (e.g. parmed.Structure) or file objects.
-The methods <a class="reference internal" href="#mmelemental.models.forcefield.ForceField.to_data" title="mmelemental.models.forcefield.ForceField.to_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.forcefield.ForceField.to_file" title="mmelemental.models.forcefield.ForceField.to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code></a> enable converting a force field to data and file objects, respectively. See the API for more details.</p>
-</section>
-<section id="nonbonded">
-<h3>NonBonded<a class="headerlink" href="#nonbonded" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>NonBonded</cite> model describes potentials for non-connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">NonBonded</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;form&quot;: &quot;LennardJones&quot;,</span>
-<span class="go">            &quot;params&quot;: {&quot;epsilon&quot;: [0.636386, 0.0, 0.0], &quot;sigma&quot;: [1.575305, 0.0, 0.0]},</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-</pre></div>
-</div>
-<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of non-bonded interactions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;symbols&quot;: [&quot;H&quot;, &quot;H&quot;, &quot;O&quot;],</span>
-<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
-<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
-<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
-<span class="go">            &quot;nonbonded&quot;: nb,</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
-<span class="go"> ForceField(name=&#39;forcefield&#39;, form=[&#39;NonBonded&#39;], hash=&#39;0cbf0de&#39;)</span>
-</pre></div>
-</div>
-</section>
-<section id="bonds">
-<h3>Bonds<a class="headerlink" href="#bonds" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>Bonds</cite> model describes pairwise potentials for 2 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bonds</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Bonds</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;form&quot;: &quot;Harmonic&quot;,</span>
-<span class="go">            &quot;params&quot;: {&quot;spring&quot;: [2512.08, 2512.08]},</span>
-<span class="go">            &quot;lengths&quot;: [0.9572, 0.9572],</span>
-<span class="go">            &quot;connectivity&quot;: [[0,1,1.0], [0,2,1.0]],</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-</pre></div>
-</div>
-<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of chemical bonds.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;symbols&quot;: [&quot;H&quot;, &quot;H&quot;, &quot;O&quot;],</span>
-<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
-<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
-<span class="go">            &quot;exclusions&quot;: &quot;3&quot;,</span>
-<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
-<span class="go">            &quot;nonbonded&quot;: nb,</span>
-<span class="go">            &quot;bonds&quot;: bonds,</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
-<span class="go"> ForceField(name=&#39;forcefield&#39;, form=[&#39;NonBonded&#39;, &#39;Bonds&#39;], hash=&#39;236e292&#39;)</span>
-</pre></div>
-</div>
-</section>
-<section id="angles">
-<h3>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>Angles</cite> model describes 3-body angle potentials for 3 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Angles</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;form&quot;: &quot;Harmonic&quot;,</span>
-<span class="go">            &quot;params&quot;: {&quot;spring&quot;: [0.09565291598722435]},</span>
-<span class="go">            &quot;angles&quot;: [104.52],</span>
-<span class="go">            &quot;connectivity&quot;: [</span>
-<span class="go">                [0, 1, 2],</span>
-<span class="go">            ],</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-</pre></div>
-</div>
-<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of chemical bonds.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
-<span class="go">        **{</span>
-<span class="go">            &quot;symbols&quot;: [&quot;H&quot;, &quot;H&quot;, &quot;O&quot;],</span>
-<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
-<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
-<span class="go">            &quot;exclusions&quot;: &quot;3&quot;,</span>
-<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
-<span class="go">            &quot;nonbonded&quot;: nb,</span>
-<span class="go">            &quot;bonds&quot;: bonds,</span>
-<span class="go">            &quot;angles&quot;: angles,</span>
-<span class="go">        }</span>
-<span class="go">    )</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
-<span class="go"> ForceField(name=&#39;forcefield&#39;, form=[&#39;NonBonded&#39;, &#39;Bonds&#39;, &#39;Angles&#39;], hash=&#39;6bdf578&#39;)</span>
-</pre></div>
-</div>
-</section>
-<section id="dihedrals">
-<h3>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline">¶</a></h3>
-<p>To be completed.</p>
-</section>
-<section id="improper-dihedrals">
-<h3>Improper dihedrals<a class="headerlink" href="#improper-dihedrals" title="Permalink to this headline">¶</a></h3>
-<p>To be completed.</p>
-</section>
-<section id="id1">
-<h3>API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-mmelemental.models.forcefield"></span><dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.Angles">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">Angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'degrees'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">types.ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/angles/base.html#Angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.Angles" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
-<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
-<li><p><strong>angles</strong> (<em>Array</em>) – Equilibrium angles. Default unit is degrees.</p></li>
-<li><p><strong>angles_units</strong> (<em>str, Default: degrees</em>) – Equilibrium angle units.</p></li>
-<li><p><strong>connectivity</strong> (<em>List[Tuple[Union[int, str], Union[int, str], Union[int, str]]]</em>) – Particle indices for each angle.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.Bonds">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">Bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lengths</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lengths_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstroms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">types.ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/bonds/base.html#Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.Bonds" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
-<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
-<li><p><strong>lengths</strong> (<em>Array</em>) – Equilibrium bond lengths. Default unit is Angstroms.</p></li>
-<li><p><strong>lengths_units</strong> (<em>str, Default: angstroms</em>) – Equilibrium bond lengths unit.</p></li>
-<li><p><strong>connectivity</strong> (<em>List[Tuple[Union[int, str], Union[int, str], float]]</em>) – Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.Dihedrals">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'degrees'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">types.ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals/base.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.Dihedrals" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
-<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
-<li><p><strong>angles</strong> (<em>Array, Optional</em>) – Equilibrium dihedral angles. Default unit is degrees.</p></li>
-<li><p><strong>angles_units</strong> (<em>str, Default: degrees</em>) – Equilibrium dihedral angle units.</p></li>
-<li><p><strong>connectivity</strong> (<em>List[Tuple[Union[int, str], Union[int, str], Union[int, str], Union[int, str]]]</em>) – Particle indices for each dihedral angle.</p></li>
-<li><p><strong>weights</strong> (<em>Array, Optional</em>) – Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">ForceField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.forcefield.mm_ff.ConstrainedStrValue</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'mmschema_forcefield'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonbonded</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.NonBonded" title="mmelemental.models.forcefield.nonbonded.base.NonBonded"><span class="pre">mmelemental.models.forcefield.nonbonded.base.NonBonded</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.NonBonded" title="mmelemental.models.forcefield.nonbonded.base.NonBonded"><span class="pre">mmelemental.models.forcefield.nonbonded.base.NonBonded</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bonds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Bonds" title="mmelemental.models.forcefield.bonded.bonds.base.Bonds"><span class="pre">mmelemental.models.forcefield.bonded.bonds.base.Bonds</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Bonds" title="mmelemental.models.forcefield.bonded.bonds.base.Bonds"><span class="pre">mmelemental.models.forcefield.bonded.bonds.base.Bonds</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Angles" title="mmelemental.models.forcefield.bonded.angles.base.Angles"><span class="pre">mmelemental.models.forcefield.bonded.angles.base.Angles</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Angles" title="mmelemental.models.forcefield.bonded.angles.base.Angles"><span class="pre">mmelemental.models.forcefield.bonded.angles.base.Angles</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dihedrals</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Dihedrals" title="mmelemental.models.forcefield.bonded.dihedrals.base.Dihedrals"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.base.Dihedrals</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.forcefield.Dihedrals" title="mmelemental.models.forcefield.bonded.dihedrals.base.Dihedrals"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.base.Dihedrals</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charges</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charges_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masses_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'amu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge_groups</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclusions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inclusions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substructs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combination_rule</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'Lorentz-Berthelot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provenance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.base.Provenance</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{'creator':</span> <span class="pre">'MMElemental',</span> <span class="pre">'routine':</span> <span class="pre">'mmelemental.models.forcefield.mm_ff',</span> <span class="pre">'version':</span> <span class="pre">'0+untagged.759.g6352e90'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue, Default: mmschema_forcefield</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_forcefield.</p></li>
-<li><p><strong>schema_version</strong> (<em>int, Default: 0</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
-<li><p><strong>name</strong> (<em>str, Optional</em>) – Common or human-readable name to assign to this model. This field can be arbitrary.</p></li>
-<li><p><strong>comment</strong> (<em>str, Optional</em>) – Additional comments for this model. Intended for pure human/user consumption and clarity.</p></li>
-<li><p><strong>symbols</strong> (<em>Array</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
-<li><p><strong>nonbonded</strong> (Union[<a class="reference internal" href="#mmelemental.models.forcefield.NonBonded" title="mmelemental.models.forcefield.NonBonded"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code></a>, <a class="reference internal" href="#mmelemental.models.forcefield.NonBonded" title="mmelemental.models.forcefield.NonBonded"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code></a>], Optional) – Non-bonded parameters model.</p></li>
-<li><p><strong>bonds</strong> (Union[<a class="reference internal" href="#mmelemental.models.forcefield.Bonds" title="mmelemental.models.forcefield.Bonds"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code></a>, <a class="reference internal" href="#mmelemental.models.forcefield.Bonds" title="mmelemental.models.forcefield.Bonds"><code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code></a>], Optional) – 2-body covalent bond model.</p></li>
-<li><p><strong>angles</strong> (Union[<a class="reference internal" href="#mmelemental.models.forcefield.Angles" title="mmelemental.models.forcefield.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>, <a class="reference internal" href="#mmelemental.models.forcefield.Angles" title="mmelemental.models.forcefield.Angles"><code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code></a>], Optional) – 3-body angular bond model.</p></li>
-<li><p><strong>dihedrals</strong> (Union[<a class="reference internal" href="#mmelemental.models.forcefield.Dihedrals" title="mmelemental.models.forcefield.Dihedrals"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code></a>, <a class="reference internal" href="#mmelemental.models.forcefield.Dihedrals" title="mmelemental.models.forcefield.Dihedrals"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code></a>], Optional) – 4-body torsional bond model.</p></li>
-<li><p><strong>charges</strong> (<em>Array, Optional</em>) – Atomic charges. Default unit is in elementary charge units.</p></li>
-<li><p><strong>charges_units</strong> (<em>str, Default: e</em>) – Atomic charge unit.</p></li>
-<li><p><strong>masses</strong> (<em>Array, Optional</em>) – List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code>.</p></li>
-<li><p><strong>masses_units</strong> (<em>str, Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
-<li><p><strong>charge_groups</strong> (<em>Array, Optional</em>) – Charge groups per atom. Length of the array must be natoms.</p></li>
-<li><p><strong>exclusions</strong> (<em>str, Optional</em>) – Which pairs of bonded atoms to exclude from non-bonded calculations.        The rules to apply in choosing bonded exclusions are specifed in the configuration file using the exclude parameter. The        choices for exclusions are None, 1-2, 1-3, 1-4, etc. With None, no atom pairs are excluded. With 1-2, only atoms that are connected             via a linear bond are excluded. With 1-3, any pair of atoms connected via a bond or bonded to a common third atom are excluded.         With 1-4, any atoms that are connected by a linear bond, or a sequence of two bonds, or a sequence of three bonds, are excluded.        With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of       3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.</p></li>
-<li><p><strong>inclusions</strong> (<em>str, Optional</em>) – Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.</p></li>
-<li><p><strong>identifier</strong> (<em>str, Optional</em>) – Forcefield unique identifier e.g. charmm27, amber99, etc.</p></li>
-<li><p><strong>defs</strong> (<em>List[str], Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. The type names are associated with the atomic elements defined in other objects e.g. see the :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> model.</p></li>
-<li><p><strong>substructs</strong> (<em>List[Tuple[str, int]], Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
-<li><p><strong>templates</strong> (<em>Dict[List[str]], Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
-<li><p><strong>combination_rule</strong> (<em>str, Default: Lorentz-Berthelot</em>) – Combination rule for the force field.</p></li>
-<li><p><strong>atomic_numbers</strong> (<em>Array, Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.759.g6352e90’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
-<li><p><strong>extras</strong> (<em>Dict[Any], Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.forcefield.ForceField" title="mmelemental.models.forcefield.mm_ff.ForceField"><span class="pre">mmelemental.models.forcefield.mm_ff.ForceField</span></a></span></span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.from_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a ForceField object from a data object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>Any</em>) – Data to construct ForceField from.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructors.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed ForceField object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.ForceField" title="mmelemental.models.forcefield.ForceField">ForceField</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.forcefield.ForceField" title="mmelemental.models.forcefield.mm_ff.ForceField"><span class="pre">mmelemental.models.forcefield.mm_ff.ForceField</span></a></span></span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a ForceField object from a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The topology or FF filename to build from.</p></li>
-<li><p><strong>dtype</strong> (<em>Optional[str], optional</em>) – The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Any additional keywords to pass to the constructor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed ForceField object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.ForceField" title="mmelemental.models.forcefield.ForceField">ForceField</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.get_hash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the hash of the force field object.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.is_topology">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_topology</span></span><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.is_topology" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns True if model contains “topological” data rather than forcefield definition.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ToolkitModel</span></span></span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.to_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a toolkit-specific forcefield from MMSchema ForceField.
-Which toolkit-specific component is called depends on which package is installed on the system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – Data type e.g. mdanalysis, parmed, etc.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]]</em>) – Additional kwargs to pass to the constructors.</p></li>
-<li><p><strong>Results</strong></p></li>
-<li><p><strong>——-</strong></p></li>
-<li><p><strong>ToolkitModel</strong> – Toolkit-specific ForceField object</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForceField.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForceField.to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the ForceField to a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
-<li><p><strong>dtype</strong> (<em>Optional[str], optional</em>) – The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
-file extension if not provided.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
-to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[str, Dict], optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.ForcesInput">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">ForcesInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifier</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dielectric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForcesInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.ForcesInput" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>method</strong> (<em>str</em>)</p></li>
-<li><p><strong>cutoff</strong> (<em>float, Optional</em>)</p></li>
-<li><p><strong>cutoff_units</strong> (<em>str, Default: angstrom</em>)</p></li>
-<li><p><strong>modifier</strong> (<em>str, Optional</em>)</p></li>
-<li><p><strong>dielectric</strong> (<em>float, Default: inf</em>)</p></li>
-<li><p><strong>correct</strong> (<em>str, Optional</em>)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.forcefield.NonBonded">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.</span></span><span class="sig-name descname"><span class="pre">NonBonded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/nonbonded/base.html#NonBonded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.NonBonded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Model that describes non-bonded interactions between particles.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
-<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-</section>
-<section id="collections">
-<h2>Collections<a class="headerlink" href="#collections" title="Permalink to this headline">¶</a></h2>
-<section id="trajectory">
-<h3>Trajectory<a class="headerlink" href="#trajectory" title="Permalink to this headline">¶</a></h3>
-<p>To be completed.</p>
-</section>
-<section id="ensemble">
-<h3>Ensemble<a class="headerlink" href="#ensemble" title="Permalink to this headline">¶</a></h3>
-<p>To be completed.</p>
-</section>
-<section id="id2">
-<h3>API<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-mmelemental.models.collect"></span><dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Ensemble">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.collect.</span></span><span class="sig-name descname"><span class="pre">Ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.collect.sm_ensem.ConstrainedStrValue</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'mmschema_ensemble'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.mm_mol.Molecule"><span class="pre">mmelemental.models.molecule.mm_mol.Molecule</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#mmelemental.models.collect.Microstate" title="mmelemental.models.collect.sm_ensem.Microstate"><span class="pre">mmelemental.models.collect.sm_ensem.Microstate</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provenance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.base.Provenance</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{'creator':</span> <span class="pre">'MMElemental',</span> <span class="pre">'routine':</span> <span class="pre">'mmelemental.models.collect.sm_ensem',</span> <span class="pre">'version':</span> <span class="pre">'0+untagged.759.g6352e90'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/sm_ensem.html#Ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Ensemble" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>A representation of ensembles in statistical mechanics. Useful for storing output</dt><dd><p>from molecular docking, coarse-graining, etc.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue, Default: mmschema_ensemble</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_ensemble.</p></li>
-<li><p><strong>schema_version</strong> (<em>int, Default: 0</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
-<li><p><strong>mols</strong> (Dict[<code class="xref py py-class docutils literal notranslate"><span class="pre">Molecule</span></code>], Optional) – Single or multiple :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> object(s) representing the molecular topology.</p></li>
-<li><p><strong>states</strong> (Dict[<a class="reference internal" href="#mmelemental.models.collect.Microstate" title="mmelemental.models.collect.Microstate"><code class="xref py py-class docutils literal notranslate"><span class="pre">Microstate</span></code></a>], Optional) – Similar to Molecule but without the connectivity. Provides improved efficiency over the             latter. See :class:<code class="docutils literal notranslate"><span class="pre">Microstate</span></code>.</p></li>
-<li><p><strong>scores</strong> (<em>List[float]</em>) – A list of scores for each state. Length must be equal to the number of states or mols.</p></li>
-<li><p><strong>scores_units</strong> (<em>str, Optional</em>) – Score function unit.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.759.g6352e90’, ‘routine’: ‘mmelemental.models.collect.sm_ensem’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
-<li><p><strong>extras</strong> (<em>Dict[Any], Optional</em>) – Additional information to bundle with this object. Use for schema development and scratch space.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Microstate">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.collect.</span></span><span class="sig-name descname"><span class="pre">Microstate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom/fs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'kJ/(mol*angstrom)'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/sm_ensem.html#Microstate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Microstate" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>geometry</strong> (<em>Array</em>) – Atomic positions of length natoms. Default unit is Angstroms.</p></li>
-<li><p><strong>geometry_units</strong> (<em>str, Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
-<li><p><strong>velocities</strong> (<em>Array, Optional</em>) – Atomic velocities of length natoms. Default unit is Angstroms/femotoseconds.</p></li>
-<li><p><strong>velocities_units</strong> (<em>str, Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
-<li><p><strong>forces</strong> (<em>Array, Optional</em>) – Atomic forces of length natoms. KiloJoules/mol.Angstroms.</p></li>
-<li><p><strong>forces_units</strong> (<em>str, Default: kJ/(mol*angstrom)</em>) – Units for atomic forces. Defaults to KiloJoules/mol.Angstroms</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.collect.TrajInput">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.collect.</span></span><span class="sig-name descname"><span class="pre">TrajInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry_freq</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities_freq</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom/fs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces_freq</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'kJ/(mol*angstrom)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#TrajInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.TrajInput" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>geometry_freq</strong> (<em>int, Optional</em>) – Every number of steps geometry are saved.</p></li>
-<li><p><strong>geometry_units</strong> (<em>str, Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
-<li><p><strong>velocities_freq</strong> (<em>int, Optional</em>) – Save velocities every ‘velocities_freq’ steps.</p></li>
-<li><p><strong>velocities_units</strong> (<em>str, Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
-<li><p><strong>forces_freq</strong> (<em>int, Optional</em>) – Every number of steps velocities are saved.</p></li>
-<li><p><strong>forces_units</strong> (<em>str, Default: kJ/(mol*angstrom)</em>) – Units for atomic forces. Defaults to KiloJoules/mol.Angstroms.</p></li>
-<li><p><strong>freq</strong> (<em>int, Optional</em>) – Every number of steps geometry, velocities, and/or forces are saved.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.collect.</span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.collect.mm_traj.ConstrainedStrValue</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'mmschema_trajectory'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">cmselemental.types.Array</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'fs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">cmselemental.types.Array</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nframes</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">mmelemental.models.molecule.topology.Topology</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">mmelemental.models.molecule.topology.Topology</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geometry_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocities_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'angstrom/fs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">cmselemental.types.Array</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forces_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'kJ/mol*angstrom'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provenance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">mmelemental.models.base.Provenance</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{'creator':</span> <span class="pre">'MMElemental',</span> <span class="pre">'routine':</span> <span class="pre">'mmelemental.models.collect.mm_traj',</span> <span class="pre">'version':</span> <span class="pre">'0+untagged.759.g6352e90'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extras</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Representation of trajectories in classical mechanics. By default, this model loads a single frame in memory.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul>
-<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue, Default: mmschema_trajectory</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_trajectory.</p></li>
-<li><p><strong>schema_version</strong> (<em>int, Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
-<li><p><strong>name</strong> (<em>str, Optional</em>) – Common or human-readable name to assign to this molecule. This field can be arbitrary; see <code class="docutils literal notranslate"><span class="pre">identifiers</span></code> for well-defined labels.</p></li>
-<li><p><strong>timestep</strong> (<em>Union[Array, float]</em>) – Timestep size. Default unit is femtoseconds.</p></li>
-<li><p><strong>timestep_units</strong> (<em>str, Default: fs</em>) – Timestep size units. Defaults to femtoseconds.</p></li>
-<li><p><strong>natoms</strong> (<em>Union[int, Array]</em>) – Number of atoms. A scalar for closed systems and an array for open (variable N) systems.</p></li>
-<li><p><strong>nframes</strong> (<em>int</em>) – Number of frames.</p></li>
-<li><p><strong>ndim</strong> (<em>int, Default: 3</em>) – Number of spatial dimensions.</p></li>
-<li><p><strong>top</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Topology</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Topology</span></code>], Optional) –</p>
-<dl class="simple">
-<dt>A topological representation of a Molecule in MM. In addition to connectivity, this model contains data for particle</dt><dd><p>symbols/labels, masses, and net charge. Useful for creating :class:<code class="docutils literal notranslate"><span class="pre">Trajectory</span></code> objects.</p>
-</dd>
-</dl>
-</li>
-<li><p><strong>geometry</strong> (<em>Array, Optional</em>) – An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. Storage is sequential in each dimension:
-[
-x1o,…,xno, y1o,…,yno, z1o,…,zno,
-…,
-x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
-]</p></li>
-<li><p><strong>geometry_units</strong> (<em>str, Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
-<li><p><strong>velocities</strong> (<em>Array, Optional</em>) – An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is Angstroms/femtoseconds.Storage is sequential in each dimension:
-[
-x1o,…,xno, y1o,…,yno, z1o,…,zno,
-…,
-x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
-]</p></li>
-<li><p><strong>velocities_units</strong> (<em>str, Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
-<li><p><strong>forces</strong> (<em>Array, Optional</em>) – An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is kJ/mol*angstrom.Storage is sequential in each dimension:
-[
-x1o,…,xno, y1o,…,yno, z1o,…,zno,
-…,
-x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
-]</p></li>
-<li><p><strong>forces_units</strong> (<em>str, Default: kJ/mol*angstrom</em>) – Units for atomic forces. Defaults to kJ/mol*angstrom.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.759.g6352e90’, ‘routine’: ‘mmelemental.models.collect.mm_traj’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
-<li><p><strong>extras</strong> (<em>Dict[Any], Optional</em>) – Additional information to bundle with this object. Use for schema development and scratch space.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.collect.Trajectory" title="mmelemental.models.collect.mm_traj.Trajectory"><span class="pre">mmelemental.models.collect.mm_traj.Trajectory</span></a></span></span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.from_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Trajectory object from a data object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>Any</em>) – Data to construct Molecule from</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – How to interpret the data. If not set, mmelemental attempts to discover this based on input type.
-Possible values: mdanalysis, mdraj, pytraj</p></li>
-<li><p><strong>**kwargs</strong> (<em>Dict[str, Any]</em>) – Additional kwargs to pass to the constructors. kwargs take precedence over data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Trajectory class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.collect.Trajectory" title="mmelemental.models.collect.Trajectory">Trajectory</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_frames</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#mmelemental.models.collect.Trajectory" title="mmelemental.models.collect.mm_traj.Trajectory"><span class="pre">mmelemental.models.collect.mm_traj.Trajectory</span></a></span></span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Trajectory object from an input file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>traj_filename</strong> (<em>str</em>) – The atomic positions filename to read</p></li>
-<li><p><strong>top_filename</strong> (<em>str, optional</em>) – The topology i.e. connectivity filename to read</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – The type of file to interpret. If not set, mmelemental attempts to discover the file type.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>all_frames</strong> (<em>bool, optional</em>) – Reads all frames in memory.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Dict[str, Any], optional</em>) – Additional kwargs to pass to the constructors.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Trajectory class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.collect.Trajectory" title="mmelemental.models.collect.Trajectory">Trajectory</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.get_geometry">
-<span class="sig-name descname"><span class="pre">get_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.get_geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.get_geometry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns geometry at a specific snapshot/frame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>frame</strong> (<em>int</em>) – Frame number ranges from 0 … nframes-1</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Geometry 1D numpy array of length natoms * ndim</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Array[float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.get_hash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the hash of a single frame in a trajectory.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ToolkitModel</span></span></span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.to_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Toolkit-specific molecule model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ToolkitModel</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.collect.Trajectory.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="modules/mmelemental/models/collect/mm_traj.html#Trajectory.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.Trajectory.to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the Trajectory to a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
-<li><p><strong>dtype</strong> (<em>str, optional</em>) – The type of file to write, attempts to infer dtype from the filename if not provided.</p></li>
-<li><p><strong>translator</strong> (<em>Optional[str], optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional[Dict[str, Any]], optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-</section>
-</section>
 
 
-             </article>
-             
-            </div>
-            <footer>
-  
+           </div>
+           
+          </div>
+          <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="components.html" class="btn btn-neutral float-right" title="Components" accesskey="n" rel="next">Next <img src="static/images/chevron-right-orange.svg" class="next-page"></a>
-      
-      
-        <a href="get_started.html" class="btn btn-neutral" title="Prerequisites" accesskey="p" rel="prev"><img src="static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
-      
+        <a href="components.html" class="btn btn-neutral float-right" title="Components" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Prerequisites" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
-  
-
-    <hr>
-
-  
+  <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
+        &#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
 
     </p>
   </div>
     
-      <div>
-        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-      </div>
-     
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
-          </div>
         </div>
+      </div>
 
-        <div class="pytorch-content-right" id="pytorch-content-right">
-          <div class="pytorch-right-menu" id="pytorch-right-menu">
-            <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
-              <ul>
-<li><a class="reference internal" href="#">Models</a><ul>
-<li><a class="reference internal" href="#molecules">Molecules</a><ul>
-<li><a class="reference internal" href="#topology">Topology</a></li>
-<li><a class="reference internal" href="#molecule">Molecule</a></li>
-<li><a class="reference internal" href="#module-mmelemental.models.molecule">API</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#force-fields">Force fields</a><ul>
-<li><a class="reference internal" href="#forcefield">ForceField</a></li>
-<li><a class="reference internal" href="#nonbonded">NonBonded</a></li>
-<li><a class="reference internal" href="#bonds">Bonds</a></li>
-<li><a class="reference internal" href="#angles">Angles</a></li>
-<li><a class="reference internal" href="#dihedrals">Dihedrals</a></li>
-<li><a class="reference internal" href="#improper-dihedrals">Improper dihedrals</a></li>
-<li><a class="reference internal" href="#id1">API</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#collections">Collections</a><ul>
-<li><a class="reference internal" href="#trajectory">Trajectory</a></li>
-<li><a class="reference internal" href="#ensemble">Ensemble</a></li>
-<li><a class="reference internal" href="#id2">API</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+    </section>
 
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
+  </div>
   
-
-
-  
-
-     
-       <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
-         <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
-         <script src="static/jquery.js"></script>
-         <script src="static/underscore.js"></script>
-         <script src="static/doctools.js"></script>
-     
-
-  
-
-  <script type="text/javascript" src="static/js/vendor/popper.min.js"></script>
-  <script type="text/javascript" src="static/js/vendor/bootstrap.min.js"></script>
-  <script type="text/javascript" src="static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
-  <!-- Begin Footer -->
-
-  <div class="container-fluid" id="docs-tutorials-resources">
-    <div class="container">
-      <div class="row">
-        <!--
-        <div class="col-md-4 text-center">
-          <h2>Docs</h2>
-          <p>Access comprehensive developer documentation for PyTorch</p>
-          <a class="with-right-arrow" href="">View Docs</a>
-        </div>
-
-        <div class="col-md-4 text-center">
-          <h2>Tutorials</h2>
-          <p>Get in-depth tutorials for beginners and advanced developers</p>
-          <a class="with-right-arrow" href="">View Tutorials</a>
-        </div>
-
-        <div class="col-md-4 text-center">
-          <h2>Resources</h2>
-          <p>Find development resources and get your questions answered</p>
-          <a class="with-right-arrow" href="https://pytorch.org/resources">View Resources</a>
-        </div>
-        -->
-      </div>
-    </div>
-  </div>
-
-
-  <!-- <footer class="site-footer">
-    <div class="container footer-container">
-      <div class="footer-logo-wrapper">
-        <a href="https://molssi.github.io/mmelemental" class="footer-logo"></a>
-      </div>
-
-      <div class="footer-links-wrapper">
-
-        <div class="footer-logo-col">
-          <img class="footer-logo-img" src="static/images/dark_asteroid_logo.svg"/>
-        </div>
-
-        <div class="footer-links-col">
-          <ul>
-            <li class="list-title"><a href="https://molssi.github.io/mmelemental">Asteroid</a></li>
-            <li><a href="">Get Started</a></li>
-            <li><a href="https://pytorch.org/features">Features</a></li>
-            <li><a href="">Ecosystem</a></li>
-            <li><a href="https://pytorch.org/blog/">Blog</a></li>
-            <li><a href="https://pytorch.org/resources">Resources</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-col">
-          <ul>
-            <li class="list-title"><a href="https://pytorch.org/support">Support</a></li>
-            <li><a href="">Tutorials</a></li>
-            <li><a href="">Docs</a></li>
-            <li><a href="https://discuss.pytorch.org" target="_blank">Discuss</a></li>
-            <li><a href="https://github.com/MolSSI/mmelemental/issues" target="_blank">Github Issues</a></li>
-            <li><a href="" target="_blank">Slack</a></li>
-            <li><a href="https://github.com/MolSSI/mmelemental/blob/master/CONTRIBUTING.md" target="_blank">Contributing</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-col follow-us-col">
-          <ul>
-            <li class="list-title">Follow Us</li>
-            <li>
-              <div id="mc_embed_signup">
-                <form
-                  action="https://twitter.us14.list-manage.com/subscribe/post?u=75419c71fe0a935e53dfa4a3f&id=91d0dccd39"
-                  method="post"
-                  id="mc-embedded-subscribe-form"
-                  name="mc-embedded-subscribe-form"
-                  class="email-subscribe-form validate"
-                  target="_blank"
-                  novalidate>
-                  <div id="mc_embed_signup_scroll" class="email-subscribe-form-fields-wrapper">
-                    <div class="mc-field-group">
-                      <label for="mce-EMAIL" style="display:none;">Email Address</label>
-                      <input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
-                    </div>
-
-                    <div id="mce-responses" class="clear">
-                      <div class="response" id="mce-error-response" style="display:none"></div>
-                      <div class="response" id="mce-success-response" style="display:none"></div>
-                    </div>
-
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_75419c71fe0a935e53dfa4a3f_91d0dccd39" tabindex="-1" value=""></div>
-
-                    <div class="clear">
-                      <input type="submit" value="" name="subscribe" id="mc-embedded-subscribe" class="button email-subscribe-button">
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-            </li>
-          </ul>
-
-          <div class="footer-social-icons">
-            <a href="" target="_blank" class="facebook"></a>
-            <a href="https://twitter.com" target="_blank" class="twitter"></a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </footer> -->
-
-
-  <!-- End Footer -->
-
-  <!-- Begin Mobile Menu -->
-
-  <div class="mobile-main-menu">
-    <div class="container-fluid">
-      <div class="container">
-        <div class="mobile-main-menu-header-container">
-          <a class="header-logo" href="https://molssi.github.io/mmelemental" aria-label="PyTorch Lightning"></a>
-          <a class="main-menu-close-button" href="#" data-behavior="close-mobile-menu"></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-main-menu-links-container">
-      <div class="main-menu">
-        <ul>
-          <li>
-            <a href="">Get Started</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/features">Features</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/blog/">Blog</a>
-          </li>
-
-          <li>
-            <a href="">Tutorials</a>
-          </li>
-
-          <li>
-            <a href="">Docs</a>
-          </li>
-
-          <li>
-            <a href="https://pytorch.org/resources">Resources</a>
-          </li>
-
-          <li>
-            <a href="https://github.com/MolSSI/mmelemental">Github</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- End Mobile Menu -->
-
-  <script type="text/javascript" src="static/js/vendor/anchor.min.js"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function() {
-      mobileMenu.bind();
-      mobileTOC.bind();
-      pytorchAnchors.bind();
-      sideMenus.bind();
-      scrollToAnchor.bind();
-      highlightNavigation.bind();
-      mainMenuDropdown.bind();
-
-      // Add class to links that have code blocks, since we cannot create links in code blocks
-      $("article.pytorch-article a span.pre").each(function(e) {
-        $(this).closest("a").addClass("has-code");
-      });
-    })
   </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #033e57;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #080f14;
+    }
+  </style>
+
+
 </body>
 </html>
