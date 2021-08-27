@@ -4,6 +4,8 @@ The `mmelemental.models.forcefield` submodule provides models that describe forc
 
 ForceField
 ==========
+Description
+-----------
 This is the most basic model for storing force field data that describe atomistic or coarse-grained inter-particle potentials.
 Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
@@ -28,13 +30,15 @@ In addition, `ForceField` provides :func:`~mmelemental.models.forcefield.ForceFi
 The methods :func:`~mmelemental.models.forcefield.ForceField.to_data` and :func:`~mmelemental.models.forcefield.ForceField.to_file` enable converting a force field to data and file objects, respectively. See the API for more details.
 
 API
-===
+---
 .. automodule:: mmelemental.models.forcefield.mm_ff
    :members:
 
 
 NonBonded
----------
+=========
+Description
+-----------
 The `NonBonded` model describes potentials for non-connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
 .. code-block:: python
@@ -63,8 +67,15 @@ This model can be used as an input to `ForceField` for an extended description o
     >>> ff
      ForceField(name='water_ff', form=['NonBonded'], hash='0cbf0de')
 
+API
+---
+.. automodule:: mmelemental.models.forcefield.nonbonded
+   :members:
+
 Bonds
------
+=====
+Description
+-----------
 The `Bonds` model describes pairwise potentials for 2 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
 .. code-block:: python
@@ -97,8 +108,15 @@ This model can be used as an input to `ForceField` for an extended description o
     >>> ff
      ForceField(name='water_ff', form=['NonBonded', 'Bonds'], hash='236e292')
 
+API
+---
+.. automodule:: mmelemental.models.forcefield.bonded.bonds
+   :members:
+
 Angles
-------
+======
+Description
+-----------
 The `Angles` model describes 3-body angle potentials for 3 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
 .. code-block:: python
@@ -133,6 +151,11 @@ This model can be used as an input to `ForceField` for an extended description o
         )
     >>> ff
      ForceField(name='water_ff', form=['NonBonded', 'Bonds', 'Angles'], hash='6bdf578')
+
+API
+---
+.. automodule:: mmelemental.models.forcefield.bonded.angles
+   :members:
 
 Dihedrals
 ---------

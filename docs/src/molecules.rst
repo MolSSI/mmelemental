@@ -9,7 +9,9 @@ To be completed soon.
 
 
 Molecule
---------
+========
+Description
+-----------
 The `Molecule` model describes particle systems such as atomistic, coarse-grained, and symbolic (e.g. smiles) molecules. 
 Model creation occurs with a kwargs constructor as shown by equivalent operations below:
 
@@ -32,11 +34,4 @@ The methods :func:`~mmelemental.models.molecule.Molecule.to_data` and :func:`~mm
 API
 ---
 .. automodule:: mmelemental.models.molecule
-   :members:
-
-To be completed.
-
-API
----
-.. automodule:: mmelemental.models.forcefield.Dihedrals
    :members:
