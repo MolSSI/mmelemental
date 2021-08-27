@@ -51,20 +51,14 @@ autodoc_default_flags = [
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    "sphinx.ext.autosummary",
-    "sphinx.ext.autodoc",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.extlinks",
-]
 
 autosummary_generate = True
-napoleon_google_docstring = False
-napoleon_use_param = False
-napoleon_use_ivar = True
+automodapi_toctreedirnm = 'api'
+#numpydoc_show_class_members = False
+#automodsumm_inherited_members = True
+autodoc_typehints = "description"
+napoleon_use_param = True
+napoleon_use_rtype = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -99,31 +93,35 @@ pygments_style = "default"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "asteroid_sphinx_theme"
+html_theme = "sphinx_rtd_theme"
+html_title = "MMElemental"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    "logo": "_static/logo.png",
-    "canonical_url": "",
-    "analytics_id": "",
-    "logo_only": True,
-    "display_version": True,
-    "prev_next_buttons_location": "bottom",
-    "style_external_links": False,
-    # Toc options
-    "collapse_navigation": True,
-    "sticky_navigation": True,
-    "navigation_depth": 4,
-    "includehidden": True,
-    "titles_only": False,
-}
-
 
 external_urls = {
     "github": "https://github.com/MolSSI/mmelemental",
+}
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+
+html_logo = "logos/asteroid_logo_dark_allblack.png"
+
+html_theme_options = {
+    "logo_only": True,
+    "display_version": False,
+    "style_external_links": False,
+    "style_nav_header_background": "light-blue",
+    "sticky_navigation": True,
+    "collapse_navigation": False,
+}
+
+html_sidebars = {
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -205,3 +203,23 @@ texinfo_documents = [
 
 
 # -- Extension configuration -------------------------------------------------
+
+extensions = [
+    # from Sphinx
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.extlinks',
+    'sphinx.ext.graphviz',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.graphviz',
+    'sphinx_autodoc_typehints',
+    # from Astropy
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.automodsumm',
+    'sphinx_automodapi.smart_resolver',
+]
