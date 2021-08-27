@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Force fields &mdash; MMElemental</title>
+  
+
+  
+  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Collections" href="collections.html" />
+    <link rel="prev" title="Molecules" href="molecules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: light-blue" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#dev-installation">Dev Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="molecules.html#molecule">Molecule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecules.html#module-mmelemental.models.molecule">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Force fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#forcefield">ForceField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.forcefield.mm_ff">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#nonbonded">NonBonded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bonds">Bonds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#angles">Angles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dihedrals">Dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#improper-dihedrals">Improper dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#trajectory">Trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#ensemble">Ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="collections.html#module-mmelemental.models.collect">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MMElemental</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Force fields</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="sources/forcefields.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="force-fields">
+<h1>Force fields<a class="headerlink" href="#force-fields" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>mmelemental.models.forcefield</cite> submodule provides models that describe force field definitions or parametrized molecules (e.g. data stored in “topology” files).</p>
+<div class="section" id="forcefield">
+<h2>ForceField<a class="headerlink" href="#forcefield" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>This is the most basic model for storing force field data that describe atomistic or coarse-grained inter-particle potentials.
+Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;name&quot;: &quot;water_ff&quot;,</span>
+<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
+<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
+<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
+<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;water_ff&#39;, form=[], hash=&#39;8352e99&#39;)</span>
+</pre></div>
+</div>
+<p>Note that this force field object has no form since we did not define any bonded (or non-bonded) terms as part of the interaction. This can be specified using
+additional models explained in the next subsections.</p>
+<p>In addition, <cite>ForceField</cite> provides <code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code> methods to create a forcefield from data (e.g. parmed.Structure) or file objects.
+The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a force field to data and file objects, respectively. See the API for more details.</p>
+</div>
+<div class="section" id="module-mmelemental.models.forcefield.mm_ff">
+<span id="api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.forcefield.mm_ff" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForceField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_forcefield</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_forcefield.</p></li>
+<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 0</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this model. This field can be arbitrary.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this model. Intended for pure human/user consumption and clarity.</p></li>
+<li><p><strong>symbols</strong> (<em>Array</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
+<li><p><strong>nonbonded</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>], Optional) – Non-bonded parameters model.</p></li>
+<li><p><strong>bonds</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>], Optional) – 2-body covalent bond model.</p></li>
+<li><p><strong>angles</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>], Optional) – 3-body angular bond model.</p></li>
+<li><p><strong>dihedrals</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code>], Optional) – 4-body torsional bond model.</p></li>
+<li><p><strong>charges</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Atomic charges. Default unit is in elementary charge units.</p></li>
+<li><p><strong>charges_units</strong> (<em>str</em><em>, </em><em>Default: e</em>) – Atomic charge unit.</p></li>
+<li><p><strong>masses</strong> (<em>Array</em><em>, </em><em>Optional</em>) – List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code>.</p></li>
+<li><p><strong>masses_units</strong> (<em>str</em><em>, </em><em>Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
+<li><p><strong>charge_groups</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Charge groups per atom. Length of the array must be natoms.</p></li>
+<li><p><strong>exclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of bonded atoms to exclude from non-bonded calculations.        The rules to apply in choosing bonded exclusions are specifed in the configuration file using the exclude parameter. The        choices for exclusions are None, 1-2, 1-3, 1-4, etc. With None, no atom pairs are excluded. With 1-2, only atoms that are connected             via a linear bond are excluded. With 1-3, any pair of atoms connected via a bond or bonded to a common third atom are excluded.         With 1-4, any atoms that are connected by a linear bond, or a sequence of two bonds, or a sequence of three bonds, are excluded.        With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of       3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.</p></li>
+<li><p><strong>inclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.</p></li>
+<li><p><strong>identifier</strong> (<em>str</em><em>, </em><em>Optional</em>) – Forcefield unique identifier e.g. charmm27, amber99, etc.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. The type names are associated with the atomic elements defined in other objects e.g. see the :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> model.</p></li>
+<li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
+<li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
+<li><p><strong>combination_rule</strong> (<em>str</em><em>, </em><em>Default: Lorentz-Berthelot</em>) – Combination rule for the force field.</p></li>
+<li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.777.gc2acc56’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.from_data">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a ForceField object from a data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Data to construct ForceField from.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed ForceField object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.mm_ff.ForceField" title="mmelemental.models.forcefield.mm_ff.ForceField">ForceField</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.from_file">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a ForceField object from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The topology or FF filename to build from.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Any additional keywords to pass to the constructor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed ForceField object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.mm_ff.ForceField" title="mmelemental.models.forcefield.mm_ff.ForceField">ForceField</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.get_hash">
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.get_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the hash of the force field object.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.is_topology">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_topology</span></span><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.is_topology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if model contains “topological” data rather than forcefield definition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.to_data">
+<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a toolkit-specific forcefield from MMSchema ForceField.
+Which toolkit-specific component is called depends on which package is installed on the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type e.g. mdanalysis, parmed, etc.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Additional kwargs to pass to the constructors.</p></li>
+<li><p><strong>Results</strong> – </p></li>
+<li><p><strong>-------</strong> – </p></li>
+<li><p><strong>ToolkitModel</strong> – Toolkit-specific ForceField object</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ToolkitModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the ForceField to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
+file extension if not provided.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForcesInput">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForcesInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForcesInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForcesInput" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – </p></li>
+<li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>Optional</em>) – </p></li>
+<li><p><strong>cutoff_units</strong> (<em>str</em><em>, </em><em>Default: angstrom</em>) – </p></li>
+<li><p><strong>modifier</strong> (<em>str</em><em>, </em><em>Optional</em>) – </p></li>
+<li><p><strong>dielectric</strong> (<em>float</em><em>, </em><em>Default: inf</em>) – </p></li>
+<li><p><strong>correct</strong> (<em>str</em><em>, </em><em>Optional</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="nonbonded">
+<h2>NonBonded<a class="headerlink" href="#nonbonded" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Description<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>NonBonded</cite> model describes potentials for non-connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">NonBonded</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;form&quot;: &quot;LennardJones&quot;,</span>
+<span class="go">            &quot;params&quot;: {&quot;epsilon&quot;: [0.636386, 0.0, 0.0], &quot;sigma&quot;: [1.575305, 0.0, 0.0]},</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+</pre></div>
+</div>
+<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of non-bonded interactions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;name&quot;: &quot;water_ff&quot;,</span>
+<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
+<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
+<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
+<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
+<span class="go">            &quot;nonbonded&quot;: nb,</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;water_ff&#39;, form=[&#39;NonBonded&#39;], hash=&#39;0cbf0de&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>API<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-mmelemental.models.forcefield.nonbonded"></span><dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.nonbonded.NonBonded">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.nonbonded.</span></span><span class="sig-name descname"><span class="pre">NonBonded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/nonbonded/base.html#NonBonded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.nonbonded.NonBonded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model that describes non-bonded interactions between particles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="bonds">
+<h2>Bonds<a class="headerlink" href="#bonds" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Description<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>Bonds</cite> model describes pairwise potentials for 2 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bonds</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Bonds</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;form&quot;: &quot;Harmonic&quot;,</span>
+<span class="go">            &quot;params&quot;: {&quot;spring&quot;: [2512.08, 2512.08]},</span>
+<span class="go">            &quot;lengths&quot;: [0.9572, 0.9572],</span>
+<span class="go">            &quot;connectivity&quot;: [[0,1,1.0], [0,2,1.0]],</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+</pre></div>
+</div>
+<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of chemical bonds.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;name&quot;: &quot;water_ff&quot;,</span>
+<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
+<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
+<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
+<span class="go">            &quot;exclusions&quot;: &quot;3&quot;,</span>
+<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
+<span class="go">            &quot;nonbonded&quot;: nb,</span>
+<span class="go">            &quot;bonds&quot;: bonds,</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;water_ff&#39;, form=[&#39;NonBonded&#39;, &#39;Bonds&#39;], hash=&#39;236e292&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>API<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-mmelemental.models.forcefield.bonded.bonds"></span><dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.bonds.Bonds">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.bonds.</span></span><span class="sig-name descname"><span class="pre">Bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/bonds/base.html#Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.bonds.Bonds" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>lengths</strong> (<em>Array</em>) – Equilibrium bond lengths. Default unit is Angstroms.</p></li>
+<li><p><strong>lengths_units</strong> (<em>str</em><em>, </em><em>Default: angstroms</em>) – Equilibrium bond lengths unit.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="angles">
+<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Description<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>Angles</cite> model describes 3-body angle potentials for 3 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Angles</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;form&quot;: &quot;Harmonic&quot;,</span>
+<span class="go">            &quot;params&quot;: {&quot;spring&quot;: [0.09565291598722435]},</span>
+<span class="go">            &quot;angles&quot;: [104.52],</span>
+<span class="go">            &quot;connectivity&quot;: [</span>
+<span class="go">                [0, 1, 2],</span>
+<span class="go">            ],</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+</pre></div>
+</div>
+<p>This model can be used as an input to <cite>ForceField</cite> for an extended description of 3-angle terms in the force field.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;name&quot;: &quot;water_ff&quot;,</span>
+<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
+<span class="go">            &quot;charges&quot;: [-0.834, 0.417, 0.417],</span>
+<span class="go">            &quot;masses&quot;: [16.0, 1.008, 1.008],</span>
+<span class="go">            &quot;exclusions&quot;: &quot;3&quot;,</span>
+<span class="go">            &quot;defs&quot;: [&quot;OW&quot;, &quot;HW&quot;, &quot;HW&quot;],</span>
+<span class="go">            &quot;nonbonded&quot;: nb,</span>
+<span class="go">            &quot;bonds&quot;: bonds,</span>
+<span class="go">            &quot;angles&quot;: angles,</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;water_ff&#39;, form=[&#39;NonBonded&#39;, &#39;Bonds&#39;, &#39;Angles&#39;], hash=&#39;6bdf578&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>API<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-mmelemental.models.forcefield.bonded.angles"></span><dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.angles.Angles">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.angles.</span></span><span class="sig-name descname"><span class="pre">Angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/angles/base.html#Angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.angles.Angles" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>angles</strong> (<em>Array</em>) – Equilibrium angles. Default unit is degrees.</p></li>
+<li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium angle units.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each angle.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="dihedrals">
+<h3>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline">¶</a></h3>
+<p>To be completed.</p>
+</div>
+<div class="section" id="improper-dihedrals">
+<h3>Improper dihedrals<a class="headerlink" href="#improper-dihedrals" title="Permalink to this headline">¶</a></h3>
+<p>To be completed.</p>
+</div>
+<div class="section" id="id7">
+<h3>API<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-mmelemental.models.forcefield.bonded.dihedrals"></span><dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.dihedrals.Dihedrals">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals/base.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.dihedrals.Dihedrals" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>angles</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Equilibrium dihedral angles. Default unit is degrees.</p></li>
+<li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium dihedral angle units.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each dihedral angle.</p></li>
+<li><p><strong>weights</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="molecules.html" class="btn btn-neutral float-left" title="Molecules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #033e57;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #080f14;
+    }
+  </style>
+
+
+</body>
+</html>

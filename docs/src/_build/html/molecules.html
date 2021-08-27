@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Molecules &mdash; MMElemental</title>
+  
+
+  
+  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
+        <script src="static/jquery.js"></script>
+        <script src="static/underscore.js"></script>
+        <script src="static/doctools.js"></script>
+    
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Force fields" href="forcefields.html" />
+    <link rel="prev" title="Components" href="components.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: light-blue" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#dev-installation">Dev Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Molecules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#topology">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#molecule">Molecule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.molecule">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.mm_ff">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id1">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id2">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#bonds">Bonds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id3">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#angles">Angles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id5">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id6">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#id7">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="collections.html">Collections</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#trajectory">Trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="collections.html#ensemble">Ensemble</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="collections.html#module-mmelemental.models.collect">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_ff.html">Forcefields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_traj.html">Trajectory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MMElemental</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Molecules</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="sources/molecules.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="molecules">
+<h1>Molecules<a class="headerlink" href="#molecules" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="#module-mmelemental.models.molecule" title="mmelemental.models.molecule"><code class="xref py py-mod docutils literal notranslate"><span class="pre">molecule</span></code></a> submodule provides models that describe molecular topology and conformation.</p>
+<div class="section" id="topology">
+<h2>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h2>
+<p>To be completed soon.</p>
+</div>
+<div class="section" id="molecule">
+<h2>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>Molecule</cite> model describes particle systems such as atomistic, coarse-grained, and symbolic (e.g. smiles) molecules.
+Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
+<span class="go">        **{</span>
+<span class="go">            &quot;symbols&quot;: [&quot;O&quot;, &quot;H&quot;, &quot;H&quot;],</span>
+<span class="go">            &quot;geometry&quot;: [2.0, 2.09, 0.0, 2.82, 2.09, 0.58, 1.18, 2.09, 0.58],</span>
+<span class="go">            &quot;connectivity&quot;: [(0, 1, 1.0), (0, 2, 1.0)],</span>
+<span class="go">        }</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
+<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;704898f&#39;)</span>
+</pre></div>
+</div>
+<p>In addition, <cite>Molecule</cite> provides <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_data" title="mmelemental.models.molecule.Molecule.from_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_file" title="mmelemental.models.molecule.Molecule.from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code></a> methods to create a molecule from data (e.g. MDAnalysis.Universe) or file objects.
+The methods <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_data" title="mmelemental.models.molecule.Molecule.to_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_file" title="mmelemental.models.molecule.Molecule.to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code></a> enable converting a molecule to data and file objects, respectively. See the API for more details.</p>
+</div>
+<div class="section" id="module-mmelemental.models.molecule">
+<span id="api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.molecule" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,</dt><dd><p>residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
+and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_molecule</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_molecule.</p></li>
+<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>symbols</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom,) array-like object of particle symbols. The index of this attribute sets the order for all other per-particle setting like <code class="docutils literal notranslate"><span class="pre">geometry</span></code> and the first dimension of <code class="docutils literal notranslate"><span class="pre">geometry</span></code>.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this molecule. This field can be arbitrary.</p></li>
+<li><p><strong>identifiers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code>, Optional) – An optional dictionary of additional identifiers by which this molecule can be referenced, such as INCHI, canonical SMILES, etc. See the <code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code> model for more details.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this molecule. Intended for pure human/user consumption and clarity.</p></li>
+<li><p><strong>ndim</strong> (<em>int</em><em>, </em><em>Default: 3</em>) – Number of spatial dimensions.</p></li>
+<li><p><strong>atom_labels</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Additional per-atom labels as an array of strings. Typical use is in model conversions, such as Elemental &lt;-&gt; Molpro and not typically something which should be user assigned. See the <code class="docutils literal notranslate"><span class="pre">comments</span></code> field for general human-consumable text to affix to the molecule.</p></li>
+<li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. Ghostedness should be indicated through <code class="docutils literal notranslate"><span class="pre">real</span></code> field, not zeros here.</p></li>
+<li><p><strong>mass_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic <em>mass</em> numbers of shape (nat). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the most common isotopes of the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. If single isotope not (yet) known for an atom, -1 is placeholder.</p></li>
+<li><p><strong>masses</strong> (<em>Array</em><em>, </em><em>Optional</em>) – The ordered array of particle masses. Index order matches the 0-indexed indices of all other per-atom fields like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. If this is not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code> but can accept <code class="docutils literal notranslate"><span class="pre">None</span></code> entries for standard masses to infer from the same index in the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> field.</p></li>
+<li><p><strong>masses_units</strong> (<em>str</em><em>, </em><em>Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
+<li><p><strong>molecular_charge</strong> (<em>float</em><em>, </em><em>Default: 0.0</em>) – The net electrostatic charge of the molecule. Default unit is elementary charge.</p></li>
+<li><p><strong>molecular_charge_units</strong> (<em>str</em><em>, </em><em>Default: e</em>) – Units for molecular charge. Defaults to elementary charge.</p></li>
+<li><p><strong>geometry</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.</p></li>
+<li><p><strong>geometry_units</strong> (<em>str</em><em>, </em><em>Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
+<li><p><strong>velocities</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is Angstroms/femtoseconds.</p></li>
+<li><p><strong>velocities_units</strong> (<em>str</em><em>, </em><em>Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
+<li><p><strong>connectivity</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of bonds within the molecule. Each entry is a tuple of <code class="docutils literal notranslate"><span class="pre">(atom_index_A,</span> <span class="pre">atom_index_B,</span> <span class="pre">bond_order)</span></code> where the <code class="docutils literal notranslate"><span class="pre">atom_index</span></code> matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Bonds may be freely reordered and inverted.</p></li>
+<li><p><strong>substructs</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.777.gc2acc56’, ‘routine’: ‘mmelemental.models.molecule.mm_mol’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_data">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Molecule object from a data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em><em>, </em><em>optional</em>) – Data to construct Molecule from such as a data object (e.g. MDAnalysis.Universe) or dict.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – How to interpret the data, if not passed attempts to discover this based on input type.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructors.</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed Molecule class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_file">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Molecule object from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The molecular structure filename to read</p></li>
+<li><p><strong>top_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The topology i.e. connectivity filename to read</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of file to interpret. If not set, mmelemental attempts to discover the file type.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Any additional keywords to pass to the constructor</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed Molecule class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_hash">
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the hash of the molecule.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_molecular_formula">
+<span class="sig-name descname"><span class="pre">get_molecular_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'alphabetical'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_molecular_formula" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the molecular formula for a molecule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>order</strong> (<em>str</em><em>, </em><em>optional</em>) – Sorting order of the formula. Valid choices are “alphabetical” and “hill”.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The molecular formula.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">H      0.5288      0.1610      0.9359</span>
+<span class="gp">... </span><span class="s1">C      0.0000      0.0000      0.0000</span>
+<span class="gp">... </span><span class="s1">H      0.2051      0.8240     -0.6786</span>
+<span class="gp">... </span><span class="s1">H      0.3345     -0.9314     -0.4496</span>
+<span class="gp">... </span><span class="s1">H     -1.0685     -0.0537      0.1921</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
+<span class="go">CH4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">H      0.0000      0.0000      0.0000</span>
+<span class="gp">... </span><span class="s1">Cl     0.0000      0.0000      1.2000</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
+<span class="go">ClH</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_substructs">
+<span class="sig-name descname"><span class="pre">get_substructs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes duplicate entries substructs while preserving the order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ngl_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
+images (<cite>.png</cite>).
+:type ngl_kwargs: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]
+:param ngl_kwargs: Addition nglview NGLWidget kwargs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A nglview view of the molecule</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nglview.NGLWidget</p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ngl_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_data">
+<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Toolkit-specific molecule model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ToolkitModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the Molecule to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
+file extension if not provided.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="forcefields.html" class="btn btn-neutral float-right" title="Force fields" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="components.html" class="btn btn-neutral float-left" title="Components" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #033e57;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #080f14;
+    }
+  </style>
+
+
+</body>
+</html>
