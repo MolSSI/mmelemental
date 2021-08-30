@@ -2,6 +2,7 @@ import numpy
 from typing import Optional
 from pydantic import Field, constr
 import hashlib
+import json
 
 
 # MM models
