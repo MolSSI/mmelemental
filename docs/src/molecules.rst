@@ -10,6 +10,9 @@ To be completed soon.
 
 Molecule
 ========
+
+.. _molecule_descr:
+
 Description
 -----------
 The `Molecule` model describes particle systems such as atomistic, coarse-grained, and symbolic (e.g. smiles) molecules. 
@@ -29,7 +32,9 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
 
 In addition, `Molecule` provides :func:`~mmelemental.models.molecule.Molecule.from_data` and :func:`~mmelemental.models.molecule.Molecule.from_file` methods to create a molecule from data (e.g. MDAnalysis.Universe) or file objects. 
 The methods :func:`~mmelemental.models.molecule.Molecule.to_data` and :func:`~mmelemental.models.molecule.Molecule.to_file` enable converting a molecule to data and file objects, respectively. See the API for more details.
+See the :doc:`tutorials_mol` tutorials for more in-depth examples.
 
+.. _molecule_api:
 
 API
 ---
