@@ -218,9 +218,9 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
     "sphinx_autodoc_typehints",
+    "sphinx.ext.autosectionlabel",
     # from Astropy
     "sphinx_automodapi.automodapi",
     "sphinx_automodapi.automodsumm",
     "sphinx_automodapi.smart_resolver",
-    "sphinx.ext.autosectionlabel",
 ]
