@@ -1,6 +1,8 @@
 import numpy
 from typing import Optional
-from pydantic import Field
+from pydantic import Field, constr
+import hashlib
+import json
 
 
 # MM models
@@ -8,12 +10,17 @@ from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.types import Array
 
 from mmelemental.util.data import (
+    float_prep,
     NUMPY_INT,
     NUMPY_FLOAT,
     NUMPY_UNI,
+    CHARGE_NOISE,
+    MASS_NOISE,
 )
 
 __all__ = ["Topology"]
+
+mmschema_topology_default = "mmschema_topology"
 
 
 class Topology(ProtoModel):
@@ -21,6 +28,26 @@ class Topology(ProtoModel):
     symbols/labels, masses, and net charge. Useful for creating :class:``Trajectory`` objects.
     """
 
+    schema_name: constr(
+        strip_whitespace=True, regex=mmschema_topology_default
+    ) = Field(  # type: ignore
+        mmschema_topology_default,
+        description=(
+            f"The MMSchema specification to which this model conforms. Explicitly fixed as {mmschema_topology_default}."
+        ),
+    )
+    schema_version: int = Field(  # type: ignore
+        1,
+        description="The version number of ``schema_name`` to which this model conforms.",
+    )
+    name: Optional[str] = Field(  # type: ignore
+        None,
+        description="Common or human-readable name to assign to this molecule. This field can be arbitrary.",
+    )
+    comment: Optional[str] = Field(  # type: ignore
+        None,
+        description="Additional comments for this molecule. Intended for pure human/user consumption and clarity.",
+    )
     symbols: Optional[Array[NUMPY_UNI]] = Field(  # type: ignore
         None,
         description="An ordered (natom,) array-like object of particle symbols. The index of "
@@ -73,3 +100,57 @@ class Topology(ProtoModel):
         "matches the 0-indexed indices of all other per-atom settings like ``symbols`` and ``real``. "
         "Bonds may be freely reordered and inverted.",
     )
+
+    def __repr_args__(self) -> "ReprArgs":
+        return [("name", self.name), ("hash", self.get_hash()[:7])]
+
+    def __eq__(self, other):
+        """
+        Checks if two models are identical. This is a molecular identity defined
+        by scientific terms, and not programing terms, so it's less rigorous than
+        a programmatic equality or a memory equivalent `is`.
+        """
+
+        if isinstance(other, dict):
+            other = self.__class__(**other)
+        elif isinstance(other, self.__class__):
+            pass
+        else:
+            raise TypeError(
+                f"Comparison between {self.__class__} and {type(other)} is not supported."
+            )
+
+        return self.get_hash() == other.get_hash()
+
+    @property
+    def hash_fields(self):
+        return [
+            "symbols",
+            "masses",
+            "masses_units",
+            "molecular_charge",
+            "molecular_charge_units",
+            "connectivity",
+        ]
+
+    def get_hash(self):
+        """
+        Returns the hash of the molecule.
+        """
+
+        m = hashlib.sha1()
+        concat = ""
+
+        # np.set_printoptions(precision=16)
+        for field in self.hash_fields:
+            data = getattr(self, field)
+            if data is not None:
+                if field == "molecular_charge":
+                    data = float_prep(data, CHARGE_NOISE)
+                elif field == "masses":
+                    data = float_prep(data, MASS_NOISE)
+
+                concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+
+        m.update(concat.encode("utf-8"))
+        return m.hexdigest()

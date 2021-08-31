@@ -377,6 +377,8 @@ class Molecule(ProtoModel):
     def get_topology(self):
 
         return Topology(
+            name="top_from_mol",
+            schema_version=self.schema_version,
             symbols=self.symbols,
             atom_labels=self.atom_labels,
             atomic_numbers=self.atomic_numbers,
