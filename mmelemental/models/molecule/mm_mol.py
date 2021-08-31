@@ -5,6 +5,7 @@ import importlib
 from pathlib import Path
 import hashlib
 import json
+from functools import partial
 
 # MM models
 from mmelemental.models.util.output import FileOutput
@@ -191,7 +192,7 @@ class Molecule(ProtoModel):
     )
     # Extras
     provenance: Provenance = Field(
-        provenance_stamp(__name__),
+        default_factory=partial(provenance_stamp, __name__),
         description="The provenance information about how this object (and its attributes) were generated, "
         "provided, and manipulated.",
     )
@@ -210,10 +211,12 @@ class Molecule(ProtoModel):
     def __init__(self, **kwargs: Optional[Dict[str, Any]]) -> None:
         """
         Initializes the molecule object from dictionary-like values.
+
         Parameters
         ----------
         **kwargs : Any
             The values of the Molecule object attributes.
+
         """
         atomic_numbers = kwargs.get("atomic_numbers")
         if atomic_numbers is not None:
@@ -285,6 +288,7 @@ class Molecule(ProtoModel):
 
     @root_validator
     def _must_be_n(cls, values):
+        assert values["symbols"] is not None, "symbols is required."
         n = len(values["symbols"])
         for key in [
             "masses",
@@ -385,7 +389,7 @@ class Molecule(ProtoModel):
         )
 
     def get_substructs(self) -> List:
-        """Removes duplicate entries substructs while preserving the order."""
+        """Removes duplicate entries in substructs while preserving the order."""
         seen = set()
         seen_add = seen.add
         return [x for x in self.substructs.tolist() if not (x in seen or seen_add(x))]
@@ -403,26 +407,6 @@ class Molecule(ProtoModel):
         -------
         str
             The molecular formula.
-
-        Examples
-        --------
-
-        >>> methane = mmelemental.models.Molecule('''
-        ... H      0.5288      0.1610      0.9359
-        ... C      0.0000      0.0000      0.0000
-        ... H      0.2051      0.8240     -0.6786
-        ... H      0.3345     -0.9314     -0.4496
-        ... H     -1.0685     -0.0537      0.1921
-        ... ''')
-        >>> methane.get_molecular_formula()
-        CH4
-
-        >>> hcl = mmelemental.models.Molecule('''
-        ... H      0.0000      0.0000      0.0000
-        ... Cl     0.0000      0.0000      1.2000
-        ... ''')
-        >>> hcl.get_molecular_formula()
-        ClH
 
         """
         if not which_import("qcelemental", return_bool=True):
@@ -612,9 +596,9 @@ class Molecule(ProtoModel):
                 extras={
                     "debug": {
                         "routine": f"{__name__}.{cls.__name__}.{cls.from_file.__name__}",
-                        "translator": f"{translator}, {mod.__version__}",
-                        "engine": f"{tkmol_class.engine()}",
-                        "model": f"{tkmol_class}",
+                        "translator": (translator, mod.__version__),
+                        "engine": tkmol_class.engine(),
+                        "model": tkmol_class,
                     }
                 }
             )
@@ -652,20 +636,13 @@ class Molecule(ProtoModel):
         Molecule
             A constructed Molecule class.
 
+        Examples
+        --------
+        >>> mol = mmelemental.models.Molecule.from_data(universe, dtype="mdanalysis")
+        >>> mol = mmelemental.models.Molecule.from_data(struct, dtype="parmed")
+
         """
         if isinstance(data, str):
-
-            if kwargs.pop("debug", None):
-                kwargs.update(
-                    extras={
-                        "debug": {
-                            "routine": f"{__name__}.{cls.__name__}.{cls.from_data.__name__}",
-                            "translator": None,
-                            "engine": None,
-                            "model": None,
-                        }
-                    }
-                )
 
             if not dtype:
                 raise ValueError(
@@ -719,6 +696,19 @@ class Molecule(ProtoModel):
                 raise ValueError(
                     f"No Molecule model found while looking in translator: {translator}."
                 )
+
+            if kwargs.pop("debug", None):
+                kwargs.update(
+                    extras={
+                        "debug": {
+                            "routine": f"{__name__}.{cls.__name__}.{cls.from_file.__name__}",
+                            "translator": (translator, mod.__version__),
+                            "engine": tkmol_class.engine(),
+                            "model": tkmol_class,
+                        }
+                    }
+                )
+
             return tkmol.to_schema(**kwargs)
         else:
             raise NotImplementedError(
