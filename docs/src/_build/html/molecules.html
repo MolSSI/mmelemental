@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
         <script src="static/jquery.js"></script>
         <script src="static/underscore.js"></script>
         <script src="static/doctools.js"></script>
@@ -88,7 +85,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+              <p class="caption"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="get_started.html#quick-installation">Quick Installation</a></li>
@@ -99,7 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Components</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<p class="caption"><span class="caption-text">Modules:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Molecules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#topology">Topology</a></li>
@@ -145,7 +142,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<p class="caption"><span class="caption-text">Tutorials:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_mol.html#overview-instantiation">Overview &amp; Instantiation</a></li>
@@ -262,8 +259,8 @@ See the <a class="reference internal" href="tutorials_mol.html"><span class="doc
 <div class="section" id="module-mmelemental.models.molecule">
 <span id="api"></span><span id="molecule-api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.molecule" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">mmelemental.models.molecule.</span></code><code class="sig-name descname"><span class="pre">Molecule</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,</dt><dd><p>residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
 and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.</p>
@@ -296,13 +293,10 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_data" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.from_data">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Molecule object from a data object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -325,11 +319,15 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;parmed&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>If dtype is not specified, mmelemental will attempt to infer it, so this works too:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">mdanalysis_universe</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_file" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.from_file">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Molecule object from a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -354,14 +352,14 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_hash" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.get_hash">
+<code class="sig-name descname"><span class="pre">get_hash</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_hash" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the hash of the molecule.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_molecular_formula">
-<span class="sig-name descname"><span class="pre">get_molecular_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'alphabetical'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_molecular_formula" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.get_molecular_formula">
+<code class="sig-name descname"><span class="pre">get_molecular_formula</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'alphabetical'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_molecular_formula" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the molecular formula for a molecule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -377,8 +375,8 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_substructs">
-<span class="sig-name descname"><span class="pre">get_substructs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.get_substructs">
+<code class="sig-name descname"><span class="pre">get_substructs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes duplicate entries in substructs while preserving the order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -388,8 +386,8 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ngl_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.show" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.show">
+<code class="sig-name descname"><span class="pre">show</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ngl_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
 images (<cite>.png</cite>).
 :type ngl_kwargs: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]
@@ -408,8 +406,8 @@ images (<cite>.png</cite>).
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_data" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.to_data">
+<code class="sig-name descname"><span class="pre">to_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -432,8 +430,8 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_file" title="Permalink to this definition">¶</a></dt>
+<dt id="mmelemental.models.molecule.Molecule.to_file">
+<code class="sig-name descname"><span class="pre">to_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the Molecule to a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
