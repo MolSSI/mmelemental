@@ -289,7 +289,7 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <li><p><strong>velocities_units</strong> (<em>str</em><em>, </em><em>Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
 <li><p><strong>connectivity</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of bonds within the molecule. Each entry is a tuple of <code class="docutils literal notranslate"><span class="pre">(atom_index_A,</span> <span class="pre">atom_index_B,</span> <span class="pre">bond_order)</span></code> where the <code class="docutils literal notranslate"><span class="pre">atom_index</span></code> matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Bonds may be freely reordered and inverted.</p></li>
 <li><p><strong>substructs</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.783.g2bca342’, ‘routine’: ‘mmelemental.models.molecule.mm_mol’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Optional) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -317,6 +317,11 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">universe</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;mdanalysis&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;parmed&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -366,32 +371,12 @@ in the <code class="xref py py-class docutils literal notranslate"><span class="
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">H      0.5288      0.1610      0.9359</span>
-<span class="gp">... </span><span class="s1">C      0.0000      0.0000      0.0000</span>
-<span class="gp">... </span><span class="s1">H      0.2051      0.8240     -0.6786</span>
-<span class="gp">... </span><span class="s1">H      0.3345     -0.9314     -0.4496</span>
-<span class="gp">... </span><span class="s1">H     -1.0685     -0.0537      0.1921</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">methane</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
-<span class="go">CH4</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">H      0.0000      0.0000      0.0000</span>
-<span class="gp">... </span><span class="s1">Cl     0.0000      0.0000      1.2000</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">hcl</span><span class="o">.</span><span class="n">get_molecular_formula</span><span class="p">()</span>
-<span class="go">ClH</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_substructs">
 <span class="sig-name descname"><span class="pre">get_substructs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes duplicate entries substructs while preserving the order.</p>
+<dd><p>Removes duplicate entries in substructs while preserving the order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
