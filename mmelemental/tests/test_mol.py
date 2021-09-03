@@ -1,6 +1,6 @@
 import pytest
+from mmelemental.models import Molecule
 from mmelemental.models.chem.codes import ChemCode
-from mmelemental.models.molecule.mm_mol import Molecule
 from cmselemental.util import yaml_import, which_import
 import mm_data
 import os
