@@ -7,7 +7,7 @@ import json
 
 # MM models
 from mmelemental.models.base import ProtoModel, Provenance
-from mmelemental.types import Array
+from cmselemental.types import Array
 
 from mmelemental.util.data import (
     float_prep,

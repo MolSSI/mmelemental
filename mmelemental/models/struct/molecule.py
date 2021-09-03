@@ -9,10 +9,10 @@ from functools import partial
 
 # MM models
 from mmelemental.models.util.output import FileOutput
-from mmelemental.models.molecule.topology import Topology
+from .topology import Topology
 from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
-from mmelemental.types import Array
+from cmselemental.types import Array
 from mmelemental.util.data import (
     float_prep,
     NUMPY_UNI,
