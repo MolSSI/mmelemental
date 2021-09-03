@@ -1,7 +1,7 @@
 from pydantic import Field, constr
 from typing import Optional, List, Dict, Any
 from cmselemental.types import Array
-from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models.struct import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 
 __all__ = ["Microstate", "Ensemble"]

@@ -1,7 +1,7 @@
 from pydantic import Field, validator, root_validator, constr
 from typing import Union, Optional, List, Dict, Any
-from mmelemental.types import Array
-from mmelemental.models.molecule.topology import Topology
+from cmselemental.types import Array
+from mmelemental.models.struct.topology import Topology
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
 from pathlib import Path
