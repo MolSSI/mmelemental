@@ -105,7 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#topology">Topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#molecule">Molecule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.molecule">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
 </ul>
@@ -233,7 +233,7 @@
             
   <div class="section" id="molecules">
 <h1>Molecules<a class="headerlink" href="#molecules" title="Permalink to this headline">¶</a></h1>
-<p>The <a class="reference internal" href="#module-mmelemental.models.molecule" title="mmelemental.models.molecule"><code class="xref py py-mod docutils literal notranslate"><span class="pre">molecule</span></code></a> submodule provides models that describe molecular topology and conformation.</p>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">molecule</span></code> submodule provides models that describe molecular topology and conformation.</p>
 <div class="section" id="topology">
 <h2>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h2>
 <p>To be completed soon.</p>
@@ -255,207 +255,12 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
 <span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;704898f&#39;)</span>
 </pre></div>
 </div>
-<p>In addition, <cite>Molecule</cite> provides <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_data" title="mmelemental.models.molecule.Molecule.from_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.from_file" title="mmelemental.models.molecule.Molecule.from_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code></a> methods to create a molecule from data (e.g. MDAnalysis.Universe) or file objects.
-The methods <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_data" title="mmelemental.models.molecule.Molecule.to_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code></a> and <a class="reference internal" href="#mmelemental.models.molecule.Molecule.to_file" title="mmelemental.models.molecule.Molecule.to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code></a> enable converting a molecule to data and file objects, respectively. See the API for more details.
+<p>In addition, <cite>Molecule</cite> provides <code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code> methods to create a molecule from data (e.g. MDAnalysis.Universe) or file objects.
+The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a molecule to data and file objects, respectively. See the API for more details.
 See the <a class="reference internal" href="tutorials_mol.html"><span class="doc">Molecule</span></a> tutorials for more in-depth examples.</p>
 </div>
-<div class="section" id="module-mmelemental.models.molecule">
-<span id="api"></span><span id="molecule-api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.molecule" title="Permalink to this headline">¶</a></h3>
-<dl class="py class">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.molecule.</span></span><span class="sig-name descname"><span class="pre">Molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>A representation of a Molecule in MM. This model contains data for symbols, geometry, connectivity, charges,</dt><dd><p>residues, etc. while also supporting a wide array of I/O and manipulation capabilities. Charges, masses, geometry,
-and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to assist with duplicate detection.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_molecule</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_molecule.</p></li>
-<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
-<li><p><strong>symbols</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom,) array-like object of particle symbols. The index of this attribute sets the order for all other per-particle setting like <code class="docutils literal notranslate"><span class="pre">geometry</span></code> and the first dimension of <code class="docutils literal notranslate"><span class="pre">geometry</span></code>.</p></li>
-<li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this molecule. This field can be arbitrary.</p></li>
-<li><p><strong>identifiers</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code>, Optional) – An optional dictionary of additional identifiers by which this molecule can be referenced, such as INCHI, canonical SMILES, etc. See the <code class="xref py py-class docutils literal notranslate"><span class="pre">Identifiers</span></code> model for more details.</p></li>
-<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this molecule. Intended for pure human/user consumption and clarity.</p></li>
-<li><p><strong>ndim</strong> (<em>int</em><em>, </em><em>Default: 3</em>) – Number of spatial dimensions.</p></li>
-<li><p><strong>atom_labels</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Additional per-atom labels as an array of strings. Typical use is in model conversions, such as Elemental &lt;-&gt; Molpro and not typically something which should be user assigned. See the <code class="docutils literal notranslate"><span class="pre">comments</span></code> field for general human-consumable text to affix to the molecule.</p></li>
-<li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. Ghostedness should be indicated through <code class="docutils literal notranslate"><span class="pre">real</span></code> field, not zeros here.</p></li>
-<li><p><strong>mass_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic <em>mass</em> numbers of shape (nat). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Values are inferred from the most common isotopes of the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set. If single isotope not (yet) known for an atom, -1 is placeholder.</p></li>
-<li><p><strong>masses</strong> (<em>Array</em><em>, </em><em>Optional</em>) – The ordered array of particle masses. Index order matches the 0-indexed indices of all other per-atom fields like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. If this is not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code> but can accept <code class="docutils literal notranslate"><span class="pre">None</span></code> entries for standard masses to infer from the same index in the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> field.</p></li>
-<li><p><strong>masses_units</strong> (<em>str</em><em>, </em><em>Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
-<li><p><strong>molecular_charge</strong> (<em>float</em><em>, </em><em>Default: 0.0</em>) – The net electrostatic charge of the molecule. Default unit is elementary charge.</p></li>
-<li><p><strong>molecular_charge_units</strong> (<em>str</em><em>, </em><em>Default: e</em>) – Units for molecular charge. Defaults to elementary charge.</p></li>
-<li><p><strong>geometry</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.</p></li>
-<li><p><strong>geometry_units</strong> (<em>str</em><em>, </em><em>Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
-<li><p><strong>velocities</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is Angstroms/femtoseconds.</p></li>
-<li><p><strong>velocities_units</strong> (<em>str</em><em>, </em><em>Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
-<li><p><strong>connectivity</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of bonds within the molecule. Each entry is a tuple of <code class="docutils literal notranslate"><span class="pre">(atom_index_A,</span> <span class="pre">atom_index_B,</span> <span class="pre">bond_order)</span></code> where the <code class="docutils literal notranslate"><span class="pre">atom_index</span></code> matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code> and <code class="docutils literal notranslate"><span class="pre">real</span></code>. Bonds may be freely reordered and inverted.</p></li>
-<li><p><strong>substructs</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Optional) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
-<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Molecule object from a data object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>Any</em><em>, </em><em>optional</em>) – Data to construct Molecule from such as a data object (e.g. MDAnalysis.Universe) or dict.</p></li>
-<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – How to interpret the data, if not passed attempts to discover this based on input type.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructors.</p></li>
-<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Molecule class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">universe</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;mdanalysis&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">struct</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;parmed&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Molecule object from a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The molecular structure filename to read</p></li>
-<li><p><strong>top_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The topology i.e. connectivity filename to read</p></li>
-<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of file to interpret. If not set, mmelemental attempts to discover the file type.</p></li>
-<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Any additional keywords to pass to the constructor</p></li>
-<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A constructed Molecule class.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.molecule.Molecule" title="mmelemental.models.molecule.Molecule">Molecule</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_hash" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the hash of the molecule.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_molecular_formula">
-<span class="sig-name descname"><span class="pre">get_molecular_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'alphabetical'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_molecular_formula" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the molecular formula for a molecule.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>order</strong> (<em>str</em><em>, </em><em>optional</em>) – Sorting order of the formula. Valid choices are “alphabetical” and “hill”.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The molecular formula.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.get_substructs">
-<span class="sig-name descname"><span class="pre">get_substructs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.get_substructs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes duplicate entries in substructs while preserving the order.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ngl_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
-images (<cite>.png</cite>).
-:type ngl_kwargs: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]
-:param ngl_kwargs: Addition nglview NGLWidget kwargs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A nglview view of the molecule</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>nglview.NGLWidget</p>
-</dd>
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ngl_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.</p></li>
-<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Toolkit-specific molecule model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ToolkitModel</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="mmelemental.models.molecule.Molecule.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mmelemental.models.molecule.Molecule.to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the Molecule to a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
-<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to write (e.g. json, pdb, etc.), attempts to infer dtype from
-file extension if not provided.</p></li>
-<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
-MMElemental attempts to find an appropriate translator if it is registered
-in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
-<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
-<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="api">
+<span id="molecule-api"></span><h3>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
