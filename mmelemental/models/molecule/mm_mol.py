@@ -746,8 +746,6 @@ class Molecule(ProtoModel):
         if not dtype:
             dtype = Path(filename).suffix[1:]
 
-        mode = kwargs.pop("mode", "w")
-
         if dtype in ["json", "js", "yaml", "yml", "hdf5", "h5"]:
             self.write_file(
                 filename,
