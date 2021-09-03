@@ -1,6 +1,7 @@
 import pytest
 from pathlib import Path
-from mmelemental.models.molecule.mm_mol import Molecule
+from mmelemental.models import Molecule
+from mmelemental.models.struct import Topology
 from cmselemental.util import yaml_import, which_import
 import mm_data
 import os
@@ -29,3 +30,14 @@ def test_mmelemental_top_serial(encoding):
     path.write_text(top.json())
     assert path.is_file()
     path.unlink()
+
+
+def test_mmelemental_top():
+    file = mm_data.mols[f"alanine.json"]
+    mm_mol = Molecule.from_file(file)
+    assert isinstance(mm_mol, Molecule)
+
+    top_from_mol = mm_mol.get_topology()
+    top = Topology(**top_from_mol.dict(exclude={"schema_name"}))
+
+    blob = top.json()
