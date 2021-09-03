@@ -1,5 +1,5 @@
 import numpy
-from typing import List, Tuple, Optional, Any, Dict, Union
+from typing import List, Optional, Any, Dict, Union
 from pydantic import Field, constr, validator, root_validator
 import importlib
 from pathlib import Path
