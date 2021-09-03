@@ -260,8 +260,8 @@ class Molecule(ProtoModel):
             return v if len(v) else None
         return v
 
-    @validator("substructs", pre=True)
-    def _valid_substructs(cls, v):
+    @validator("substructs", "connectivity", pre=True)
+    def _valid_tuple_array(cls, v):
         assert isinstance(
             v, (list, tuple, numpy.ndarray)
         ), "Substructs must be a list, tuple, or array."
