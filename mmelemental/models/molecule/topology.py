@@ -6,7 +6,7 @@ import json
 
 
 # MM models
-from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
+from mmelemental.models.base import ProtoModel, Provenance
 from mmelemental.types import Array
 
 from mmelemental.util.data import (
