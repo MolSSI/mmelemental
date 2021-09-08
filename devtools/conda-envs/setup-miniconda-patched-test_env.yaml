@@ -15,4 +15,4 @@ dependencies:
       - sphinx-rtd-theme
       - sphinx_autodoc_typehints
       - sphinx_automodapi
-  - python=3.7
+  - python=3.9
