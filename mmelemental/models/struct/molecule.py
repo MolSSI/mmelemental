@@ -160,6 +160,13 @@ class Molecule(ProtoModel):
     molecular_charge_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to elementary charge."
     )
+    formal_charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
+        None,
+        description="Formal charges of all particles/atoms."
+    )
+    formal_charges_units: Optional[str] = Field(  # type: ignore
+        "e", description="Units for molecular charge. Defaults to elementary charge."
+    )
     geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
@@ -540,7 +547,7 @@ class Molecule(ProtoModel):
         fileobj = FileOutput(path=filename) if filename else None
         top_fileobj = FileOutput(path=top_filename) if top_filename else None
 
-        dtype = dtype or fileobj.ext.strip(".")
+        dtype = dtype or fileobj.ext.removeprefix(".")
 
         # Generic translator component
         if not which_import("mmic_translator", return_bool=True):

@@ -241,7 +241,7 @@ class ForceField(ProtoModel):
 
         if file_ext in [".json"]:
 
-            dtype = file_ext.strip(".")
+            dtype = file_ext.removeprefix(".")
             # Raw string type, read and pass through
             if dtype == "json":
                 with open(filename, "r") as infile:
@@ -254,7 +254,7 @@ class ForceField(ProtoModel):
 
         fileobj = FileOutput(path=filename) if filename else None
 
-        dtype = dtype or fileobj.ext.strip(".")
+        dtype = dtype or fileobj.ext.removeprefix(".")
         ext = "." + dtype
 
         # Generic translator component
