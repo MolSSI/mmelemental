@@ -161,8 +161,7 @@ class Molecule(ProtoModel):
         "e", description="Units for molecular charge. Defaults to elementary charge."
     )
     formal_charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
-        None,
-        description="Formal charges of all particles/atoms."
+        None, description="Formal charges of all particles/atoms."
     )
     formal_charges_units: Optional[str] = Field(  # type: ignore
         "e", description="Units for molecular charge. Defaults to elementary charge."
