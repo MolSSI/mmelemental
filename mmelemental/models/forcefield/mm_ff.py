@@ -61,12 +61,20 @@ class ForceField(ProtoModel):
         ),
     )
     schema_version: int = Field(  # type: ignore
-        0,
+        1,
         description="The version number of ``schema_name`` to which this model conforms.",
+    )
+    author: Optional[str] = Field(  # type: ignore
+        None,
+        description="Author name to assign to the force field this model stores. This field can be arbitrary.",
     )
     name: Optional[str] = Field(  # type: ignore
         None,
         description="Common or human-readable name to assign to this model. This field can be arbitrary.",
+    )
+    version: Optional[str] = Field(  # type: ignore
+        None,
+        description="Version of the force field this model stores. This field can be arbitrary.",
     )
     comment: Optional[str] = Field(  # type: ignore
         None,
@@ -124,9 +132,6 @@ class ForceField(ProtoModel):
     # switch_width="1.0 * angstrom",
     # cutoff="9.0 * angstrom" ,
     # method="cutoff",
-    identifier: Optional[str] = Field(  # type: ignore
-        None, description="Forcefield unique identifier e.g. charmm27, amber99, etc."
-    )
     defs: Optional[List[str]] = Field(  # type: ignore
         None,
         description="Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. "
