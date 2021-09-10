@@ -1,7 +1,7 @@
 from pydantic import validator, root_validator, Field
 from mmelemental.models.base import ProtoModel
 from mmelemental.models.util.output import FileOutput
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, List
 import ast
 import glob
 import pathlib
@@ -16,8 +16,19 @@ class Params(ProtoModel):
         ...,
         description="Name or form of the potential. See cls.supported_potentials() for available potentials.",
     )
+    version: Optional[str] = Field(  # type: ignore
+        None,
+        description="Version of the force field this model stores. This field can be arbitrary.",
+    )
     params: Any = Field(..., description="Specific force field parameters model.")
-
+    defs: Optional[List[str]] = Field(  # type: ignore
+        None,
+        description="Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.",
+    )
+    extras: Dict[str, Any] = Field(  # type: ignore
+        None,
+        description="Additional information to bundle with the object. Use for schema development and scratch space.",
+    )
     # Constructors
     @classmethod
     def from_file(
