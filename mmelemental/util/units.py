@@ -1,9 +1,9 @@
 """ Functions for unit conversions in MMElemental """
 
-__all__ = ["convert"]
+__all__ = ["convert", "Quantity"]
 
 from typing import Any
-from pint import UnitRegistry
+from pint import UnitRegistry, Quantity
 
 
 def convert(quant: Any, from_units: str, to_units: str):
