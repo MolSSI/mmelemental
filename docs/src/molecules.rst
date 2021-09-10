@@ -38,5 +38,5 @@ See the :doc:`tutorials_mol` tutorials for more in-depth examples.
 
 API
 ---
-.. automodule:: mmelemental.models.molecule
+.. automodule:: mmelemental.models.struct.molecule
    :members:

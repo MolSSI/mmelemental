@@ -156,7 +156,7 @@ The Molecule_ and Topology_ models are applicable to any kind of particle system
 for instance represent entities rather than atoms (although this will negate atomic properties such as atomic or mass numbers). 
 
 Validation
-==========
+----------
 MMElemental performs only data type validation on any constructed model. However, beyond basic validation and sanity checks, MMElemental does not perform any scientific validation. This is what enables 
 MMElemental to support coarse-graining for instance. For domain-specific (i.e. scientific) validation, MMElemental can theoretically make use of MMIC_ validators similarly to how it uses translators to 
 parse and write to various file formats.
