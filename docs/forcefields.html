@@ -267,8 +267,10 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_forcefield</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_forcefield.</p></li>
-<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 0</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>author</strong> (<em>str</em><em>, </em><em>Optional</em>) – Author name to assign to the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this model. This field can be arbitrary.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this model. Intended for pure human/user consumption and clarity.</p></li>
 <li><p><strong>symbols</strong> (<em>Array</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
 <li><p><strong>nonbonded</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>], Optional) – Non-bonded parameters model.</p></li>
@@ -282,13 +284,12 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <li><p><strong>charge_groups</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Charge groups per atom. Length of the array must be natoms.</p></li>
 <li><p><strong>exclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of bonded atoms to exclude from non-bonded calculations.        The rules to apply in choosing bonded exclusions are specifed in the configuration file using the exclude parameter. The        choices for exclusions are None, 1-2, 1-3, 1-4, etc. With None, no atom pairs are excluded. With 1-2, only atoms that are connected             via a linear bond are excluded. With 1-3, any pair of atoms connected via a bond or bonded to a common third atom are excluded.         With 1-4, any atoms that are connected by a linear bond, or a sequence of two bonds, or a sequence of three bonds, are excluded.        With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of       3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.</p></li>
 <li><p><strong>inclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.</p></li>
-<li><p><strong>identifier</strong> (<em>str</em><em>, </em><em>Optional</em>) – Forcefield unique identifier e.g. charmm27, amber99, etc.</p></li>
 <li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. The type names are associated with the atomic elements defined in other objects e.g. see the :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> model.</p></li>
 <li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
 <li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
 <li><p><strong>combination_rule</strong> (<em>str</em><em>, </em><em>Default: Lorentz-Berthelot</em>) – Combination rule for the force field.</p></li>
 <li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.816.g04f3c3b’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.820.g3e709d7’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -460,7 +461,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -513,7 +517,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>lengths</strong> (<em>Array</em>) – Equilibrium bond lengths. Default unit is Angstroms.</p></li>
 <li><p><strong>lengths_units</strong> (<em>str</em><em>, </em><em>Default: angstroms</em>) – Equilibrium bond lengths unit.</p></li>
 <li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).</p></li>
@@ -572,7 +579,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>angles</strong> (<em>Array</em>) – Equilibrium angles. Default unit is degrees.</p></li>
 <li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium angle units.</p></li>
 <li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each angle.</p></li>
@@ -602,7 +612,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials() for available potentials.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>angles</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Equilibrium dihedral angles. Default unit is degrees.</p></li>
 <li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium dihedral angle units.</p></li>
 <li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each dihedral angle.</p></li>
