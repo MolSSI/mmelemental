@@ -15,8 +15,8 @@ class Bonds(Params):
     lengths_units: Optional[str] = Field(
         "angstroms", description="Equilibrium bond lengths unit."
     )
-    connectivity: List[Tuple[Union[int, str], Union[int, str], float]] = Field(  # type: ignore
-        ...,
+    connectivity: Optional[List[Tuple[Union[int, str], Union[int, str], float]]] = Field(  # type: ignore
+        None,
         description="Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).",
         min_items=1,
     )
