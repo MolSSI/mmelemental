@@ -2,7 +2,7 @@ name: test
 channels:
 dependencies:
     # Base depends
-  - python
+  - python>=3.9
   - pip
 
     # Testing
