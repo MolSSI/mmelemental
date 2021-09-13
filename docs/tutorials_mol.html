@@ -337,8 +337,10 @@ available in <a class="reference external" href="https://pint.readthedocs.io">pi
 </div>
 <div class="section" id="topological-data">
 <h2>Topological data<a class="headerlink" href="#topological-data" title="Permalink to this headline">¶</a></h2>
-<p>A <a class="reference external" href="molecules.html#topology">Topology</a> model in MMElemental is a subset of <a class="reference external" href="molecules.html#molecule">Molecule</a> which captures symbolic information such as particle symbols and connectivity.
-We can create a <a class="reference external" href="molecules.html#topology">Topology</a> object from an existing molecule with the <cite>get_topology</cite> method as shown:</p>
+<p>A <a class="reference external" href="molecules.html#topology">Topology</a> model in MMElemental is a subset of <a class="reference external" href="molecules.html#molecule">Molecule</a> which captures abstract information about a molecule’s connectivity. A <a class="reference external" href="molecules.html#topology">Topology</a> object
+does not, however, store particle positions. This model is particularly useful for efficiently storing trajectories generated from classical molecular dynamics, in which
+the connectivity of a molecule is constant while the particle positions change over time. We can create a <a class="reference external" href="molecules.html#topology">Topology</a> object from an existing molecule with the <cite>get_topology</cite>
+method as shown:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">top</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">get_topology</span><span class="p">()</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">top</span>
