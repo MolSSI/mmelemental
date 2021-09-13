@@ -80,8 +80,8 @@ class ForceField(ProtoModel):
         None,
         description="Additional comments for this model. Intended for pure human/user consumption and clarity.",
     )
-    symbols: Array[str] = Field(  # type: ignore
-        ...,
+    symbols: Optional[Array[str]] = Field(  # type: ignore
+        None,
         description="An ordered (natom,) list of particle (e.g. atomic elemental) symbols.",
     )
     nonbonded: Optional[Union[NonBonded, List[NonBonded]]] = Field(  # type: ignore
@@ -145,9 +145,6 @@ class ForceField(ProtoModel):
     templates: Optional[Dict[str, List[str]]] = Field(
         None,
         description="A list of template definitions typically in terms of atom types. E.g. {'ACE': ['HH31', 'CH3', 'HH32', 'HH33', 'C', 'O']}.",
-    )
-    combination_rule: Optional[str] = Field(
-        "Lorentz-Berthelot", description="Combination rule for the force field."
     )
     atomic_numbers: Optional[Array[numpy.int16]] = Field(  # type: ignore
         None,
