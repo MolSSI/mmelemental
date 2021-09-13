@@ -289,7 +289,7 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this model. This field can be arbitrary.</p></li>
 <li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
 <li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this model. Intended for pure human/user consumption and clarity.</p></li>
-<li><p><strong>symbols</strong> (<em>Array</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
+<li><p><strong>symbols</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
 <li><p><strong>nonbonded</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>], Optional) – Non-bonded parameters model.</p></li>
 <li><p><strong>bonds</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>], Optional) – 2-body covalent bond model.</p></li>
 <li><p><strong>angles</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>], Optional) – 3-body angular bond model.</p></li>
@@ -304,9 +304,8 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. The type names are associated with the atomic elements defined in other objects e.g. see the :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> model.</p></li>
 <li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
 <li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
-<li><p><strong>combination_rule</strong> (<em>str</em><em>, </em><em>Default: Lorentz-Berthelot</em>) – Combination rule for the force field.</p></li>
 <li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.825.g091977e.dirty’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.830.gf58aa63’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -482,6 +481,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
 <li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
+<li><p><strong>combination_rule</strong> (<em>str</em><em>, </em><em>Default: Lorentz-Berthelot</em>) – Combination rule for the force field.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -540,7 +540,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>lengths</strong> (<em>Array</em>) – Equilibrium bond lengths. Default unit is Angstroms.</p></li>
 <li><p><strong>lengths_units</strong> (<em>str</em><em>, </em><em>Default: angstroms</em>) – Equilibrium bond lengths unit.</p></li>
-<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em>) – Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – Particle indices  or names e.g. types for each bond and the bond order: (index1, index2, order).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -602,7 +602,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>angles</strong> (<em>Array</em>) – Equilibrium angles. Default unit is degrees.</p></li>
 <li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium angle units.</p></li>
-<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each angle.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – Particle indices for each angle.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -635,7 +635,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 <li><p><strong>angles</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Equilibrium dihedral angles. Default unit is degrees.</p></li>
 <li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium dihedral angle units.</p></li>
-<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Particle indices for each dihedral angle.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – Particle indices for each dihedral angle.</p></li>
 <li><p><strong>weights</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.</p></li>
 </ul>
 </dd>
