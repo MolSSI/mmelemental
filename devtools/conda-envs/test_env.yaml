@@ -4,6 +4,7 @@ dependencies:
     # Base depends
   - python>=3.9
   - pip
+  - docutils=0.16
 
     # Testing
   - pytest
