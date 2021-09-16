@@ -118,8 +118,10 @@ In the next section, we will go over how molecules can be created from files, se
 Topological data
 ----------------
 
-A Topology_ model in MMElemental is a subset of Molecule_ which captures symbolic information such as particle symbols and connectivity.
-We can create a Topology_ object from an existing molecule with the `get_topology` method as shown:
+A Topology_ model in MMElemental is a subset of Molecule_ which captures abstract information about a molecule's connectivity. A Topology_ object
+does not, however, store particle positions. This model is particularly useful for efficiently storing trajectories generated from classical molecular dynamics, in which
+the connectivity of a molecule is constant while the particle positions change over time. We can create a Topology_ object from an existing molecule with the `get_topology` 
+method as shown:
 
 .. code-block:: python
 
