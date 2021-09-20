@@ -1,74 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Force fields &mdash; MMElemental</title>
-  
-
-  
-  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="static/documentation_options.js"></script>
         <script src="static/jquery.js"></script>
         <script src="static/underscore.js"></script>
         <script src="static/doctools.js"></script>
-    
-    <script type="text/javascript" src="static/js/theme.js"></script>
-
-    
+    <script src="static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Collections" href="collections.html" />
     <link rel="prev" title="Molecules" href="molecules.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: light-blue" >
-          
-
-          
             <a href="index.html">
-          
-
-          
-            
             <img src="static/mmel_logo.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -76,18 +37,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="get_started.html">Prerequisites</a><ul>
@@ -100,6 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="design.html#models">Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="design.html#components">Components</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="design.html#translation">Translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design.html#validation">Validation</a></li>
 </ul>
 </li>
 </ul>
@@ -189,78 +140,37 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials_debug.html">Debugging</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: light-blue" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">MMElemental</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Force fields</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="sources/forcefields.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="force-fields">
-<h1>Force fields<a class="headerlink" href="#force-fields" title="Permalink to this headline">¶</a></h1>
+<h1>Force fields<a class="headerlink" href="#force-fields" title="Permalink to this headline"></a></h1>
 <p>The <cite>mmelemental.models.forcefield</cite> submodule provides models that describe force field definitions or parametrized molecules (e.g. data stored in “topology” files).</p>
 <div class="section" id="forcefield">
-<h2>ForceField<a class="headerlink" href="#forcefield" title="Permalink to this headline">¶</a></h2>
+<h2>ForceField<a class="headerlink" href="#forcefield" title="Permalink to this headline"></a></h2>
 <div class="section" id="description">
-<span id="ffdescr"></span><h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<span id="ffdescr"></span><h3>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h3>
 <p>This is the most basic model for storing force field data that describe atomistic or coarse-grained inter-particle potentials.
 Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span>
@@ -282,10 +192,10 @@ additional models explained in the next subsections.</p>
 The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a force field to data and file objects, respectively. See the API for more details.</p>
 </div>
 <div class="section" id="module-mmelemental.models.forcefield.mm_ff">
-<span id="api"></span><span id="ffapi"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.forcefield.mm_ff" title="Permalink to this headline">¶</a></h3>
+<span id="api"></span><span id="ffapi"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.forcefield.mm_ff" title="Permalink to this headline"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForceField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForceField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -311,7 +221,7 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
 <li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
 <li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.840.g70a3191.dirty’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.843.gb81ff08’, ‘routine’: ‘mmelemental.models.forcefield.mm_ff’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -321,7 +231,7 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.from_data">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_data" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_data" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs a ForceField object from a data object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -341,7 +251,7 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.from_file">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_file" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs a ForceField object from a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -364,19 +274,19 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.get_hash">
-<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.get_hash" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.get_hash" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the hash of the force field object.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.is_topology">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_topology</span></span><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.is_topology" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_topology</span></span><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.is_topology" title="Permalink to this definition"></a></dt>
 <dd><p>Returns True if model contains “topological” data rather than forcefield definition.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.to_data">
-<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_data" title="Permalink to this definition"></a></dt>
 <dd><p>Constructs a toolkit-specific forcefield from MMSchema ForceField.
 Which toolkit-specific component is called depends on which package is installed on the system.</p>
 <dl class="field-list simple">
@@ -400,7 +310,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForceField.to_file">
-<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForceField.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForceField.to_file" title="Permalink to this definition"></a></dt>
 <dd><p>Writes the ForceField to a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -424,7 +334,7 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 <dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.mm_ff.ForcesInput">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForcesInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForcesInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForcesInput" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.mm_ff.</span></span><span class="sig-name descname"><span class="pre">ForcesInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/mm_ff.html#ForcesInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.mm_ff.ForcesInput" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -445,9 +355,9 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="nonbonded">
-<h2>NonBonded<a class="headerlink" href="#nonbonded" title="Permalink to this headline">¶</a></h2>
+<h2>NonBonded<a class="headerlink" href="#nonbonded" title="Permalink to this headline"></a></h2>
 <div class="section" id="nbdescr">
-<span id="id1"></span><h3>Description<a class="headerlink" href="#nbdescr" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>Description<a class="headerlink" href="#nbdescr" title="Permalink to this headline"></a></h3>
 <p>The <cite>NonBonded</cite> model describes potentials for non-connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">NonBonded</span><span class="p">(</span>
 <span class="go">        **{</span>
@@ -474,10 +384,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="nbapi">
-<span id="id2"></span><h3>API<a class="headerlink" href="#nbapi" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3>API<a class="headerlink" href="#nbapi" title="Permalink to this headline"></a></h3>
 <span class="target" id="module-mmelemental.models.forcefield.nonbonded"></span><dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.nonbonded.NonBonded">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.nonbonded.</span></span><span class="sig-name descname"><span class="pre">NonBonded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/nonbonded/base.html#NonBonded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.nonbonded.NonBonded" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.nonbonded.</span></span><span class="sig-name descname"><span class="pre">NonBonded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/nonbonded/base.html#NonBonded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.nonbonded.NonBonded" title="Permalink to this definition"></a></dt>
 <dd><p>Model that describes non-bonded interactions between particles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -499,9 +409,9 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="bonds">
-<h2>Bonds<a class="headerlink" href="#bonds" title="Permalink to this headline">¶</a></h2>
+<h2>Bonds<a class="headerlink" href="#bonds" title="Permalink to this headline"></a></h2>
 <div class="section" id="bondsdescr">
-<span id="id3"></span><h3>Description<a class="headerlink" href="#bondsdescr" title="Permalink to this headline">¶</a></h3>
+<span id="id3"></span><h3>Description<a class="headerlink" href="#bondsdescr" title="Permalink to this headline"></a></h3>
 <p>The <cite>Bonds</cite> model describes pairwise potentials for 2 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bonds</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Bonds</span><span class="p">(</span>
 <span class="go">        **{</span>
@@ -532,10 +442,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="bondsapi">
-<span id="id4"></span><h3>API<a class="headerlink" href="#bondsapi" title="Permalink to this headline">¶</a></h3>
+<span id="id4"></span><h3>API<a class="headerlink" href="#bondsapi" title="Permalink to this headline"></a></h3>
 <span class="target" id="module-mmelemental.models.forcefield.bonded.bonds"></span><dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.bonds.Bonds">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.bonds.</span></span><span class="sig-name descname"><span class="pre">Bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/bonds/base.html#Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.bonds.Bonds" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.bonds.</span></span><span class="sig-name descname"><span class="pre">Bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/bonds/base.html#Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.bonds.Bonds" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -558,9 +468,9 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="angles">
-<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline">¶</a></h2>
+<h2>Angles<a class="headerlink" href="#angles" title="Permalink to this headline"></a></h2>
 <div class="section" id="anglesdescr">
-<span id="id5"></span><h3>Description<a class="headerlink" href="#anglesdescr" title="Permalink to this headline">¶</a></h3>
+<span id="id5"></span><h3>Description<a class="headerlink" href="#anglesdescr" title="Permalink to this headline"></a></h3>
 <p>The <cite>Angles</cite> model describes 3-body angle potentials for 3 connected particles. Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">angles</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">forcefield</span><span class="o">.</span><span class="n">Angles</span><span class="p">(</span>
 <span class="go">        **{</span>
@@ -594,10 +504,10 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </div>
 </div>
 <div class="section" id="anglesapi">
-<span id="id6"></span><h3>API<a class="headerlink" href="#anglesapi" title="Permalink to this headline">¶</a></h3>
+<span id="id6"></span><h3>API<a class="headerlink" href="#anglesapi" title="Permalink to this headline"></a></h3>
 <span class="target" id="module-mmelemental.models.forcefield.bonded.angles"></span><dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.angles.Angles">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.angles.</span></span><span class="sig-name descname"><span class="pre">Angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/angles/base.html#Angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.angles.Angles" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.angles.</span></span><span class="sig-name descname"><span class="pre">Angles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/angles/base.html#Angles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.angles.Angles" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -619,18 +529,18 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 </div>
 <div class="section" id="dihedrals">
-<h3>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline">¶</a></h3>
+<h3>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline"></a></h3>
 <p>To be completed.</p>
 </div>
 <div class="section" id="improper-dihedrals">
-<h3>Improper dihedrals<a class="headerlink" href="#improper-dihedrals" title="Permalink to this headline">¶</a></h3>
+<h3>Improper dihedrals<a class="headerlink" href="#improper-dihedrals" title="Permalink to this headline"></a></h3>
 <p>To be completed.</p>
 </div>
 <div class="section" id="dihedralsapi">
-<span id="id7"></span><h3>API<a class="headerlink" href="#dihedralsapi" title="Permalink to this headline">¶</a></h3>
+<span id="id7"></span><h3>API<a class="headerlink" href="#dihedralsapi" title="Permalink to this headline"></a></h3>
 <span class="target" id="module-mmelemental.models.forcefield.bonded.dihedrals"></span><dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.dihedrals.Dihedrals">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals/base.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.dihedrals.Dihedrals" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals/base.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.dihedrals.Dihedrals" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -657,50 +567,33 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="molecules.html" class="btn btn-neutral float-left" title="Molecules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.
-
-    </p>
+    <p>&#169; Copyright 2021, MolSSI. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.5.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-    
+  </script>  
 
   <style>
     /* Sidebar header (and topbar for mobile) */
