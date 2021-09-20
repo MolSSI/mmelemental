@@ -624,12 +624,12 @@ class Molecule(ProtoModel):
         if kwargs.pop("debug", None):
             kwargs.update(
                 extras={
-                    "debug": {
+                    "mmic_translator": {
                         "routine": f"{__name__}.{cls.__name__}.{cls.from_file.__name__}",
                         "translator": (translator, mod.__version__),
                         "engine": tkmol_class.engine(),
                         "model": tkmol_class,
-                    }
+                    },
                 }
             )
 
