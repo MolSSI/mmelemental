@@ -1,0 +1,24 @@
+Design
+######
+.. _MMSchema: https://molssi.github.io/mmschema
+.. _pydantic: https://sphinx-pydantic.readthedocs.io
+
+.. image:: _static/mmel-mmic.png
+   :scale: 55 %
+   :align: center
+
+.. image:: _static/mmic-comps.png
+   :scale: 55 %
+   :align: center
+
+
+Models
+------
+MMElemental provides models based on the MMSchema_ specification. These models are immutable,
+and they provide serialization and data validation based on the pydantic_ library. Each model
+has a set of fields that, when suitable, are used to automatically generate a unique hash 
+that enables each object to be uniquely identified.
+
+Components
+----------
+How mmic works in tandem with MMEl.

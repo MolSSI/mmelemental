@@ -23,8 +23,7 @@ that allow conversion between different representations of MM objects or file fo
    :caption: Introduction:
 
    get_started
-   models
-   components
+   design
 
 .. toctree::
    :maxdepth: 1
