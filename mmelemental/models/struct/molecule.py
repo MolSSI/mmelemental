@@ -23,6 +23,12 @@ from mmelemental.util.data import (
     MASS_NOISE,
     CHARGE_NOISE,
 )
+from mmelemental.util.units import (
+    LENGTH_DIM,
+    MASS_DIM,
+    TIME_DIM,
+    CURRENT_DIM,
+)
 from cmselemental.util import yaml_import, which_import
 
 __all__ = ["Molecule"]
@@ -152,26 +158,41 @@ class Molecule(ProtoModel):
     masses_units: Optional[str] = Field(  # type: ignore
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
+        dimensionality=MASS_DIM,
     )
     molecular_charge: Optional[float] = Field(  # type: ignore
         0.0,
         description="The net electrostatic charge of the molecule. Default unit is elementary charge.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
-        "e", description="Units for molecular charge. Defaults to elementary charge."
+        "e",
+        description="Units for molecular charge. Defaults to elementary charge.",
+        dimensionality=CURRENT_DIM * TIME_DIM,
     )
     formal_charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None, description="Formal charges of all particles/atoms."
     )
     formal_charges_units: Optional[str] = Field(  # type: ignore
-        "e", description="Units for molecular charge. Defaults to elementary charge."
+        "e",
+        description="Units for formal charges. Defaults to elementary charge.",
+        dimensionality=CURRENT_DIM * TIME_DIM,
+    )
+    partial_charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
+        None, description="Assigned partial charges of all particles/atoms."
+    )
+    partial_charges_units: Optional[str] = Field(  # type: ignore
+        "e",
+        description="Units for partial charges. Defaults to elementary charge.",
+        dimensionality=CURRENT_DIM * TIME_DIM,
     )
     geometry: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
         description="An ordered (natom*ndim,) array for XYZ atomic coordinates. Default unit is Angstrom.",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
-        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+        "angstrom",
+        description="Units for atomic geometry. Defaults to Angstroms.",
+        dimensionality=LENGTH_DIM,
     )
     velocities: Optional[Array[NUMPY_FLOAT]] = Field(  # type: ignore
         None,
@@ -181,6 +202,7 @@ class Molecule(ProtoModel):
     velocities_units: Optional[str] = Field(  # type: ignore
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+        dimensionality=LENGTH_DIM / TIME_DIM,
     )
     # Topological data
     connectivity: Optional[Array[numpy.dtype(f"{NUMPY_INT}, {NUMPY_INT}, {NUMPY_FLOAT}")]] = Field(  # type: ignore
