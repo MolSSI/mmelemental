@@ -3,6 +3,7 @@ channels: null
 dependencies:
   - python>=3.9
   - pip
+  - docutils=0.16
   - pytest
   - pytest-cov
   - codecov
