@@ -3,7 +3,13 @@
 __all__ = ["convert", "Quantity"]
 
 from typing import Any
-from pint import UnitRegistry, Quantity
+from pint import UnitRegistry, Quantity, util
+
+
+LENGTH_DIM = util.UnitsContainer({"[length]": 1})
+MASS_DIM = util.UnitsContainer({"[mass]": 1})
+TIME_DIM = util.UnitsContainer({"[time]": 1})
+CURRENT_DIM = util.UnitsContainer({"[current]": 1})
 
 
 def convert(quant: Any, from_units: str, to_units: str):
