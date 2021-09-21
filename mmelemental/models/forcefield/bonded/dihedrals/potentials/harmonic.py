@@ -6,7 +6,7 @@ from mmelemental.util.units import (
     LENGTH_DIM,
     MASS_DIM,
     TIME_DIM,
-    AMOUNT_DIM,
+    SUBS_DIM,
 )
 
 __all__ = ["Harmonic"]
@@ -24,7 +24,7 @@ class Harmonic(ProtoModel):
     energy_units: Optional[str] = Field(
         "kJ/mol",
         description="Dihedral energy constant unit.",
-        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * SUBS_DIM),
     )
     periodicity: Array[int] = Field(
         ...,

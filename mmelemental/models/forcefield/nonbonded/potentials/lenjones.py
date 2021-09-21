@@ -5,7 +5,7 @@ from mmelemental.util.units import (
     LENGTH_DIM,
     MASS_DIM,
     TIME_DIM,
-    AMOUNT_DIM,
+    SUBS_DIM,
 )
 from cmselemental.types import Array
 
@@ -21,7 +21,7 @@ class LennardJones(ProtoModel):
     epsilon_units: Optional[str] = Field(
         "kJ/mol",
         description="Units for the Lennard-Jones epsilon (well depth) constant.",
-        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * SUBS_DIM),
     )
     sigma: Array[float] = Field(
         ...,

@@ -5,7 +5,7 @@ from mmelemental.util.units import (
     LENGTH_DIM,
     MASS_DIM,
     TIME_DIM,
-    AMOUNT_DIM,
+    SUBS_DIM,
 )
 from cmselemental.types import Array
 
@@ -21,7 +21,7 @@ class EAM(ProtoModel):
     embed_units: Optional[str] = Field(
         "kJ/mol",
         description="Units for the embedding energy term.",
-        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * SUBS_DIM),
     )
     potential: Array[float] = Field(
         ...,
@@ -30,7 +30,7 @@ class EAM(ProtoModel):
     pair_units: Optional[str] = Field(
         "kJ/mol",
         description="Units for the pair potential interaction term.",
-        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * SUBS_DIM),
     )
     density: Array[float] = Field(
         ..., description="Array of (discretized) atomic electron densities."

@@ -9,7 +9,7 @@ LENGTH_DIM = util.UnitsContainer({"[length]": 1})
 MASS_DIM = util.UnitsContainer({"[mass]": 1})
 TIME_DIM = util.UnitsContainer({"[time]": 1})
 CURRENT_DIM = util.UnitsContainer({"[current]": 1})
-AMOUNT_DIM = util.UnitsContainer({"[substance]": 1})
+SUBS_DIM = util.UnitsContainer({"[substance]": 1})
 DIMENSIONLESS = util.UnitsContainer({})
 
 

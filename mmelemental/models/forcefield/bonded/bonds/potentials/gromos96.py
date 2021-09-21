@@ -4,7 +4,7 @@ from mmelemental.models.base import ProtoModel
 from mmelemental.util.units import (
     MASS_DIM,
     TIME_DIM,
-    AMOUNT_DIM,
+    SUBS_DIM,
 )
 from cmselemental.types import Array
 
@@ -22,7 +22,7 @@ class Gromos96(ProtoModel):
     spring_units: Optional[str] = Field(
         "kJ/(mol*angstrom**2)",
         description="Bond spring constant unit.",
-        dimensionality=MASS_DIM / (TIME_DIM ** 2 * AMOUNT_DIM),
+        dimensionality=MASS_DIM / (TIME_DIM ** 2 * SUBS_DIM),
     )
 
     @validator("spring", allow_reuse=True)
