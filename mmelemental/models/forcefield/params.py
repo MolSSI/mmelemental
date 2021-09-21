@@ -1,6 +1,7 @@
 from pydantic import validator, root_validator, Field
 from mmelemental.models.base import ProtoModel
 from mmelemental.models.util.output import FileOutput
+from cmselemental.util.decorators import classproperty
 from typing import Any, Optional, Dict, List
 import ast
 import glob
@@ -14,7 +15,7 @@ class Params(ProtoModel):
     _path = None
     form: str = Field(
         ...,
-        description="Name or form of the potential. See cls.supported_potentials() for available potentials.",
+        description="Name or form of the potential. See cls.supported_potentials for available potentials.",
     )
     version: Optional[str] = Field(  # type: ignore
         None,
@@ -124,7 +125,7 @@ class Params(ProtoModel):
 
     @validator("form")
     def _registered_name(cls, v):
-        if v not in cls.supported_potentials():
+        if v not in cls.supported_potentials:
             raise NotImplementedError(f"{v} is not supported in MMElemental.")
         return v
 
@@ -132,18 +133,13 @@ class Params(ProtoModel):
     def _valid_params(cls, values):
         v = values.get("params")
         if isinstance(v, dict):
-            v_class = cls.supported_potentials().get(values.get("form"))
+            v_class = cls.supported_potentials.get(values.get("form"))
             v = v_class(**v)
             values["params"] = v
         assert v.__class__.__name__ == values.get(
             "form"
         ), f"Params type: {v.__class__.__name__} != form: {values.get('form')}."
         return values
-
-    # Properties
-    @property
-    def hash_fields(self):
-        return ["params"]
 
     def get_hash(self):
         """
@@ -166,11 +162,19 @@ class Params(ProtoModel):
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
 
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)
+    # Properties
+    @property
+    def hash_fields(self):
+        return ["params"]
 
-    @classmethod
+    @property
+    def units(self):
+        """Returns instance (object) units i.e. any Field name ending with _units."""
+        data_units = super().units
+        data_units.update(self.params.units)
+        return data_units
+
+    @classproperty
     def supported_potentials(cls) -> Dict[str, "Params"]:
         """Returns a dictionary for all available Params subclasses available in cls._path."""
         files = glob.glob(cls._path)
