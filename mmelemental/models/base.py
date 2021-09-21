@@ -2,6 +2,7 @@ from cmselemental import models
 from pydantic import Field, root_validator
 from typing import Dict, Optional
 from mmelemental.extras import get_information
+from cmselemental.util.decorators import classproperty
 from typing import Optional, Any, Dict
 import pint
 
@@ -42,13 +43,20 @@ class ProtoModel(models.ProtoModel):
         kwargs["exclude_none"] = True
         return super().dict(*args, **kwargs)
 
-    @classmethod
-    def get_units(cls):
-        """Returns model default units i.e. any Field name ending with _units."""
+    @classproperty
+    def default_units(cls):
+        """Returns class default units i.e. any Field name ending with _units."""
         return {
             val.name: val.default
-            for key, val in cls.__fields__.items()
+            for val in cls.__fields__.values()
             if val.name.endswith("_units")
+        }
+
+    @property
+    def units(self):
+        """Returns instance (object) units i.e. any Field name ending with _units."""
+        return {
+            key: val for key, val in self.__dict__.items() if key.endswith("_units")
         }
 
     @root_validator
