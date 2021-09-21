@@ -79,6 +79,6 @@ class ProtoModel(models.ProtoModel):
                     unit_str = str(quant.u)
                     assert quant.check(
                         dim
-                    ), f"Unit supplied ({unit_str}) has invalid dimensions {dim}."
+                    ), f"Unit supplied ({unit_str}) for {key} has invalid dimensions {dim}."
                     values[key] = unit_str
         return values
