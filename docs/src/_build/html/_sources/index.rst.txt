@@ -9,14 +9,9 @@
 MMElemental documentation
 =========================
 
-MMElemental is an implementation of MMSchema_. Specifically, MMElemental is a python package that provides pydantic_ models for molecular mechanics (MM).
+MMElemental is an implementation of MMSchema_. Specifically, MMElemental is a python package that provides pydantic_ data models for molecular mechanics (MM).
 MMElemental makes it easy to standardize MM applications and workflows in python based on the MMSchema specification, and it provides interoperability capabilities 
 that allow conversion between different representations of MM objects or file formats.
-
-
-.. image:: _static/mmel_mmschema.png
-   :scale: 55 %
-   :align: center
 
 .. toctree::
    :maxdepth: 2

@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -86,7 +83,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+              <p class="caption"><span class="caption-text">Introduction:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../get_started.html">Prerequisites</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../get_started.html#quick-installation">Quick Installation</a></li>
@@ -96,17 +93,21 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../design.html">Design</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../design.html#models">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../design.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../design.html#components">Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../design.html#translation">Translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../design.html#validation">Validation</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Modules:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../molecules.html">Molecules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../molecules.html#topology">Topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../molecules.html#molecule">Molecule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../molecules.html#description">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../molecules.html#api">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../molecules.html#module-mmelemental.models.struct.molecule">API</a></li>
 </ul>
 </li>
 </ul>
@@ -151,7 +152,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<p class="caption"><span class="caption-text">Tutorials:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials_mol.html">Molecule</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../tutorials_mol.html#overview-instantiation">Overview &amp; Instantiation</a></li>
@@ -311,19 +312,27 @@
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">schema_version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="mi">0</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The version number of ``schema_name`` to which this model conforms.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">author</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Author name to assign to the force field this model stores. This field can be arbitrary.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Common or human-readable name to assign to this model. This field can be arbitrary.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Version of the force field this model stores. This field can be arbitrary.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">comment</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Additional comments for this model. Intended for pure human/user consumption and clarity.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">symbols</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="o">...</span><span class="p">,</span>
+    <span class="n">symbols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;An ordered (natom,) list of particle (e.g. atomic elemental) symbols.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">nonbonded</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">NonBonded</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">NonBonded</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
@@ -374,9 +383,6 @@
     <span class="c1"># switch_width=&quot;1.0 * angstrom&quot;,</span>
     <span class="c1"># cutoff=&quot;9.0 * angstrom&quot; ,</span>
     <span class="c1"># method=&quot;cutoff&quot;,</span>
-    <span class="n">identifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Forcefield unique identifier e.g. charmm27, amber99, etc.&quot;</span>
-    <span class="p">)</span>
     <span class="n">defs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. &quot;</span>
@@ -390,9 +396,6 @@
     <span class="n">templates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="kc">None</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A list of template definitions typically in terms of atom types. E.g. {&#39;ACE&#39;: [&#39;HH31&#39;, &#39;CH3&#39;, &#39;HH32&#39;, &#39;HH33&#39;, &#39;C&#39;, &#39;O&#39;]}.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">combination_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="s2">&quot;Lorentz-Berthelot&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Combination rule for the force field.&quot;</span>
     <span class="p">)</span>
     <span class="n">atomic_numbers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Array</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">int16</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="kc">None</span><span class="p">,</span>
@@ -491,7 +494,7 @@
 
         <span class="k">if</span> <span class="n">file_ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.json&quot;</span><span class="p">]:</span>
 
-            <span class="n">dtype</span> <span class="o">=</span> <span class="n">file_ext</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">file_ext</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="c1"># Raw string type, read and pass through</span>
             <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
@@ -504,7 +507,7 @@
 
         <span class="n">fileobj</span> <span class="o">=</span> <span class="n">FileOutput</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span> <span class="k">if</span> <span class="n">filename</span> <span class="k">else</span> <span class="kc">None</span>
 
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span> <span class="ow">or</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span> <span class="ow">or</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">dtype</span>
 
         <span class="c1"># Generic translator component</span>

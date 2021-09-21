@@ -5,23 +5,40 @@ Design
 .. _pydantic: https://sphinx-pydantic.readthedocs.io
 .. _mmic_translator: https://molssi.github.io/mmic_translator
 .. _mmic_validator: https://molssi.github.io/mmic_validator
+.. _CMSElemental: https://github.com/MolSSI/cmselemental
 
-MMElemental is strictly a python implementation of MMSchema_ i.e. its main focus is on data classes, which are implemented in the form of pydantic_ models. MMElemental
-natively supports few common data formats such as JSON and HDF5. In order to parse MM-specific file formats (sdf, mmCIF, PDB, etc.), MMElemental uses mmic_translator_, which
-is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema.
+MMElemental is strictly a python implementation of the MMSchema_ specification i.e. its main focus is on data classes, which are implemented in the form of pydantic_ models. MMElemental
+natively supports few common data formats such as JSON, YAML, and HDF5. In order to parse MM-specific file formats (sdf, mmCIF, PDB, etc.), MMElemental uses mmic_translator_, which
+is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema. Both model and components MMElemental 
+provides/supports are explained in the next subsections.
 
 
 Models
 ------
-MMElemental provides models based on the MMSchema_ specification. These models are immutable,
-and they provide serialization and data validation based on the pydantic_ library. Each model
-has a set of fields that, when suitable, are used to automatically generate a unique hash 
-that enables each object to be uniquely identified.
+All models in MMElemental are immutable data-centric classes, which provide serialization and data validation methods based on the pydantic_ library. 
+
+.. image:: _static/mmel_mmschema.png
+   :scale: 55 %
+   :align: center
+
+Each model has a set of fields that, when suitable, are used to automatically generate a unique hash 
+that enables each object to be uniquely identified and check for file integrity. Furthermore, any model
+that stores physical quantities in its fields provides the associated units field as well (unless it's dimensionless).
+
+A UML diagram that summarizes some of the properties and methods found in a core MMElemental model is shown below. The
+constructor methods are available in models that support reading/writing common file formats or conversions to other
+data objects.
+
+.. image:: _static/model.png
+   :scale: 80 %
+   :align: center
+
+All `Model` implementations are subclasses of `ProtoModel` from the CMSElemental_ package, which serves as the backbone of MMElemental.
 
 Components
 ----------
 There are 2 distinct classes of MM components we distinguish in MMElemental: strategy and tactic. The former defines general i/o schemas for a specific domain while the latter
-is a realization of the former. See mmic_ for a more in-depth description.
+is a realization of the former. See MMIC_ for a more in-depth description.
 
 .. image:: _static/mmic-comps.png
    :scale: 60 %

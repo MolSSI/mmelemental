@@ -13,15 +13,33 @@ is a general-purpose component (part of the MMIC_ project) that enables converti
 
 Models
 ------
-MMElemental provides models based on the MMSchema_ specification. These models are immutable,
-and they provide serialization and data validation based on the pydantic_ library. Each model
-has a set of fields that, when suitable, are used to automatically generate a unique hash 
-that enables each object to be uniquely identified.
+MMElemental provides models based on the MMSchema_ specification. These classes are immutable,
+and they provide serialization and data validation methods based on the pydantic_ library. 
+
+.. image:: _static/mmel_mmschema.png
+   :scale: 55 %
+   :align: center
+
+Each model has a set of fields that, when suitable, are used to automatically generate a unique hash 
+that enables each object to be uniquely identified and check for file integrity. Furthermore, any model
+that stores physical quantities in its fields provides the associated units field as well (unless it's dimensionless).
+
+A UML diagram that summarizes the core fields and methods found in an MMElemental model is shown below.
+
+.. image:: _static/model.png
+   :scale: 80 %
+   :align: center
+
+whatever
 
 Components
 ----------
 There are 2 distinct classes of MM components we distinguish in MMElemental: strategy and tactic. The former defines general i/o schemas for a specific domain while the latter
 is a realization of the former. See mmic_ for a more in-depth description.
+
+.. image:: _static/mmic-comps.png
+   :scale: 60 %
+   :align: center
 
 Translation
 ===========
@@ -32,7 +50,7 @@ For the purpose of converting between different data/file representations or tra
    :align: center
 
 
-By default, MMElemental selects an appropriate tactic converter based on the run-time selection used in mmic_trnslator_. 
+By default, MMElemental selects an appropriate tactic converter based on the run-time selection used in mmic_translator_. 
 
 .. code-block:: python
 
@@ -69,6 +87,6 @@ tactic translator to use i.e.
 
 In this case, we forced MMElemental to use `mmic_parmed` instead. If the requested tactic component is unavailable or unspported, MMElemental will pass whatever exception mmic_translator_ raises instead.
 
-.. image:: _static/mmic-comps.png
-   :scale: 55 %
-   :align: center
+Validation
+==========
+Not yet available.
