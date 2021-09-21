@@ -3,6 +3,7 @@ from typing import Optional, List, Dict, Any
 from cmselemental.types import Array
 from mmelemental.models.struct import Molecule
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
+from mmelemental.util.units import TIME_DIM, MASS_DIM, LENGTH_DIM, DIMENSIONLESS
 
 __all__ = ["Microstate", "Ensemble"]
 
@@ -14,7 +15,9 @@ class Microstate(ProtoModel):
         ..., description="Atomic positions of length natoms. Default unit is Angstroms."
     )
     geometry_units: Optional[str] = Field(
-        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+        "angstrom",
+        description="Units for atomic geometry. Defaults to Angstroms.",
+        dimensionality=LENGTH_DIM,
     )
     velocities: Optional[Array[float]] = Field(
         None,
@@ -23,6 +26,7 @@ class Microstate(ProtoModel):
     velocities_units: Optional[str] = Field(
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+        dimensionality=LENGTH_DIM / TIME_DIM,
     )
     forces: Optional[Array[float]] = Field(
         None, description="Atomic forces of length natoms. KiloJoules/mol.Angstroms."
@@ -30,6 +34,7 @@ class Microstate(ProtoModel):
     forces_units: Optional[str] = Field(
         "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms",
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / TIME_DIM ** 2,
     )
 
 
@@ -64,7 +69,11 @@ class Ensemble(ProtoModel):
         ...,
         description="A list of scores for each state. Length must be equal to the number of states or mols.",
     )
-    scores_units: Optional[str] = Field(None, description="Score function unit.")
+    scores_units: Optional[str] = Field(
+        None,
+        description="Score function unit. Unitless by default unless specified otherwise.",
+        dimensionality=DIMENSIONLESS,
+    )
     provenance: Provenance = Field(
         provenance_stamp(__name__),
         description="The provenance information about how this object (and its attributes) were generated, "
