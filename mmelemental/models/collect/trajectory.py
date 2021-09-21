@@ -8,7 +8,7 @@ from pathlib import Path
 import importlib
 import hashlib
 import numpy
-
+from mmelemental.util.units import TIME_DIM, MASS_DIM, LENGTH_DIM, SUBS_DIM
 from mmelemental.util.data import (
     float_prep,
     NUMPY_UNI,
@@ -35,7 +35,9 @@ class TrajInput(ProtoModel):
         None, description="Every number of steps geometry are saved."
     )
     geometry_units: Optional[str] = Field(
-        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+        "angstrom",
+        description="Units for atomic geometry. Defaults to Angstroms.",
+        dimensionality=LENGTH_DIM,
     )
     velocities_freq: Optional[int] = Field(
         None,
@@ -44,6 +46,7 @@ class TrajInput(ProtoModel):
     velocities_units: Optional[str] = Field(
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+        dimensionality=LENGTH_DIM / TIME_DIM,
     )
     forces_freq: Optional[int] = Field(
         None, description="Every number of steps velocities are saved."
@@ -51,6 +54,7 @@ class TrajInput(ProtoModel):
     forces_units: Optional[str] = Field(
         "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms.",
+        dimensionality=MASS_DIM * LENGTH_DIM / (SUBS_DIM * TIME_DIM ** 2),
     )
     freq: Optional[int] = Field(
         None,
@@ -84,7 +88,9 @@ class Trajectory(ProtoModel):
         ..., description="Timestep size. Default unit is femtoseconds."
     )
     timestep_units: Optional[str] = Field(
-        "fs", description="Timestep size units. Defaults to femtoseconds."
+        "fs",
+        description="Timestep size units. Defaults to femtoseconds.",
+        dimensionality=TIME_DIM,
     )
     natoms: Union[int, Array[numpy.dtype(NUMPY_INT)]] = Field(
         ...,
@@ -113,7 +119,9 @@ class Trajectory(ProtoModel):
         "]",
     )
     geometry_units: Optional[str] = Field(  # type: ignore
-        "angstrom", description="Units for atomic geometry. Defaults to Angstroms."
+        "angstrom",
+        description="Units for atomic geometry. Defaults to Angstroms.",
+        dimensionality=LENGTH_DIM,
     )
     velocities: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
@@ -129,6 +137,7 @@ class Trajectory(ProtoModel):
     velocities_units: Optional[str] = Field(  # type: ignore
         "angstrom/fs",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
+        dimensionality=LENGTH_DIM / TIME_DIM,
     )
     forces: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(  # type: ignore
         None,
@@ -142,8 +151,9 @@ class Trajectory(ProtoModel):
         "]",
     )
     forces_units: Optional[str] = Field(  # type: ignore
-        "kJ/mol*angstrom",
+        "kJ/(mol*angstrom)",
         description="Units for atomic forces. Defaults to kJ/mol*angstrom.",
+        dimensionality=MASS_DIM * LENGTH_DIM / (SUBS_DIM * TIME_DIM ** 2),
     )
     provenance: Provenance = Field(
         provenance_stamp(__name__),
