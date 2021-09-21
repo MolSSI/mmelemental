@@ -1,8 +1,9 @@
 from cmselemental import models
-from pydantic import Field
+from pydantic import Field, root_validator
 from typing import Dict, Optional
 from mmelemental.extras import get_information
-from typing import Optional
+from typing import Optional, Any, Dict
+import pint
 
 __all__ = ["Provenance", "ProtoModel"]
 
@@ -49,3 +50,27 @@ class ProtoModel(models.ProtoModel):
             for key, val in cls.__fields__.items()
             if val.name.endswith("_units")
         }
+
+    @root_validator
+    def _valid_unit(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+        """Ensures all model units are physically valid and compatible with Pint. Returns
+        field values with pint-compatible unit names."""
+        schema_props = cls.schema()["properties"]
+        for key, val in schema_props.items():
+            if key.endswith("_units"):
+                units = values.get(key)
+                if units is not None:  # Make sure unit name/symbol has been supplied
+                    quant = pint.Quantity(
+                        1.0, units=units
+                    )  # ensure pint supports this unit
+                    dim = val.get("dimensionality")  # dim metadata must be defined
+                    if dim is None:
+                        raise AttributeError(
+                            f"{key} Field does not store any dimensionality metadata."
+                        )
+                    unit_str = str(quant.u)
+                    assert quant.check(
+                        dim
+                    ), f"Unit supplied ({unit_str}) has invalid dimensions {dim}."
+                    values[key] = unit_str
+        return values
