@@ -17,6 +17,11 @@ from mmelemental.util.data import (
     CHARGE_NOISE,
     MASS_NOISE,
 )
+from mmelemental.util.units import (
+    MASS_DIM,
+    TIME_DIM,
+    CURRENT_DIM,
+)
 
 __all__ = ["Topology"]
 
@@ -85,13 +90,16 @@ class Topology(ProtoModel):
     masses_units: Optional[str] = Field(  # type: ignore
         "amu",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
+        dimensionality=MASS_DIM,
     )
     molecular_charge: Optional[float] = Field(  # type: ignore
         0.0,
         description="The net electrostatic charge of the molecule. Default unit is elementary charge.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
-        "e", description="Units for molecular charge. Defaults to elementary charge."
+        "e",
+        description="Units for molecular charge. Defaults to elementary charge.",
+        dimensionality=CURRENT_DIM * TIME_DIM,
     )
     connectivity: Optional[Array[numpy.dtype(f"{NUMPY_INT}, {NUMPY_INT}, {NUMPY_FLOAT}")]] = Field(  # type: ignore
         None,
