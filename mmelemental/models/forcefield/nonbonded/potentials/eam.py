@@ -1,6 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 from mmelemental.models.base import ProtoModel
+from mmelemental.util.units import (
+    LENGTH_DIM,
+    MASS_DIM,
+    TIME_DIM,
+    AMOUNT_DIM,
+)
 from cmselemental.types import Array
 
 __all__ = ["EAM"]
@@ -13,14 +19,18 @@ class EAM(ProtoModel):
         description="Array of embedding (discretized) energy terms. Default unit is kJ/mol.",
     )
     embed_units: Optional[str] = Field(
-        "kJ/mol", description="Units for the embedding energy term."
+        "kJ/mol",
+        description="Units for the embedding energy term.",
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
     )
     potential: Array[float] = Field(
         ...,
         description="Array of (discretized) pair potential interaction functions. Default unit is kJ/mol.",
     )
     pair_units: Optional[str] = Field(
-        "kJ/mol", description="Units for the pair potential interaction term."
+        "kJ/mol",
+        description="Units for the pair potential interaction term.",
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
     )
     density: Array[float] = Field(
         ..., description="Array of (discretized) atomic electron densities."
@@ -35,7 +45,3 @@ class EAM(ProtoModel):
             values["density"]
         ), "embed and density must be of equal length!"
         return values
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)

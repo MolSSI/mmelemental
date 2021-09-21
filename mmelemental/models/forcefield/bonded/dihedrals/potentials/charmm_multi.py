@@ -2,13 +2,20 @@ from pydantic import Field, validator, root_validator
 from typing import Optional, List
 from cmselemental.types import Array
 from mmelemental.models.base import ProtoModel
+from mmelemental.util.units import (
+    LENGTH_DIM,
+    MASS_DIM,
+    TIME_DIM,
+    AMOUNT_DIM,
+    DIMENSIONLESS,
+)
 
 __all__ = ["CharmmMulti"]
 
 
 class CharmmMulti(ProtoModel):
     """
-    Charmm-style dihedral potential: Energy = energy * (1 + cos(periodicity * angle - phase)).
+    Charmm-style multiple dihedral potential terms: Energy = SUM[ energy * (1 + cos(periodicity * angle - phase)) ].
     """
 
     energy: List[Array[float]] = Field(
@@ -16,7 +23,9 @@ class CharmmMulti(ProtoModel):
         description="Dihedral energy constant. Default unit is kJ/mol.",
     )
     energy_units: Optional[str] = Field(
-        "kJ/mol", description="Dihedral energy constant unit."
+        "kJ/mol",
+        description="Dihedral energy constant unit.",
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
     )
     periodicity: List[Array[int]] = Field(
         ...,
@@ -27,7 +36,9 @@ class CharmmMulti(ProtoModel):
         description="Dihedral phase angle. Default unit is degrees.",
     )
     phase_units: Optional[str] = Field(
-        "degrees", description="Dihedral phase angle unit."
+        "degrees",
+        description="Dihedral phase angle unit.",
+        dimensionality=DIMENSIONLESS,
     )
 
     @validator("energy", "periodicity", "phase", allow_reuse=True)

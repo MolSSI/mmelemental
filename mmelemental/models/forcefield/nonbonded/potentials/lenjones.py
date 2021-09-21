@@ -1,6 +1,12 @@
 from pydantic import Field, root_validator
 from typing import Optional
 from mmelemental.models.base import ProtoModel
+from mmelemental.util.units import (
+    LENGTH_DIM,
+    MASS_DIM,
+    TIME_DIM,
+    AMOUNT_DIM,
+)
 from cmselemental.types import Array
 
 __all__ = ["LennardJones"]
@@ -15,13 +21,16 @@ class LennardJones(ProtoModel):
     epsilon_units: Optional[str] = Field(
         "kJ/mol",
         description="Units for the Lennard-Jones epsilon (well depth) constant.",
+        dimensionality=MASS_DIM * LENGTH_DIM ** 2 / (TIME_DIM ** 2 * AMOUNT_DIM),
     )
     sigma: Array[float] = Field(
         ...,
         description="The distance at which the Lennard-Jones potential is 0. Default unit is angstroms.",
     )
     sigma_units: Optional[str] = Field(
-        "angstrom", description="Units for the Lennard-Jones sigma constant."
+        "angstrom",
+        description="Units for the Lennard-Jones sigma constant.",
+        dimensionality=LENGTH_DIM,
     )
 
     @root_validator(allow_reuse=True)
@@ -32,7 +41,3 @@ class LennardJones(ProtoModel):
             values["sigma"]
         ), "epsilon and sigma must be of equal length!"
         return values
-
-    def dict(self, *args, **kwargs):
-        kwargs["exclude"] = {"provenance"}
-        return super().dict(*args, **kwargs)

@@ -1,5 +1,6 @@
 from pydantic import Field
 from mmelemental.models.forcefield.params import Params
+from mmelemental.util.units import LENGTH_DIM
 from typing import Optional, List, Tuple, Union
 from cmselemental.types import Array
 import os
@@ -13,7 +14,9 @@ class Bonds(Params):
         ..., description="Equilibrium bond lengths. Default unit is Angstroms."
     )
     lengths_units: Optional[str] = Field(
-        "angstroms", description="Equilibrium bond lengths unit."
+        "angstroms",
+        description="Equilibrium bond lengths unit.",
+        dimensionality=LENGTH_DIM,
     )
     connectivity: Optional[List[Tuple[Union[int, str], Union[int, str], float]]] = Field(  # type: ignore
         None,

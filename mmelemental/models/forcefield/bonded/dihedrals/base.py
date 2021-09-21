@@ -1,5 +1,6 @@
 from pydantic import Field, validator
 from mmelemental.models.forcefield.params import Params
+from mmelemental.util.units import DIMENSIONLESS
 from cmselemental.types import Array
 from typing import Optional, List, Tuple, Union
 import os
@@ -14,7 +15,9 @@ class Dihedrals(Params):
         None, description="Equilibrium dihedral angles. Default unit is degrees."
     )
     angles_units: Optional[str] = Field(
-        "degrees", description="Equilibrium dihedral angle units."
+        "degrees",
+        description="Equilibrium dihedral angle units.",
+        dimensionality=DIMENSIONLESS,
     )
     connectivity: Optional[List[Tuple[Union[int, str], Union[int, str], Union[int, str], Union[int, str]]]] = Field(  # type: ignore
         None,
