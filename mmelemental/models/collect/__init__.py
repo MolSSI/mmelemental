@@ -1,7 +1,7 @@
-from .mm_traj import *
-from .sm_ensem import *
+from .trajectory import *
+from .ensemble import *
 
-from . import mm_traj
-from . import sm_ensem
+from . import trajectory
+from . import ensemble
 
-__all__ = mm_traj.__all__ + sm_ensem.__all__
+__all__ = trajectory.__all__ + ensemble.__all__
