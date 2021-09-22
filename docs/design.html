@@ -188,11 +188,11 @@ while the instance property <cite>units</cite> returns the physical units assign
 <h2>Components<a class="headerlink" href="#components" title="Permalink to this headline"></a></h2>
 <p>There are 2 distinct classes of MM components we distinguish in MMElemental: strategy and tactic. The former defines general i/o schemas for a specific domain while the latter
 is a realization of the former. See <a class="reference external" href="https://github.com/MolSSI/mmic">MMIC</a> for a more in-depth description.</p>
-<a class="reference internal image-reference" href="images/mmic-comps.png"><img alt="images/mmic-comps.png" class="align-center" src="images/mmic-comps.png" style="width: 543.6px; height: 421.2px;" /></a>
+<a class="reference internal image-reference" href="images/mmic-comps.png"><img alt="images/mmic-comps.png" class="align-center" src="images/mmic-comps.png" style="width: 271.8px; height: 213.6px;" /></a>
 <div class="section" id="translation">
 <h3>Translation<a class="headerlink" href="#translation" title="Permalink to this headline"></a></h3>
 <p>For the purpose of converting between different data/file representations or translating between different specifications, <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a> can hook up to specific tactic components.</p>
-<a class="reference internal image-reference" href="images/mmel-mmic.png"><img alt="images/mmel-mmic.png" class="align-center" src="images/mmel-mmic.png" style="width: 449.35px; height: 668.8000000000001px;" /></a>
+<a class="reference internal image-reference" href="images/mmel-mmic.png"><img alt="images/mmel-mmic.png" class="align-center" src="images/mmel-mmic.png" style="width: 231.55px; height: 339.35px;" /></a>
 <p>By default, MMElemental selects an appropriate tactic converter based on the run-time selection used in <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">grofile</span><span class="p">)</span>
 </pre></div>
