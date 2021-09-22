@@ -25,15 +25,17 @@ Each model has a set of fields that, when suitable, are used to automatically ge
 that enables each object to be uniquely identified and check for file integrity. Furthermore, any model
 that stores physical quantities in its fields provides the associated units field as well (unless it's dimensionless).
 
-A UML diagram that summarizes some of the properties and methods found in a core MMElemental model is shown below. The
-constructor methods are available in models that support reading/writing common file formats or conversions to other
-data objects.
+A UML diagram that summarizes some of the properties and methods found in a core MMElemental model is shown below. 
+All `Model` implementations are subclasses of `ProtoModel` from the CMSElemental_ package, which serves as the backbone of MMElemental.
 
 .. image:: _static/model.png
    :scale: 80 %
    :align: center
 
-All `Model` implementations are subclasses of `ProtoModel` from the CMSElemental_ package, which serves as the backbone of MMElemental.
+The constructor/writer methods are available in models that support reading/writing common file formats or converting to other
+data objects. The `default_units` is a class property that returns whatever default physical units a particular model stores,
+while the instance property `units` returns the physical units assigned to the object after instantiation.
+
 
 Components
 ----------
