@@ -103,17 +103,39 @@ We can also access other attributes we did not explicitly specify such as atomic
      3
 
 Certain physical properties such as `geometry`, `velocities`, `masses`, and `molecular_charge` have default units fields as well that can be set based on physically consistent and supported units
-available in pint_. For example, we can access the defaul geometry unit (`angstrom`) or access all units available in this model.
+available in pint_. For example, we can access the defaul geometry unit (`angstrom`) or access all default units available in this model:
 
 .. code-block:: python
 
     >>> mol.geometry_units
      'angstrom'     
 
-    >>> mol.get_units()
-     {'masses_units': 'amu', 'molecular_charge_units': 'e', 'geometry_units': 'angstrom', 'velocities_units': 'angstrom/fs'}
+    >>> mmelemental.models.Molecule.default_units
+     {
+       'masses_units': 'unified_atomic_mass_unit', 'molecular_charge_units': 'elementary_charge', 
+       'formal_charges_units': 'elementary_charge', 'partial_charges_units': 'elementary_charge', 
+       'geometry_units': 'angstrom', 'velocities_units': 'angstrom / femtosecond'
+     }
 
-In the next section, we will go over how molecules can be created from files, seralized and written to files.
+The instance method `mol.units` returns all stored units that were assigned to the object. For example:
+
+.. code-block:: python
+
+    >>> mol = mmelemental.models.Molecule(
+    >>>     symbols = ["O", "H", "H"],
+    >>>     geometry = [0.2, 0.209, 0.0, 0.282, 0.209, 0.58, 0.118, 0.209, 0.58],
+    >>>     geometry_units = "nm",
+    >>>     connectivity = [(0, 1, 1.0), (0, 2, 1.0)],
+    >>> )
+
+    >>> mol
+     Molecule(name='H2O', hash='720bf3a')
+
+In this case, we specified the geometry in nanometers, which is not the default geometry unit. Note how the hash code changed as well despite the fact that the molecule remains scientifically 
+(but not programmatically) equivalent. Also note that `mol.units != mol.default_units` since the former has its geometry units in nanometers whereas `mol.default_units` is a function of only
+the model schema itself (and not any instant of the class).
+
+In the next section, we will go over how molecules can be created from files, seralized, and written to files.
 
 Topological data
 ----------------

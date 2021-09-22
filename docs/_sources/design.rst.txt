@@ -43,7 +43,7 @@ There are 2 distinct classes of MM components we distinguish in MMElemental: str
 is a realization of the former. See MMIC_ for a more in-depth description.
 
 .. image:: _static/mmic-comps.png
-   :scale: 60 %
+   :scale: 100 %
    :align: center
 
 Translation
@@ -51,7 +51,7 @@ Translation
 For the purpose of converting between different data/file representations or translating between different specifications, mmic_translator_ can hook up to specific tactic components.
 
 .. image:: _static/mmel-mmic.png
-   :scale: 55 %
+   :scale: 100 %
    :align: center
 
 
