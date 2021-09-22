@@ -156,7 +156,7 @@ class Molecule(ProtoModel):
         "standard masses to infer from the same index in the ``symbols`` field.",
     )
     masses_units: Optional[str] = Field(  # type: ignore
-        "amu",
+        "unified_atomic_mass_unit",
         description="Units for atomic masses. Defaults to unified atomic mass unit.",
         dimensionality=MASS_DIM,
     )
@@ -165,7 +165,7 @@ class Molecule(ProtoModel):
         description="The net electrostatic charge of the molecule. Default unit is elementary charge.",
     )
     molecular_charge_units: Optional[str] = Field(  # type: ignore
-        "e",
+        "elementary_charge",
         description="Units for molecular charge. Defaults to elementary charge.",
         dimensionality=CURRENT_DIM * TIME_DIM,
     )
@@ -173,7 +173,7 @@ class Molecule(ProtoModel):
         None, description="Formal charges of all particles/atoms."
     )
     formal_charges_units: Optional[str] = Field(  # type: ignore
-        "e",
+        "elementary_charge",
         description="Units for formal charges. Defaults to elementary charge.",
         dimensionality=CURRENT_DIM * TIME_DIM,
     )
@@ -181,7 +181,7 @@ class Molecule(ProtoModel):
         None, description="Assigned partial charges of all particles/atoms."
     )
     partial_charges_units: Optional[str] = Field(  # type: ignore
-        "e",
+        "elementary_charge",
         description="Units for partial charges. Defaults to elementary charge.",
         dimensionality=CURRENT_DIM * TIME_DIM,
     )
@@ -197,10 +197,10 @@ class Molecule(ProtoModel):
     velocities: Optional[Array[NUMPY_FLOAT]] = Field(  # type: ignore
         None,
         description="An ordered (natoms*ndim,) array for XYZ atomic velocities. Default unit is "
-        "Angstroms/femtoseconds.",
+        "angstroms/femtoseconds.",
     )
     velocities_units: Optional[str] = Field(  # type: ignore
-        "angstrom/fs",
+        "angstrom / femtosecond",
         description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
         dimensionality=LENGTH_DIM / TIME_DIM,
     )
