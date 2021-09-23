@@ -181,6 +181,6 @@ for instance represent entities rather than atoms (although this will negate ato
 
 Validation
 ----------
-MMElemental performs only data type validation on any constructed model. However, beyond basic validation and sanity checks, MMElemental does not perform any scientific validation. This is what enables 
-MMElemental to support coarse-graining for instance. For domain-specific (i.e. scientific) validation, MMElemental can theoretically make use of MMIC_ validators similarly to how it uses translators to 
-parse and write to various file formats.
+MMElemental performs data type validation on any constructed model. However, beyond basic validation and sanity checks, MMElemental does not perform any scientific validation. This is why non-atomic entities
+are supported for instance for coarse-graining, and this is what enables MMElemental to support a wide range of applications. For domain-specific (i.e. scientific) validation, MMElemental can theoretically 
+make use of MMIC_ validators similarly to how it uses translators to parse/write various file formats.
