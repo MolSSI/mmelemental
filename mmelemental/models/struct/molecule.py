@@ -790,6 +790,7 @@ class Molecule(ProtoModel):
             self.write_file(
                 filename,
                 encoding=dtype,
+                **kwargs,
             )
         else:  # look for an installed mmic_translator
             if not translator:
