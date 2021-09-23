@@ -228,6 +228,11 @@ class Molecule(ProtoModel):
         None,
         description="Additional information to bundle with the molecule. Use for schema development and scratch space.",
     )
+    hash: str = Field(
+        None,
+        description="The hash code that unique identifies this object. Typically not manually assigned but left for "
+        "MMElemental to handle.",
+    )
 
     class Config(ProtoModel.Config):
         repr_style = lambda self: [("name", self.name), ("hash", self.get_hash()[:7])]
@@ -264,6 +269,13 @@ class Molecule(ProtoModel):
         super().__init__(**kwargs)
 
         values = self.__dict__
+
+        if values.get("hash") is None:
+            values["hash"] = self.get_hash()
+        else:
+            assert (
+                values["hash"] == self.get_hash()
+            ), "Model data inconsistent with stored hash code!"
 
         if values.get("symbols") is None:
             raise ValueError(
