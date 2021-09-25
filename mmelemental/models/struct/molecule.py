@@ -545,7 +545,7 @@ class Molecule(ProtoModel):
         Returns
         -------
         Molecule
-            A constructed Molecule class.
+            A Molecule object.
 
         """
         file_ext = Path(filename).suffix if filename else None
@@ -676,7 +676,7 @@ class Molecule(ProtoModel):
         Returns
         -------
         Molecule
-            A constructed Molecule class.
+            A Molecule object.
 
         Examples
         --------
