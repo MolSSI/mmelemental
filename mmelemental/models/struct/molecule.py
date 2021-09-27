@@ -488,18 +488,20 @@ class Molecule(ProtoModel):
     def show(self, ngl_kwargs: Optional[Dict[str, Any]] = None) -> "nglview.NGLWidget":  # type: ignore
         r"""Creates a 3D representation of a moleucle that can be manipulated in Jupyter Notebooks and exported as
         images (`.png`).
+
         Parameters
         ----------
         ngl_kwargs
-            Addition nglview NGLWidget kwargs
+            Addition nglview NGLWidget kwargs.
+
         Returns
         -------
         nglview.NGLWidget
-            A nglview view of the molecule
-        """
-        import cmselemental
+            An nglview view of the molecule.
 
-        if not cmselemental.util.importing.which_import("nglview", return_bool=True):
+        """
+
+        if not which_import("nglview", return_bool=True):
             raise ModuleNotFoundError(
                 f"Python module nglwview not found. Solve by installing it: `pip install nglview`"
             )  # pragma: no cover
