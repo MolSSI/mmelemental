@@ -15,7 +15,7 @@ provides/supports are explained in the next subsections.
 
 Models
 ------
-All models in MMElemental are immutable data-centric classes, which provide serialization and data validation methods based on the pydantic_ library. 
+All models in MMElemental are immutable data-centric classes, which provide serialization and data validation methods based on the pydantic_ library.
 
 .. image:: _static/mmel_mmschema.png
    :scale: 55 %

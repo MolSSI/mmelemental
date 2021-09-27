@@ -124,9 +124,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Force fields</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#instantiation">Instantiation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#functional-form">Functional form</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#assigned-parameters">Assigned parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#parametrized-molecules">Parametrized molecules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#i-o-operations">I/O operations</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#file-operations">File operations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-conversion">Data conversion</a></li>
@@ -170,108 +170,38 @@
 can be used in molecular mechanics, molecular dynamics, Monte Carlo methods, molecular docking, coarse-graining, and any other method that utilizes force fields.</p>
 <div class="section" id="instantiation">
 <h2>Instantiation<a class="headerlink" href="#instantiation" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="forcefields.html#forcefield">ForceField</a> objects can be created by supplying keyword arguments to the constructor. Per the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification, there are no required fields. Hence, the simplest way to create a force field object is via:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This creates a <a class="reference external" href="molecules.html#molecule">Molecule</a> object with a unique hash code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;forcefield&#39;, form=[], hash=&#39;96b52d9&#39;)</span>
+</pre></div>
+</div>
+<p>We can also assign a unique name to this force field object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_forcefield&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;my_forcefield&#39;, form=[], hash=&#39;96b52d9&#39;)</span>
+</pre></div>
+</div>
+<p>Notice how the hash code did not change because the force field definition has not physically changed. In contrast, if we change a physical property such as the <cite>defs</cite>, its hash code changes i.e.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_forcefield&quot;</span><span class="p">,</span> <span class="n">defs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OW&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span>
+<span class="go"> ForceField(name=&#39;my_forcefield&#39;, form=[], hash=&#39;0d9fc00&#39;)</span>
+</pre></div>
+</div>
+<p>Here we define an entity called “OW” which refers to an atom type of Oxygen.</p>
 <div class="section" id="functional-form">
 <h3>Functional form<a class="headerlink" href="#functional-form" title="Permalink to this headline"></a></h3>
-<p><a class="reference external" href="forcefields.html#forcefield">ForceField</a> objects can be created by supplying keyword arguments to the constructor. Per the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification, the only required keyword argument is <cite>symbols</cite> with all other fields
-being optional. Hence, the simplest way to create a molecule is via:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ff</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">ForceField</span><span class="p">(</span><span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">])</span>
-</pre></div>
+<p>Here we discuss the use of the <a class="reference external" href="forcefields.html#forcefield">ForceField</a> class for constructing force fields such as Amber99 and Sage OFF.
+To be completed.</p>
 </div>
-<p>This creates a <a class="reference external" href="molecules.html#molecule">Molecule</a> object with a unique hash code and a name that defaults to the molecular formula (can be overwritten with the keyword arg <cite>name</cite>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
-<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;83a5d8a&#39;)</span>
-</pre></div>
+<div class="section" id="assigned-parameters">
+<h3>Assigned parameters<a class="headerlink" href="#assigned-parameters" title="Permalink to this headline"></a></h3>
+<p><a class="reference external" href="forcefields.html#forcefield">ForceField</a> objects can also store force field parameters that were assigned to a particular molecule.
+To be completed.</p>
 </div>
-<p>We can visualize this molecule if we’re using <a class="reference external" href="https://jupyter.org">Jupyter</a> notebook/lab with <a class="reference external" href="http://nglviewer.org/nglview/latest/">nglview</a>. In order to do that, we need to specify the atomic positions by passing the <cite>geometry</cite> keyword to the constructor i.e.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.82</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">,</span> <span class="mf">1.18</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
-<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;631741f&#39;)</span>
-</pre></div>
-</div>
-<p>Notice how the hash code changed because we’ve specified another core field (<cite>geometry</cite>) in the molecule model i.e. the molecule definition has physically changed. In contrast, if we change a property such as
-the <cite>name</cite> of the molecule, its hash code remains the same i.e.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;water&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.82</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">,</span> <span class="mf">1.18</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
-<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;631741f&#39;)</span>
-</pre></div>
-</div>
-<p>We can visualize this molecule if <a class="reference external" href="http://nglviewer.org/nglview/latest/">nglview</a> is installed:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>or</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">nglview</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">nglview</span><span class="o">.</span><span class="n">show_mmelemental</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>NGLview guesses the connectivity or bonds in a given molecule. We can, however, specify the connectivity (and the bond order).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.82</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">,</span> <span class="mf">1.18</span><span class="p">,</span> <span class="mf">2.09</span><span class="p">,</span> <span class="mf">0.58</span><span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">connectivity</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)],</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span>
-<span class="go"> Molecule(name=&#39;H2O&#39;, hash=&#39;18705f4&#39;)</span>
-</pre></div>
-</div>
-<p>Since connectivity changes the physical definition of a molecule, the hash code changes when connectivity is specified or modified. Note that the <cite>connectivity</cite> field should always
-be a list of tuple of the form (atom1_index, atom2_index, bond_order). Otherwise, <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> will throw in a validation error.</p>
-<p>Under the hood, all array fields are cast as numpy arrays, and every field set by the user becomes accessible (but cannot be modified since <cite>Molecule</cite> is an immutable object). For instance,
-we can access the connectivity or geometry via:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">geometry</span>
-<span class="go"> array([2.  , 2.09, 0.  , 2.82, 2.09, 0.58, 1.18, 2.09, 0.58])</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">connectivity</span>
-<span class="go"> array([(0, 1, 1.), (0, 2, 1.)], dtype=[(&#39;f0&#39;, &#39;&lt;i8&#39;), (&#39;f1&#39;, &#39;&lt;i8&#39;), (&#39;f2&#39;, &#39;&lt;f8&#39;)])</span>
-</pre></div>
-</div>
-<p>We can also access other attributes we did not explicitly specify such as atomic numbers and dimensionality:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">atomic_numbers</span>
-<span class="go"> array([8, 1, 1])</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">ndim</span>
-<span class="go"> 3</span>
-</pre></div>
-</div>
-<p>Certain physical properties such as <cite>geometry</cite>, <cite>velocities</cite>, <cite>masses</cite>, and <cite>molecular_charge</cite> have default units fields as well that can be set based on physically consistent and supported units
-available in <a class="reference external" href="https://pint.readthedocs.io">pint</a>. For example, we can access the defaul geometry unit (<cite>angstrom</cite>) or access all units available in this model.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">geometry_units</span>
-<span class="go"> &#39;angstrom&#39;</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">get_units</span><span class="p">()</span>
-<span class="go"> {&#39;masses_units&#39;: &#39;amu&#39;, &#39;molecular_charge_units&#39;: &#39;e&#39;, &#39;geometry_units&#39;: &#39;angstrom&#39;, &#39;velocities_units&#39;: &#39;angstrom/fs&#39;}</span>
-</pre></div>
-</div>
-<p>In the next section, we will go over how molecules can be created from files, seralized and written to files.</p>
-</div>
-</div>
-<div class="section" id="parametrized-molecules">
-<h2>Parametrized molecules<a class="headerlink" href="#parametrized-molecules" title="Permalink to this headline"></a></h2>
-<p>A <a class="reference external" href="molecules.html#topology">Topology</a> model in MMElemental is a subset of <a class="reference external" href="molecules.html#molecule">Molecule</a> which captures symbolic information such as particle symbols and connectivity.
-We can create a <a class="reference external" href="molecules.html#topology">Topology</a> object from an existing molecule with the <cite>get_topology</cite> method as shown:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">top</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">get_topology</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">top</span>
-<span class="go"> Topology(name=&#39;top_from_mol&#39;, hash=&#39;6915dc7&#39;)</span>
-</pre></div>
-</div>
-<p>Alternatively,</p>
-<p>A <a class="reference external" href="molecules.html#topology">Topology</a> object can also be used to instantiate a <a class="reference external" href="molecules.html#molecule">Molecule</a> object. For instance,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="o">**</span><span class="n">top</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;schema_name&quot;</span><span class="p">}))</span>
-<span class="go"> Molecule(name=&#39;top_from_mol&#39;, hash=&#39;a5f83e3&#39;)</span>
-</pre></div>
-</div>
-<p>Notice that <cite>top.dict(exclude={“schema_name”})</cite> extracts all populated fields and return them in a python dictionary, excluding the <cite>schema_name</cite> (which is by default <cite>mmschema_molecule</cite> for molecules).</p>
 </div>
 <div class="section" id="i-o-operations">
 <h2>I/O operations<a class="headerlink" href="#i-o-operations" title="Permalink to this headline"></a></h2>
@@ -286,7 +216,7 @@ We can create a <a class="reference external" href="molecules.html#topology">Top
 </div>
 <div class="section" id="coarse-graining">
 <h2>Coarse-graining<a class="headerlink" href="#coarse-graining" title="Permalink to this headline"></a></h2>
-<p>The <a class="reference external" href="molecules.html#molecule">Molecule</a> and <a class="reference external" href="molecules.html#topology">Topology</a> models are applicable to any kind of particle systems i.e. the underlying object these models describe does not have to be atomic. The <cite>symbols</cite> property could
+<p>The <a class="reference external" href="forcefields.html#forcefield">ForceField</a> models are applicable to any kind of particle systems i.e. the underlying object these models describe does not have to be atomic. The <cite>symbols</cite> property could
 for instance represent entities rather than atoms (although this will negate atomic properties such as atomic or mass numbers).</p>
 </div>
 <div class="section" id="validation">
