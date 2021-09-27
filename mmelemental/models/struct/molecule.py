@@ -480,7 +480,9 @@ class Molecule(ProtoModel):
                 elif field == "masses":
                     data = float_prep(data, MASS_NOISE)
 
-                concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                concat += json.dumps(
+                    data, default=lambda x: x.ravel().tolist()
+                )  # if serialization fails, assume type is numpy.ndarray
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
