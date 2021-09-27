@@ -231,6 +231,7 @@ and velocities are truncated to 4, 6, 8, and 8 decimal places, respectively, to 
 <li><p><strong>substructs</strong> (<em>Array</em><em>, </em><em>Optional</em>) – A list of (name, num) of connected atoms constituting the building block (e.g. monomer) of the structure (e.g. a polymer). Order follows atomic indices from 0 till Natoms-1. E.g. [(‘ALA’, 4), …] means atom1 belongs to aminoacid alanine with residue number 4. Substruct name is max 4 characters.</p></li>
 <li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Optional) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the molecule. Use for schema development and scratch space.</p></li>
+<li><p><strong>hash</strong> (<em>str</em><em>, </em><em>Optional</em>) – The hash code that unique identifies this object. Typically not manually assigned but left for MMElemental to handle.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
