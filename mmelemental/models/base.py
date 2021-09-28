@@ -37,6 +37,9 @@ def provenance_stamp(routine: str) -> Dict[str, str]:
 
 
 class ProtoModel(models.ProtoModel):
+    class Config:
+        json_encoders: Dict[str, Any] = {pint.unit.UnitsContainer: lambda v: dict(v)}
+
     def dict(self, *args, **kwargs):
         kwargs["by_alias"] = True
         kwargs["exclude_unset"] = False
