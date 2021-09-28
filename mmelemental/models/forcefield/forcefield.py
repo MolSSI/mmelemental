@@ -22,7 +22,7 @@ from mmelemental.util.units import CURRENT_DIM, TIME_DIM, MASS_DIM
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from mmelemental.models.util.output import FileOutput
 from .nonbonded import NonBonded
-from .bonded import Bonds, Angles, Dihedrals
+from .bonded import Bonds, Angles, Dihedrals, DihedralsImproper
 
 _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
 Solve by: pip install mmic_translator"
@@ -30,17 +30,7 @@ Solve by: pip install mmic_translator"
 mmschema_forcefield_default = "mmschema_forcefield"
 
 
-__all__ = ["ForceField", "ForcesInput"]
-
-
-class ImproperDihedrals(ProtoModel):
-    im_dihedrals: Optional[Array[Array[float]]] = Field(
-        None, description="Improper dihedral/torsion parameters."
-    )
-    im_dihedrals_type: Optional[List[str]] = Field(
-        None,
-        description="Improper dihedral potential form e.g. harmonic, fourier, etc.",
-    )
+__all__ = ["ForceField"]
 
 
 class ForcesInput(ProtoModel):
@@ -97,9 +87,9 @@ class ForceField(ProtoModel):
     dihedrals: Optional[Union[Dihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="4-body torsional bond model."
     )
-    # im_dihedrals: Optional[Union[ImproperDihedrals, List[Dihedrals]]] = Field(  # type: ignore
-    #    None, description="Improper dihedral bond model."
-    # )
+    dihedrals_improper: Optional[Union[DihedralsImproper, List[Dihedrals]]] = Field(  # type: ignore
+        None, description="Improper 4-body torsional bond model."
+    )
     charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(
         None, description="Atomic charges. Default unit is in elementary charge units."
     )
