@@ -454,6 +454,7 @@ class ForceField(ProtoModel):
     def hash_fields(self):
         return [
             "symbols",
+            "defs",
             "masses",
             "masses_units",
             "charges",
@@ -463,7 +464,6 @@ class ForceField(ProtoModel):
             "angles",
             "dihedrals",
             # "im_dihedrals",
-            "combination_rule",
             "exclusions",
             "inclusions",
         ]
@@ -480,7 +480,7 @@ class ForceField(ProtoModel):
         for field in self.hash_fields:
             data = getattr(self, field)
             if data is not None:
-                if field == "symbols":
+                if field == "symbols" or field == "defs":
                     concat += json.dumps(data, default=lambda x: x.ravel().tolist())
                 if field == "charges":
                     data = float_prep(data, CHARGE_NOISE)
@@ -497,7 +497,9 @@ class ForceField(ProtoModel):
                 ):
                     if not isinstance(data, dict):
                         data = data.dict()
-                    concat += json.dumps(data, default=lambda x: x.ravel().tolist())
+                concat += json.dumps(
+                    data, default=lambda x: x.ravel().tolist()
+                )  # if serialization fails, assume type is numpy.ndarray
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
