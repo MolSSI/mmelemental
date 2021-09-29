@@ -21,45 +21,13 @@ from mmelemental.util.data import (
 )
 from cmselemental.util import which_import
 
-__all__ = ["Trajectory", "TrajInput"]
+__all__ = ["Trajectory"]
 
 _trans_nfound_msg = "MMElemental translation requires mmic_translator. \
 Solve by: pip install mmic_translator"
 
 
 mmschema_trajectory_default = "mmschema_trajectory"
-
-
-class TrajInput(ProtoModel):
-    geometry_freq: Optional[int] = Field(
-        None, description="Every number of steps geometry are saved."
-    )
-    geometry_units: Optional[str] = Field(
-        "angstrom",
-        description="Units for atomic geometry. Defaults to Angstroms.",
-        dimensionality=LENGTH_DIM,
-    )
-    velocities_freq: Optional[int] = Field(
-        None,
-        description="Save velocities every 'velocities_freq' steps.",
-    )
-    velocities_units: Optional[str] = Field(
-        "angstrom/fs",
-        description="Units for atomic velocities. Defaults to Angstroms/femtoseconds.",
-        dimensionality=LENGTH_DIM / TIME_DIM,
-    )
-    forces_freq: Optional[int] = Field(
-        None, description="Every number of steps velocities are saved."
-    )
-    forces_units: Optional[str] = Field(
-        "kJ/(mol*angstrom)",
-        description="Units for atomic forces. Defaults to KiloJoules/mol.Angstroms.",
-        dimensionality=MASS_DIM * LENGTH_DIM / (SUBS_DIM * TIME_DIM ** 2),
-    )
-    freq: Optional[int] = Field(
-        None,
-        description="Every number of steps geometry, velocities, and/or forces are saved.",
-    )
 
 
 class Trajectory(ProtoModel):
@@ -324,7 +292,7 @@ class Trajectory(ProtoModel):
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
-            from mmic_translator.components.supported import reg_trans
+            from mmic_translator import reg_trans
 
             reg_trans = list(reg_trans)
 
