@@ -9,21 +9,21 @@ Design
 
 MMElemental is strictly a python implementation of the MMSchema_ specification i.e. its main focus is on data classes, which are implemented in the form of pydantic_ models. MMElemental
 natively supports few common data formats such as JSON, YAML, and HDF5. In order to parse MM-specific file formats (sdf, mmCIF, PDB, etc.), MMElemental uses mmic_translator_, which
-is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema. Both model and components MMElemental 
-provides/supports are explained in the next subsections.
+is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema. Model in MMElemental are discussedn in
+the next subsection, while components compatible with MMElemental are explained in the subsequent subsections.
 
 
 Models
 ------
-All models in MMElemental are immutable data-centric classes, which provide serialization and data validation methods based on the pydantic_ library.
+All models in MMElemental are immutable classes, which provide serialization and data validation methods based on the pydantic_ library.
 
 .. image:: _static/mmel_mmschema.png
    :scale: 55 %
    :align: center
 
-Each model has a set of fields that, when suitable, are used to automatically generate a unique hash 
+Each model has a set of fields that are used to automatically generate a unique hash 
 that enables each object to be uniquely identified and check for file integrity. Furthermore, any model
-that stores physical quantities in its fields provides the associated units field as well (unless it's dimensionless).
+that stores physical quantities in its fields must provide the associated units field as well.
 
 A UML diagram that summarizes some of the properties and methods found in a core MMElemental model is shown below. 
 All `Model` implementations are subclasses of `ProtoModel` from the CMSElemental_ package, which serves as the backbone of MMElemental.
@@ -55,14 +55,15 @@ For the purpose of converting between different data/file representations or tra
    :align: center
 
 
-By default, MMElemental selects an appropriate tactic converter based on the run-time selection used in mmic_translator_. 
+By default, MMElemental selects an appropriate tactic converter based on run-time selection criteria used in mmic_translator_. 
 
 .. code-block:: python
 
     >>> mol = mmelemental.models.Molecule.from_file(grofile)
 
 
-All debug information is stored in the `extras` field in mmschema_molecule. However, to access additional info on which tactic translator was used, we need to pass `debug=True`:
+All debug information is stored in the `extras` field in mmschema_molecule. However, to access additional info on which tactic translator was used, we need to pass `debug=True`. 
+For example:
 
 .. code-block:: python
 
@@ -76,7 +77,7 @@ All debug information is stored in the `extras` field in mmschema_molecule. Howe
         }
 
 
-In this case, MMElemental chose `mmic_mda` (based on MDAnalysis) to parse the grofile. In order to instruct mmelemental to use a different tactic translator, we need to manually specify which
+In this case, MMElemental chose `mmic_mda` (based on MDAnalysis) to parse the grofile. In order to instruct mmelemental to use a different tactic translator, we can manually specify which
 tactic translator to use i.e.
 
 .. code-block:: python
