@@ -33,15 +33,6 @@ mmschema_forcefield_default = "mmschema_forcefield"
 __all__ = ["ForceField"]
 
 
-class ForcesInput(ProtoModel):
-    method: str = Field(..., description="")
-    cutoff: Optional[float] = Field(None, description="")
-    cutoff_units: Optional[str] = Field("angstrom", description="")
-    modifier: Optional[str] = Field(None, description="")
-    dielectric: Optional[float] = Field(numpy.inf, description="")
-    correct: Optional[str] = Field(None, description="")
-
-
 class ForceField(ProtoModel):
     schema_name: constr(
         strip_whitespace=True, regex="^(mmschema_forcefield)$"
@@ -87,7 +78,7 @@ class ForceField(ProtoModel):
     dihedrals: Optional[Union[Dihedrals, List[Dihedrals]]] = Field(  # type: ignore
         None, description="4-body torsional bond model."
     )
-    dihedrals_improper: Optional[Union[DihedralsImproper, List[Dihedrals]]] = Field(  # type: ignore
+    dihedrals_improper: Optional[Union[DihedralsImproper, List[DihedralsImproper]]] = Field(  # type: ignore
         None, description="Improper 4-body torsional bond model."
     )
     charges: Optional[Array[numpy.dtype(NUMPY_FLOAT)]] = Field(
@@ -123,9 +114,6 @@ class ForceField(ProtoModel):
         None,
         description="Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.",
     )
-    # switch_width="1.0 * angstrom",
-    # cutoff="9.0 * angstrom" ,
-    # method="cutoff",
     defs: Optional[List[str]] = Field(  # type: ignore
         None,
         description="Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. "
@@ -192,7 +180,13 @@ class ForceField(ProtoModel):
     def __repr_args__(self) -> "ReprArgs":
         forms = [
             form.__class__.__name__
-            for form in (self.nonbonded, self.bonds, self.angles, self.dihedrals)
+            for form in (
+                self.nonbonded,
+                self.bonds,
+                self.angles,
+                self.dihedrals,
+                self.dihedrals_improper,
+            )
             if form
         ]
         return [("name", self.name), ("form", forms), ("hash", self.get_hash()[:7])]
@@ -200,7 +194,7 @@ class ForceField(ProtoModel):
     # Validators
     @validator("charges")
     def _charges_length(cls, v, values):
-        assert len(v.shape) == 1, "Atomic charges must be a 1D array!"
+        assert len(v.shape) == 1, "Atomic charges must be 1D array!"
         return v
 
     # Constructors
@@ -262,7 +256,7 @@ class ForceField(ProtoModel):
         if not translator:
             if not TransComponent:
                 raise ModuleNotFoundError(_trans_nfound_msg)
-            from mmic_translator.components.supported import reg_trans
+            from mmic_translator import reg_trans
 
             reg_trans = list(reg_trans)
 
@@ -463,7 +457,7 @@ class ForceField(ProtoModel):
             "bonds",
             "angles",
             "dihedrals",
-            # "im_dihedrals",
+            "dihedrals_improper",
             "exclusions",
             "inclusions",
         ]
@@ -493,7 +487,7 @@ class ForceField(ProtoModel):
                     "bonds",
                     "angles",
                     "dihedrals",
-                    "im_dihedrals",
+                    "dihedrals_improper",
                 ):
                     if not isinstance(data, dict):
                         data = data.dict()
@@ -506,5 +500,5 @@ class ForceField(ProtoModel):
 
     @property
     def is_topology(self):
-        """Returns True if model contains "topological" data rather than forcefield definition."""
+        """Returns True if model contains "topological" (i.e. subset of assigned ff params) data rather than forcefield definition."""
         return True if self.defs is None else False
