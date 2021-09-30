@@ -32,7 +32,7 @@ class DihedralsImproper(Params):
     # Validators
     @validator("angles")
     def _angles_shape(cls, v, values):
-        assert len(v.shape) == 1, "Bond lengths must be a 1D array!"
+        assert len(v.shape) == 1, "Improper dihedral angles must be 1D array!"
         return v
 
     @validator("weights")
