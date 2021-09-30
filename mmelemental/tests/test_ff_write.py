@@ -42,6 +42,22 @@ dihedrals_pytest_params = "form,lengths,params", [
         },
     ),
 ]
+dihedrals_improper_pytest_params = "form,lengths,params", [
+    (
+        "Charmm",
+        rand_ndih,
+        {"energy": rand_ndih, "periodicity": rand_int_ndih, "phase": rand_ndih},
+    ),
+    (
+        "CharmmMulti",
+        rand_ndih,
+        {
+            "energy": (rand_ndih, rand_ndih),
+            "periodicity": (rand_int_ndih, rand_int_ndih),
+            "phase": (rand_ndih, rand_ndih),
+        },
+    ),
+]
 
 
 def rewrite(filename):
@@ -109,13 +125,30 @@ def test_dihedrals(form, lengths, params):
     potential = getattr(ff.bonded.dihedrals.potentials, form)(**params)
     dihedrals = ff.bonded.Dihedrals(
         params=potential,
-        # angles=lengths,
-        # angles_units="radians",
+        angles=lengths,
+        angles_units="radians",
         connectivity=indices,
         form=form,
     )
     assert dihedrals.form == form
     return dihedrals
+
+
+###########################################
+####### IMPROPER DIHEDRALS ################
+@pytest.mark.parametrize(*dihedrals_pytest_params)
+def test_improper_dihedrals(form, lengths, params):
+    indices = [(i, i + 1, i + 2, i + 3) for i in range(ndihedrals)]
+    potential = getattr(ff.bonded.dihedrals_improper.potentials, form)(**params)
+    dihedrals_improper = ff.bonded.DihedralsImproper(
+        params=potential,
+        angles=lengths,
+        angles_units="radians",
+        connectivity=indices,
+        form=form,
+    )
+    assert dihedrals_improper.form == form
+    return dihedrals_improper
 
 
 @pytest.mark.parametrize(*dihedrals_pytest_params)
@@ -130,11 +163,13 @@ def test_forcefield(form, lengths, params):
         form="Harmonic", lengths=rand_nangle, params={"spring": rand_nangle}
     )
     dihedrals = test_dihedrals(form, lengths, params)
+    dihedrals_improper = test_improper_dihedrals(form, lengths, params)
     mm_ff = ff.ForceField(
         nonbonded=nonbonded,
         bonds=bonds,
         angles=angles,
         dihedrals=dihedrals,
+        dihedrals_improper=dihedrals_improper,
         charges=numpy.random.rand(natoms),
         symbols=["H" for _ in range(natoms)],
     )
