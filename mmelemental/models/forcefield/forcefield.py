@@ -425,6 +425,9 @@ class ForceField(ProtoModel):
                 f"Translator {translator} not available. Make sure it is properly installed."
             )
 
+    def __hash__(self):
+        return hash(self.get_hash())
+
     def __eq__(self, other):
         """
         Checks if two models are identical. This is a forcefield identity defined
