@@ -70,7 +70,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Force fields</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#forcefield">ForceField</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.forcefield.forcefield">API</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#nonbonded">NonBonded</a><ul>
@@ -191,8 +191,148 @@ additional models explained in the next subsections.</p>
 <p>In addition, <cite>ForceField</cite> provides <code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code> methods to create a forcefield from data (e.g. parmed.Structure) or file objects.
 The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a force field to data and file objects, respectively. See the API for more details.</p>
 </div>
-<div class="section" id="api">
-<span id="ffapi"></span><h3>API<a class="headerlink" href="#api" title="Permalink to this headline"></a></h3>
+<div class="section" id="module-mmelemental.models.forcefield.forcefield">
+<span id="api"></span><span id="ffapi"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.forcefield.forcefield" title="Permalink to this headline"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.forcefield.</span></span><span class="sig-name descname"><span class="pre">ForceField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_forcefield</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_forcefield.</p></li>
+<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>author</strong> (<em>str</em><em>, </em><em>Optional</em>) – Author name to assign to the force field this model stores. This field can be arbitrary.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this model. This field can be arbitrary.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
+<li><p><strong>comment</strong> (<em>str</em><em>, </em><em>Optional</em>) – Additional comments for this model. Intended for pure human/user consumption and clarity.</p></li>
+<li><p><strong>symbols</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom,) list of particle (e.g. atomic elemental) symbols.</p></li>
+<li><p><strong>nonbonded</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NonBonded</span></code>], Optional) – Non-bonded parameters model.</p></li>
+<li><p><strong>bonds</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Bonds</span></code>], Optional) – 2-body covalent bond model.</p></li>
+<li><p><strong>angles</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Angles</span></code>], Optional) – 3-body angular bond model.</p></li>
+<li><p><strong>dihedrals</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dihedrals</span></code>], Optional) – 4-body torsional bond model.</p></li>
+<li><p><strong>dihedrals_improper</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">DihedralsImproper</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DihedralsImproper</span></code>], Optional) – Improper 4-body torsional bond model.</p></li>
+<li><p><strong>charges</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Atomic charges. Default unit is in elementary charge units.</p></li>
+<li><p><strong>charges_units</strong> (<em>str</em><em>, </em><em>Default: e</em>) – Atomic charge unit.</p></li>
+<li><p><strong>masses</strong> (<em>Array</em><em>, </em><em>Optional</em>) – List of atomic masses. If not provided, the mass of each atom is inferred from its most common isotope. If this is provided, it must be the same length as <code class="docutils literal notranslate"><span class="pre">symbols</span></code>.</p></li>
+<li><p><strong>masses_units</strong> (<em>str</em><em>, </em><em>Default: amu</em>) – Units for atomic masses. Defaults to unified atomic mass unit.</p></li>
+<li><p><strong>charge_groups</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Charge groups per atom. Length of the array must be natoms.</p></li>
+<li><p><strong>exclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of bonded atoms to exclude from non-bonded calculations.        The rules to apply in choosing bonded exclusions are specifed in the configuration file using the exclude parameter. The        choices for exclusions are None, 1-2, 1-3, 1-4, etc. With None, no atom pairs are excluded. With 1-2, only atoms that are connected             via a linear bond are excluded. With 1-3, any pair of atoms connected via a bond or bonded to a common third atom are excluded.         With 1-4, any atoms that are connected by a linear bond, or a sequence of two bonds, or a sequence of three bonds, are excluded.        With scaled1-4, exclusions are applied in the same manner as the 1-3 setting, but those pairs that are connected by a sequence of       3 bonds are calculated using the modified 1-4 methods described rather than the standard force calculations.</p></li>
+<li><p><strong>inclusions</strong> (<em>str</em><em>, </em><em>Optional</em>) – Which pairs of 1-4 excluded bonded atoms to include in non-bonded calculations.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation. The type names are associated with the atomic elements defined in other objects e.g. see the :class:<code class="docutils literal notranslate"><span class="pre">Molecule</span></code> model.</p></li>
+<li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
+<li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
+<li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.902.g2f3db9f’, ‘routine’: ‘mmelemental.models.forcefield.forcefield’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.from_data">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.from_data" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a ForceField object from a data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Data to construct ForceField from.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed ForceField object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.forcefield.ForceField" title="mmelemental.models.forcefield.forcefield.ForceField">ForceField</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.from_file">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a ForceField object from a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The topology or FF filename to build from.</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to interpret e.g. psf. If unset, mmelemental attempts to discover the file type.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Any additional keywords to pass to the constructor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed ForceField object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.forcefield.forcefield.ForceField" title="mmelemental.models.forcefield.forcefield.ForceField">ForceField</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.get_hash">
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.get_hash" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the hash of the force field object.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.is_topology">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_topology</span></span><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.is_topology" title="Permalink to this definition"></a></dt>
+<dd><p>Returns True if model contains “topological” (i.e. subset of assigned ff params) data rather than forcefield definition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.to_data">
+<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.to_data" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a toolkit-specific forcefield from MMSchema ForceField.
+Which toolkit-specific component is called depends on which package is installed on the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – Data type e.g. mdanalysis, parmed, etc.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Additional kwargs to pass to the constructors.</p></li>
+<li><p><strong>Results</strong> – </p></li>
+<li><p><strong>-------</strong> – </p></li>
+<li><p><strong>ToolkitModel</strong> – Toolkit-specific ForceField object</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ToolkitModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.forcefield.ForceField.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/forcefield.html#ForceField.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.forcefield.ForceField.to_file" title="Permalink to this definition"></a></dt>
+<dd><p>Writes the ForceField to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
+<li><p><strong>dtype</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The type of file to write (e.g. psf, top, etc.), attempts to infer dtype from
+file extension if not provided.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_parmed. Takes precedence over dtype. If unset, MMElemental attempts
+to find an appropriate translator if it is registered in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>str</em><em>, </em><em>Dict</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 <div class="section" id="nonbonded">

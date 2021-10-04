@@ -70,7 +70,7 @@
 <li class="toctree-l1"><a class="reference internal" href="forcefields.html">Force fields</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="forcefields.html#forcefield">ForceField</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#description">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#api">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#module-mmelemental.models.forcefield.forcefield">API</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="forcefields.html#nonbonded">NonBonded</a><ul>
@@ -168,15 +168,15 @@
 <h1>Design<a class="headerlink" href="#design" title="Permalink to this headline"></a></h1>
 <p>MMElemental is strictly a python implementation of the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification i.e. its main focus is on data classes, which are implemented in the form of <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> models. MMElemental
 natively supports few common data formats such as JSON, YAML, and HDF5. In order to parse MM-specific file formats (sdf, mmCIF, PDB, etc.), MMElemental uses <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a>, which
-is a general-purpose component (part of the <a class="reference external" href="https://github.com/MolSSI/mmic">MMIC</a> project) that enables converting between different data/file representations and MMSchema. Both model and components MMElemental
-provides/supports are explained in the next subsections.</p>
+is a general-purpose component (part of the <a class="reference external" href="https://github.com/MolSSI/mmic">MMIC</a> project) that enables converting between different data/file representations and MMSchema. Model in MMElemental are discussedn in
+the next subsection, while components compatible with MMElemental are explained in the subsequent subsections.</p>
 <div class="section" id="models">
 <h2>Models<a class="headerlink" href="#models" title="Permalink to this headline"></a></h2>
-<p>All models in MMElemental are immutable data-centric classes, which provide serialization and data validation methods based on the <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> library.</p>
+<p>All models in MMElemental are immutable classes, which provide serialization and data validation methods based on the <a class="reference external" href="https://sphinx-pydantic.readthedocs.io">pydantic</a> library.</p>
 <a class="reference internal image-reference" href="images/mmel_mmschema.png"><img alt="images/mmel_mmschema.png" class="align-center" src="images/mmel_mmschema.png" style="width: 156.20000000000002px; height: 510.40000000000003px;" /></a>
-<p>Each model has a set of fields that, when suitable, are used to automatically generate a unique hash
+<p>Each model has a set of fields that are used to automatically generate a unique hash
 that enables each object to be uniquely identified and check for file integrity. Furthermore, any model
-that stores physical quantities in its fields provides the associated units field as well (unless it’s dimensionless).</p>
+that stores physical quantities in its fields must provide the associated units field as well.</p>
 <p>A UML diagram that summarizes some of the properties and methods found in a core MMElemental model is shown below.
 All <cite>Model</cite> implementations are subclasses of <cite>ProtoModel</cite> from the <a class="reference external" href="https://github.com/MolSSI/cmselemental">CMSElemental</a> package, which serves as the backbone of MMElemental.</p>
 <a class="reference internal image-reference" href="images/model.png"><img alt="images/model.png" class="align-center" src="images/model.png" style="width: 286.40000000000003px; height: 286.40000000000003px;" /></a>
@@ -193,11 +193,12 @@ is a realization of the former. See <a class="reference external" href="https://
 <h3>Translation<a class="headerlink" href="#translation" title="Permalink to this headline"></a></h3>
 <p>For the purpose of converting between different data/file representations or translating between different specifications, <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a> can hook up to specific tactic components.</p>
 <a class="reference internal image-reference" href="images/mmel-mmic.png"><img alt="images/mmel-mmic.png" class="align-center" src="images/mmel-mmic.png" style="width: 494.4px; height: 737.4px;" /></a>
-<p>By default, MMElemental selects an appropriate tactic converter based on the run-time selection used in <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a>.</p>
+<p>By default, MMElemental selects an appropriate tactic converter based on run-time selection criteria used in <a class="reference external" href="https://molssi.github.io/mmic_translator">mmic_translator</a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">grofile</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>All debug information is stored in the <cite>extras</cite> field in mmschema_molecule. However, to access additional info on which tactic translator was used, we need to pass <cite>debug=True</cite>:</p>
+<p>All debug information is stored in the <cite>extras</cite> field in mmschema_molecule. However, to access additional info on which tactic translator was used, we need to pass <cite>debug=True</cite>.
+For example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">grofile</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">extras</span><span class="p">[</span><span class="s2">&quot;mmic_translator&quot;</span><span class="p">]</span>
 <span class="go">    {</span>
@@ -208,7 +209,7 @@ is a realization of the former. See <a class="reference external" href="https://
 <span class="go">    }</span>
 </pre></div>
 </div>
-<p>In this case, MMElemental chose <cite>mmic_mda</cite> (based on MDAnalysis) to parse the grofile. In order to instruct mmelemental to use a different tactic translator, we need to manually specify which
+<p>In this case, MMElemental chose <cite>mmic_mda</cite> (based on MDAnalysis) to parse the grofile. In order to instruct mmelemental to use a different tactic translator, we can manually specify which
 tactic translator to use i.e.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">grofile</span><span class="p">,</span> <span class="n">translator</span><span class="o">=</span><span class="s2">&quot;mmic_parmed&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span><span class="o">.</span><span class="n">extras</span><span class="p">[</span><span class="s2">&quot;mmic_translator&quot;</span><span class="p">]</span>

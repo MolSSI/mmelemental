@@ -36,7 +36,7 @@ The methods :func:`~mmelemental.models.forcefield.ForceField.to_data` and :func:
 
 API
 ---
-.. automodule:: mmelemental.models.forcefield.mm_ff
+.. automodule:: mmelemental.models.forcefield.forcefield
    :members:
 
 
