@@ -396,6 +396,9 @@ class Molecule(ProtoModel):
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
 
+    def __hash__(self):
+        return hash(self.get_hash())
+
     def __eq__(self, other):
         """
         Checks if two models are identical. This is a molecular identity defined
