@@ -9,9 +9,10 @@ Design
 
 MMElemental is strictly a python implementation of the MMSchema_ specification i.e. its main focus is on data classes, which are implemented in the form of pydantic_ models. MMElemental
 natively supports few common data formats such as JSON, YAML, and HDF5. In order to parse MM-specific file formats (sdf, mmCIF, PDB, etc.), MMElemental uses mmic_translator_, which
-is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema. Model in MMElemental are discussedn in
-the next subsection, while components compatible with MMElemental are explained in the subsequent subsections.
+is a general-purpose component (part of the MMIC_ project) that enables converting between different data/file representations and MMSchema. The core data models in MMElemental are discussed 
+in the :ref:`next<Models>` subsection, while components compatible with MMElemental are explained in the subsequent :ref:`section<Components>`.
 
+.. _Models:
 
 Models
 ------
@@ -29,13 +30,14 @@ A UML diagram that summarizes some of the properties and methods found in a core
 All `Model` implementations are subclasses of `ProtoModel` from the CMSElemental_ package, which serves as the backbone of MMElemental.
 
 .. image:: _static/model.png
-   :scale: 80 %
+   :scale: 65 %
    :align: center
 
 The constructor/writer methods are available in models that support reading/writing common file formats or converting to other
 data objects. The `default_units` is a class property that returns whatever default physical units a particular model stores,
 while the instance property `units` returns the physical units assigned to the object after instantiation.
 
+.. _Components:
 
 Components
 ----------
@@ -43,15 +45,15 @@ There are 2 distinct classes of MM components we distinguish in MMElemental: str
 is a realization of the former. See MMIC_ for a more in-depth description.
 
 .. image:: _static/mmic-comps.png
-   :scale: 65 %
+   :scale: 100 %
    :align: center
 
 Translation
 ===========
-For the purpose of converting between different data/file representations or translating between different specifications, mmic_translator_ can hook up to specific tactic components.
+For the purpose of converting between different data/file representations or translating between different specifications, mmic_translator_ can utilize specific tactic components.
 
 .. image:: _static/mmel-mmic.png
-   :scale: 60 %
+   :scale: 100 %
    :align: center
 
 
