@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Molecule &mdash; MMElemental</title>
+  <title>Structure &mdash; MMElemental</title>
       <link rel="stylesheet" href="static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="static/graphviz.css" type="text/css" />
@@ -58,7 +58,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="molecules.html">Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="molecules.html#molecule">Molecule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="molecules.html#description">Description</a></li>
@@ -86,9 +86,16 @@
 <li class="toctree-l2"><a class="reference internal" href="forcefields.html#angles">Angles</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#anglesdescr">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#anglesapi">API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="forcefields.html#improper-dihedrals">Improper dihedrals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#dihedrals">Dihedrals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedralsdescr">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedralsapi">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forcefields.html#dihedralsimproper">DihedralsImproper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedralsimproperdescr">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="forcefields.html#dihedralsimproperapi">API</a></li>
 </ul>
 </li>
 </ul>
@@ -109,7 +116,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Molecule</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview-instantiation">Overview &amp; Instantiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#topological-data">Topological data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#i-o-operations">I/O operations</a><ul>
@@ -154,7 +161,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Molecule</li>
+      <li>Structure</li>
       <li class="wy-breadcrumbs-aside">
             <a href="sources/tutorials_mol.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -164,12 +171,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="molecule">
-<h1>Molecule<a class="headerlink" href="#molecule" title="Permalink to this headline"></a></h1>
+  <div class="section" id="structure">
+<h1>Structure<a class="headerlink" href="#structure" title="Permalink to this headline"></a></h1>
 <p>The most fundamental and general model for representing molecules in MMElemental is with the <a class="reference external" href="molecules.html#molecule">Molecule</a> model.</p>
 <div class="section" id="overview-instantiation">
 <h2>Overview &amp; Instantiation<a class="headerlink" href="#overview-instantiation" title="Permalink to this headline"></a></h2>
-<p><a class="reference external" href="molecules.html#molecule">Molecule</a> objects can be created by supplying keyword arguments to the constructor. Per the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification, the only required keyword argument is <cite>symbols</cite> with all other fields
+<p><a class="reference external" href="molecules.html#molecule">Molecule</a> objects can be created by supplying keyword arguments to the constructor. Per the <a class="reference external" href="https://molssi.github.io/mmschema">MMSchema</a> specification, the only required keyword argument is <cite>symbols</cite> while all other fields
 being optional. Hence, the simplest way to create a molecule is via:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mol</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Molecule</span><span class="p">(</span><span class="n">symbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;O&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">])</span>
 </pre></div>

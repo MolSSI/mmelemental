@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Collections" href="collections.html" />
-    <link rel="prev" title="Molecules" href="molecules.html" /> 
+    <link rel="prev" title="Structure" href="molecules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -58,7 +58,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="molecules.html">Molecules</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="molecules.html">Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="molecules.html#topology">Topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="molecules.html#molecule">Molecule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="molecules.html#description">Description</a></li>
@@ -86,9 +86,16 @@
 <li class="toctree-l2"><a class="reference internal" href="#angles">Angles</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#anglesdescr">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#anglesapi">API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dihedrals">Dihedrals</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#improper-dihedrals">Improper dihedrals</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dihedrals">Dihedrals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dihedralsdescr">Description</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dihedralsapi">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dihedralsimproper">DihedralsImproper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dihedralsimproperdescr">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dihedralsimproperapi">API</a></li>
 </ul>
 </li>
 </ul>
@@ -109,7 +116,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Molecule</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials_mol.html">Structure</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_mol.html#overview-instantiation">Overview &amp; Instantiation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_mol.html#topological-data">Topological data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_mol.html#i-o-operations">I/O operations</a><ul>
@@ -222,7 +229,7 @@ The methods <code class="xref py py-func docutils literal notranslate"><span cla
 <li><p><strong>substructs</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of substructure names the particles belong to. E.g. [(‘ALA’, 4), (‘ACE’, 0)] means atom1 belong to residue ALA (alanine) with residue number 4, while atom2 belongs to residue ACE (acetyl) with residue number 0.</p></li>
 <li><p><strong>templates</strong> (<em>Dict</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – A list of template definitions typically in terms of atom types. E.g. {‘ACE’: [‘HH31’, ‘CH3’, ‘HH32’, ‘HH33’, ‘C’, ‘O’]}.</p></li>
 <li><p><strong>atomic_numbers</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An optional ordered 1-D array-like object of atomic numbers of shape (nat,). Index matches the 0-indexed indices of all other per-atom settings like <code class="docutils literal notranslate"><span class="pre">symbols</span></code>. Values are inferred from the <code class="docutils literal notranslate"><span class="pre">symbols</span></code> list if not explicitly set.</p></li>
-<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.904.ge59bd3d’, ‘routine’: ‘mmelemental.models.forcefield.forcefield’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.906.g643bdce’, ‘routine’: ‘mmelemental.models.forcefield.forcefield’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
 <li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
 </ul>
 </dd>
@@ -509,16 +516,15 @@ to find an appropriate translator if it is registered in the <code class="xref p
 </dd></dl>
 
 </div>
-<div class="section" id="dihedrals">
-<h3>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline"></a></h3>
-<p>To be completed.</p>
 </div>
-<div class="section" id="improper-dihedrals">
-<h3>Improper dihedrals<a class="headerlink" href="#improper-dihedrals" title="Permalink to this headline"></a></h3>
+<div class="section" id="dihedrals">
+<h2>Dihedrals<a class="headerlink" href="#dihedrals" title="Permalink to this headline"></a></h2>
+<div class="section" id="dihedralsdescr">
+<span id="id7"></span><h3>Description<a class="headerlink" href="#dihedralsdescr" title="Permalink to this headline"></a></h3>
 <p>To be completed.</p>
 </div>
 <div class="section" id="dihedralsapi">
-<span id="id7"></span><h3>API<a class="headerlink" href="#dihedralsapi" title="Permalink to this headline"></a></h3>
+<span id="id8"></span><h3>API<a class="headerlink" href="#dihedralsapi" title="Permalink to this headline"></a></h3>
 <span class="target" id="module-mmelemental.models.forcefield.bonded.dihedrals"></span><dl class="py class">
 <dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.dihedrals.Dihedrals">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals.</span></span><span class="sig-name descname"><span class="pre">Dihedrals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals/base.html#Dihedrals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.dihedrals.Dihedrals" title="Permalink to this definition"></a></dt>
@@ -544,13 +550,46 @@ to find an appropriate translator if it is registered in the <code class="xref p
 
 </div>
 </div>
+<div class="section" id="dihedralsimproper">
+<h2>DihedralsImproper<a class="headerlink" href="#dihedralsimproper" title="Permalink to this headline"></a></h2>
+<div class="section" id="dihedralsimproperdescr">
+<span id="id9"></span><h3>Description<a class="headerlink" href="#dihedralsimproperdescr" title="Permalink to this headline"></a></h3>
+<p>To be completed.</p>
+</div>
+<div class="section" id="dihedralsimproperapi">
+<span id="id10"></span><h3>API<a class="headerlink" href="#dihedralsimproperapi" title="Permalink to this headline"></a></h3>
+<span class="target" id="module-mmelemental.models.forcefield.bonded.dihedrals_improper"></span><dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.forcefield.bonded.dihedrals_improper.DihedralsImproper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.forcefield.bonded.dihedrals_improper.</span></span><span class="sig-name descname"><span class="pre">DihedralsImproper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/forcefield/bonded/dihedrals_improper/base.html#DihedralsImproper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.forcefield.bonded.dihedrals_improper.DihedralsImproper" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>str</em>) – Name or form of the potential. See cls.supported_potentials for available potentials.</p></li>
+<li><p><strong>version</strong> (<em>str</em><em>, </em><em>Optional</em>) – Version of the force field this model stores. This field can be arbitrary.</p></li>
+<li><p><strong>params</strong> (<em>Any</em>) – Specific force field parameters model.</p></li>
+<li><p><strong>defs</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>Optional</em>) – Particle definition. For atomic forcefields, this could be the atom type (e.g. HH31) or SMIRKS (OFF) representation.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with the object. Use for schema development and scratch space.</p></li>
+<li><p><strong>angles</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Equilibrium dihedral angles. Default unit is degrees.</p></li>
+<li><p><strong>angles_units</strong> (<em>str</em><em>, </em><em>Default: degrees</em>) – Equilibrium improper dihedral angle units.</p></li>
+<li><p><strong>connectivity</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em><em>, </em><em>Optional</em>) – Particle indices for each improper dihedral angle.</p></li>
+<li><p><strong>weights</strong> (<em>Array</em><em>, </em><em>Optional</em>) – Something to consider later on? Ses CHARMM dihedral_style for LAMMPS.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="molecules.html" class="btn btn-neutral float-left" title="Molecules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="molecules.html" class="btn btn-neutral float-left" title="Structure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="collections.html" class="btn btn-neutral float-right" title="Collections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
