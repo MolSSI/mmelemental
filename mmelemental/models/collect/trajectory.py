@@ -142,6 +142,9 @@ class Trajectory(ProtoModel):
     def __repr_args__(self) -> "ReprArgs":
         return [("name", self.name), ("hash", self.get_hash()[:7])]
 
+    def __hash__(self):
+        return hash(self.get_hash())
+
     @validator("geometry", "velocities", "forces")
     def _must_be_n(cls, v, values):
         if v is None:
