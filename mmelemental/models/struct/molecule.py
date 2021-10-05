@@ -10,7 +10,6 @@ from functools import partial
 # MM models
 from mmelemental.models.util.output import FileOutput
 from .topology import Topology
-from mmelemental.models.chem.codes import ChemCode
 from mmelemental.models.base import ProtoModel, Provenance, provenance_stamp
 from cmselemental.types import Array
 from mmelemental.util.data import (
@@ -60,24 +59,24 @@ class Identifiers(ProtoModel):
     pubchem_cid: Optional[str] = Field(None, description="PubChem Compound ID")
     pubchem_sid: Optional[str] = Field(None, description="PubChem Substance ID")
     pubchem_conformerid: Optional[str] = Field(None, description="PubChem Conformer ID")
-    smiles: Optional[Union[ChemCode, str]] = Field(
+    smiles: Optional[str] = Field(
         None, description="A simplified molecular-input line-entry system code."
     )
-    smarts: Optional[Union[ChemCode, str]] = Field(
+    smarts: Optional[str] = Field(
         None,
         description="A SMILES arbitrary target specification code for defining substructures.",
     )
-    inchi: Optional[Union[ChemCode, str]] = Field(
+    inchi: Optional[str] = Field(
         None, description="An international chemical identifier code."
     )
-    sequence: Optional[Union[ChemCode, str]] = Field(
+    sequence: Optional[str] = Field(
         None,
         description="A sequence code from RDKit (currently only supports peptides).",
     )
-    fasta: Optional[Union[ChemCode, str]] = Field(
+    fasta: Optional[str] = Field(
         None, description="A FASTA code (currently only supports peptides)."
     )
-    helm: Optional[Union[ChemCode, str]] = Field(
+    helm: Optional[str] = Field(
         None, description="A HELM code (currently only supports peptides)."
     )
 
@@ -697,10 +696,6 @@ class Molecule(ProtoModel):
                 raise ValueError(
                     "You must supply dtype for proper interpretation of string data e.g. smiles, yaml, json, etc."
                 )
-            if dtype == "smiles":
-                code = ChemCode(code=data, dtype=dtype)
-                symbols = list(code.code)  # this is garbage, must be replaced
-                input_dict = {"identifiers": {dtype: data}, "symbols": symbols}
             elif dtype == "json":
                 assert isinstance(data, str)
                 input_dict = json.loads(data)
@@ -709,6 +704,9 @@ class Molecule(ProtoModel):
                 assert isinstance(data, str)
                 input_dict = yaml.safe_load(data)
             else:
+                # input_dict = {"identifiers": {dtype: data}}
+                # try to construct a molecule from one of the supported identifiers
+                # to be implemented in mmic_translator?
                 raise NotImplementedError(f"Data type {dtype} not understood.")
             kwargs.pop("dtype", None)
             kwargs.update(input_dict)
