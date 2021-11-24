@@ -269,6 +269,14 @@ class Molecule(ProtoModel):
 
         values = self.__dict__
 
+        if not values.get("name"):
+            if not which_import("qcelemental", return_bool=True):
+                raise ModuleNotFoundError(_qcel_nfound_msg)
+
+            from qcelemental.molparse.to_string import formula_generator
+
+            values["name"] = formula_generator(values["symbols"])
+
         if values.get("hash") is None:
             values["hash"] = self.get_hash()
         else:
@@ -280,14 +288,6 @@ class Molecule(ProtoModel):
             raise ValueError(
                 "Either symbols or atomic_numbers must be supplied for a unique definition of a Molecule."
             )
-
-        if not values.get("name"):
-            if not which_import("qcelemental", return_bool=True):
-                raise ModuleNotFoundError(_qcel_nfound_msg)
-
-            from qcelemental.molparse.to_string import formula_generator
-
-            values["name"] = formula_generator(values["symbols"])
 
     # Validators
     @validator("*", pre=True)
