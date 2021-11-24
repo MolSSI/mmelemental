@@ -36,3 +36,11 @@ def test_mmelemental_serial(encoding):
     mm_mol.to_file(f"tmp.{encoding}")
     assert os.path.isfile(f"tmp.{encoding}")
     os.remove(f"tmp.{encoding}")
+
+@pytest.mark.parametrize("encoding", serialize_extensions)
+def test_mmelemental_hash(encoding):
+    file = mm_data.mols[f"alanine.{encoding}"]
+    mm_mol = Molecule.from_file(file)
+    data = mm_mol.dict()
+    mm_mol = Molecule(**data)
+    assert isinstance(mm_mol, Molecule)
