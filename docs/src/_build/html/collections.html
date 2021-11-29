@@ -106,11 +106,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#ensemble">Ensemble</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ensemble-descr">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ensemble-api">API</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -173,24 +168,31 @@
              
   <div class="section" id="collections">
 <h1>Collections<a class="headerlink" href="#collections" title="Permalink to this headline"></a></h1>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">collections</span></code> submodule provides models that describe series of states.</p>
 <div class="section" id="trajectory">
 <h2>Trajectory<a class="headerlink" href="#trajectory" title="Permalink to this headline"></a></h2>
 <div class="section" id="description">
-<span id="trajectory-descr"></span><h3>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h3>
-<p>To be completed.</p>
+<span id="traj-descr"></span><h3>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h3>
+<p>The <cite>Trajectory</cite> model describes trajectories in classical molecular dynamics.
+Model creation occurs with a kwargs constructor as shown by equivalent operations below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span> <span class="o">=</span> <span class="n">mmelemental</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Trajectory</span><span class="p">(</span>
+<span class="go">        natoms = 1,</span>
+<span class="go">        nframes = 3,</span>
+<span class="go">        timestep = 1.0,</span>
+<span class="go">        timestep_units = &quot;femtoseconds&quot;,</span>
+<span class="go">        geometry = [2.0, 2.09, 0.0, 2.82, 2.09, 0.58, 1.18, 2.09, 0.58],</span>
+<span class="go">        geometry_units = &quot;angstrom&quot;,</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">traj</span>
+<span class="go"> Trajectory(name=None, hash=&#39;da39a3e&#39;)</span>
+</pre></div>
+</div>
+<p>In addition, <cite>Trajectory</cite> provides <code class="xref py py-func docutils literal notranslate"><span class="pre">from_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">from_file()</span></code> methods to create a trajectory from data (e.g. MDAnalysis.Universe) or file objects.
+The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a trajectory to data and file objects, respectively. See the API for more details.
+See the <a class="reference internal" href="tutorials_traj.html"><span class="doc">Trajectory</span></a> tutorials for more in-depth examples.</p>
 </div>
 <div class="section" id="api">
 <span id="trajectory-api"></span><h3>API<a class="headerlink" href="#api" title="Permalink to this headline"></a></h3>
-</div>
-</div>
-<div class="section" id="ensemble">
-<h2>Ensemble<a class="headerlink" href="#ensemble" title="Permalink to this headline"></a></h2>
-<div class="section" id="ensemble-descr">
-<span id="id1"></span><h3>Description<a class="headerlink" href="#ensemble-descr" title="Permalink to this headline"></a></h3>
-<p>To be completed.</p>
-</div>
-<div class="section" id="ensemble-api">
-<span id="id2"></span><h3>API<a class="headerlink" href="#ensemble-api" title="Permalink to this headline"></a></h3>
 </div>
 </div>
 </div>

@@ -161,18 +161,18 @@ A Topology_ object can also be used to instantiate a Molecule_ object. For insta
     >>> mmelemental.models.Molecule(**top.dict(exclude={"schema_name"}))
      Molecule(name='top_from_mol', hash='a5f83e3')
 
-Notice that `top.dict(exclude={"schema_name"})` extracts all populated fields and return them in a python dictionary, excluding the `schema_name` (which is by default `mmschema_molecule` for molecules).
+Notice that `top.dict(exclude={"schema_name"})` extracts all populated fields and returns them in a python dictionary, excluding the `schema_name` (which is by default `mmschema_molecule` for molecules).
 
 
 I/O operations
 --------------
 File operations
 ===============
-Coming soon.
+To be completed.
 
 Data conversion
 ===============
-Coming soon.
+To be completed.
 
 Coarse-graining
 ---------------
