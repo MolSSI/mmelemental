@@ -21,7 +21,7 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
             timestep = 1.0,
             timestep_units = "femtoseconds",
             geometry = [2.0, 2.09, 0.0, 2.82, 2.09, 0.58, 1.18, 2.09, 0.58],
-            geometry_units = "angstrom",
+            geometry_units = "angstrom"
         )
     >>> traj
      Trajectory(name=None, hash='da39a3e')
