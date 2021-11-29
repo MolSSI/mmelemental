@@ -34,5 +34,5 @@ See the :doc:`tutorials_traj` tutorials for more in-depth examples.
 
 API
 ---
-.. automodule:: mmelemental.models.collections.trajectory
+.. automodule:: mmelemental.models.collect.trajectory
    :members:
