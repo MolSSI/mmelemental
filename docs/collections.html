@@ -103,7 +103,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Collections</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#trajectory">Trajectory</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#api">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-mmelemental.models.collect.trajectory">API</a></li>
 </ul>
 </li>
 </ul>
@@ -191,8 +191,177 @@ Model creation occurs with a kwargs constructor as shown by equivalent operation
 The methods <code class="xref py py-func docutils literal notranslate"><span class="pre">to_data()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">to_file()</span></code> enable converting a trajectory to data and file objects, respectively. See the API for more details.
 See the <a class="reference internal" href="tutorials_traj.html"><span class="doc">Trajectory</span></a> tutorials for more in-depth examples.</p>
 </div>
-<div class="section" id="api">
-<span id="trajectory-api"></span><h3>API<a class="headerlink" href="#api" title="Permalink to this headline"></a></h3>
+<div class="section" id="module-mmelemental.models.collect.trajectory">
+<span id="api"></span><span id="trajectory-api"></span><h3>API<a class="headerlink" href="#module-mmelemental.models.collect.trajectory" title="Permalink to this headline"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mmelemental.models.collect.trajectory.</span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Representation of trajectories in classical mechanics. By default, this model loads a single frame in memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_name</strong> (<em>ConstrainedStrValue</em><em>, </em><em>Default: mmschema_trajectory</em>) – The MMSchema specification to which this model conforms. Explicitly fixed as mmschema_trajectory.</p></li>
+<li><p><strong>schema_version</strong> (<em>int</em><em>, </em><em>Default: 1</em>) – The version number of <code class="docutils literal notranslate"><span class="pre">schema_name</span></code> to which this model conforms.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>Optional</em>) – Common or human-readable name to assign to this molecule. This field can be arbitrary; see <code class="docutils literal notranslate"><span class="pre">identifiers</span></code> for well-defined labels.</p></li>
+<li><p><strong>timestep</strong> (<em>Union</em><em>[</em><em>Array</em><em>, </em><em>float</em><em>]</em>) – Timestep size. Default unit is femtoseconds.</p></li>
+<li><p><strong>timestep_units</strong> (<em>str</em><em>, </em><em>Default: fs</em>) – Timestep size units. Defaults to femtoseconds.</p></li>
+<li><p><strong>natoms</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Array</em><em>]</em>) – Number of atoms. A scalar for closed systems and an array for open (variable N) systems.</p></li>
+<li><p><strong>nframes</strong> (<em>int</em>) – Number of frames.</p></li>
+<li><p><strong>ndim</strong> (<em>int</em><em>, </em><em>Default: 3</em>) – Number of spatial dimensions.</p></li>
+<li><p><strong>top</strong> (Union[<code class="xref py py-class docutils literal notranslate"><span class="pre">Topology</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Topology</span></code>], Optional) – <dl class="simple">
+<dt>A topological representation of a Molecule in MM. In addition to connectivity, this model contains data for particle</dt><dd><p>symbols/labels, masses, and net charge. Useful for creating :class:<code class="docutils literal notranslate"><span class="pre">Trajectory</span></code> objects.</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>geometry</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natom*ndim*nframes,) array for XYZ atomic coordinates. Default unit is Angstrom. Storage is sequential in each dimension:
+[
+x1o,…,xno, y1o,…,yno, z1o,…,zno,
+…,
+x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
+]</p></li>
+<li><p><strong>geometry_units</strong> (<em>str</em><em>, </em><em>Default: angstrom</em>) – Units for atomic geometry. Defaults to Angstroms.</p></li>
+<li><p><strong>velocities</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natoms*ndim*nframes,) array for XYZ atomic velocities. Default unit is Angstroms/femtoseconds.Storage is sequential in each dimension:
+[
+x1o,…,xno, y1o,…,yno, z1o,…,zno,
+…,
+x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
+]</p></li>
+<li><p><strong>velocities_units</strong> (<em>str</em><em>, </em><em>Default: angstrom/fs</em>) – Units for atomic velocities. Defaults to Angstroms/femtoseconds.</p></li>
+<li><p><strong>forces</strong> (<em>Array</em><em>, </em><em>Optional</em>) – An ordered (natoms*ndim*nframes,) array for XYZ atomic forces. Default unit is kJ/mol*angstrom.Storage is sequential in each dimension:
+[
+x1o,…,xno, y1o,…,yno, z1o,…,zno,
+…,
+x1f,…,xnf, y1f,…,ynf, z1f,…,znf,
+]</p></li>
+<li><p><strong>forces_units</strong> (<em>str</em><em>, </em><em>Default: kJ/</em><em>(</em><em>mol*angstrom</em><em>)</em>) – Units for atomic forces. Defaults to kJ/mol*angstrom.</p></li>
+<li><p><strong>provenance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Provenance</span></code>, Default: {‘creator’: ‘MMElemental’, ‘version’: ‘0+untagged.926.g0366529’, ‘routine’: ‘mmelemental.models.collect.trajectory’}) – The provenance information about how this object (and its attributes) were generated, provided, and manipulated.</p></li>
+<li><p><strong>extras</strong> (<em>Dict</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Optional</em>) – Additional information to bundle with this object. Use for schema development and scratch space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.from_data">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.from_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.from_data" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a Trajectory object from a data object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Any</em>) – Data to construct Molecule from</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – How to interpret the data. If not set, mmelemental attempts to discover this based on input type.
+Possible values: mdanalysis, mdraj, pytraj</p></li>
+<li><p><strong>**kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Additional kwargs to pass to the constructors. kwargs take precedence over data.</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed Trajectory class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.collect.trajectory.Trajectory" title="mmelemental.models.collect.trajectory.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.from_file">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">traj_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.from_file" title="Permalink to this definition"></a></dt>
+<dd><p>Constructs a Trajectory object from an input file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>traj_filename</strong> (<em>str</em>) – The atomic positions filename to read</p></li>
+<li><p><strong>top_filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The topology i.e. connectivity filename to read</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of file to interpret. If not set, mmelemental attempts to discover the file type.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>all_frames</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reads all frames in memory.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructors.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A constructed Trajectory class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mmelemental.models.collect.trajectory.Trajectory" title="mmelemental.models.collect.trajectory.Trajectory">Trajectory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.get_geometry">
+<span class="sig-name descname"><span class="pre">get_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.get_geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.get_geometry" title="Permalink to this definition"></a></dt>
+<dd><p>Returns geometry at a specific snapshot/frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frame</strong> (<em>int</em>) – Frame number ranges from 0 … nframes-1</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Geometry 1D numpy array of length natoms * ndim</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Array[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.get_hash">
+<span class="sig-name descname"><span class="pre">get_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.get_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.get_hash" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the hash of a single frame in a trajectory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.to_data">
+<span class="sig-name descname"><span class="pre">to_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.to_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.to_data" title="Permalink to this definition"></a></dt>
+<dd><p>Converts Molecule to toolkit-specific molecule (e.g. rdkit, MDAnalysis, parmed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of data object to convert to e.g. mdanalysis, rdkit, parmed, etc.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Toolkit-specific molecule model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ToolkitModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mmelemental.models.collect.trajectory.Trajectory.to_file">
+<span class="sig-name descname"><span class="pre">to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="modules/mmelemental/models/collect/trajectory.html#Trajectory.to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mmelemental.models.collect.trajectory.Trajectory.to_file" title="Permalink to this definition"></a></dt>
+<dd><p>Writes the Trajectory to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to write to</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of file to write, attempts to infer dtype from the filename if not provided.</p></li>
+<li><p><strong>translator</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Translator name e.g. mmic_rdkit. Takes precedence over dtype. If unset,
+MMElemental attempts to find an appropriate translator if it is registered
+in the <code class="xref py py-class docutils literal notranslate"><span class="pre">TransComponent</span></code> class.</p></li>
+<li><p><strong>**kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Additional kwargs to pass to the constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 </div>
