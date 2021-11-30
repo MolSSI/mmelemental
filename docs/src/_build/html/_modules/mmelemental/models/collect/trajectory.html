@@ -178,15 +178,15 @@
 <span class="kn">from</span> <span class="nn">mmelemental.util.units</span> <span class="kn">import</span> <span class="n">TIME_DIM</span><span class="p">,</span> <span class="n">MASS_DIM</span><span class="p">,</span> <span class="n">LENGTH_DIM</span><span class="p">,</span> <span class="n">SUBS_DIM</span>
 <span class="kn">from</span> <span class="nn">mmelemental.util.data</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">float_prep</span><span class="p">,</span>
-    <span class="n">NUMPY_UNI</span><span class="p">,</span>
     <span class="n">NUMPY_INT</span><span class="p">,</span>
     <span class="n">NUMPY_FLOAT</span><span class="p">,</span>
     <span class="n">GEOMETRY_NOISE</span><span class="p">,</span>
     <span class="n">VELOCITY_NOISE</span><span class="p">,</span>
-    <span class="n">MASS_NOISE</span><span class="p">,</span>
-    <span class="n">CHARGE_NOISE</span><span class="p">,</span>
+    <span class="n">FORCE_NOISE</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cmselemental.util</span> <span class="kn">import</span> <span class="n">which_import</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Trajectory&quot;</span><span class="p">]</span>
 
@@ -381,7 +381,19 @@
         <span class="n">m</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">()</span>
         <span class="n">concat</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="o">...</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_fields</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;geometry&quot;</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">GEOMETRY_NOISE</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;velocities&quot;</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">VELOCITY_NOISE</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;forces&quot;</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">float_prep</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">FORCE_NOISE</span><span class="p">)</span>
+
+                <span class="n">concat</span> <span class="o">+=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                    <span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="p">)</span>  <span class="c1"># if serialization fails, assume type is numpy.ndarray</span>
 
         <span class="n">m</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">concat</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
