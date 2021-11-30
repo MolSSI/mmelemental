@@ -11,15 +11,15 @@ import numpy
 from mmelemental.util.units import TIME_DIM, MASS_DIM, LENGTH_DIM, SUBS_DIM
 from mmelemental.util.data import (
     float_prep,
-    NUMPY_UNI,
     NUMPY_INT,
     NUMPY_FLOAT,
     GEOMETRY_NOISE,
     VELOCITY_NOISE,
-    MASS_NOISE,
-    CHARGE_NOISE,
+    FORCE_NOISE,
 )
 from cmselemental.util import which_import
+import json
+
 
 __all__ = ["Trajectory"]
 
@@ -214,7 +214,19 @@ class Trajectory(ProtoModel):
         m = hashlib.sha1()
         concat = ""
 
-        ...
+        for field in self.hash_fields:
+            data = getattr(self, field)
+            if data is not None:
+                if field == "geometry":
+                    data = float_prep(data, GEOMETRY_NOISE)
+                elif field == "velocities":
+                    data = float_prep(data, VELOCITY_NOISE)
+                elif field == "forces":
+                    data = float_prep(data, FORCE_NOISE)
+
+                concat += json.dumps(
+                    data, default=lambda x: x.ravel().tolist()
+                )  # if serialization fails, assume type is numpy.ndarray
 
         m.update(concat.encode("utf-8"))
         return m.hexdigest()
