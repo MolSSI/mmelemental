@@ -9,6 +9,7 @@ NUMPY_UNI = "U4"
 # Rounding quantities for hashing
 GEOMETRY_NOISE = 8
 VELOCITY_NOISE = 8
+FORCE_NOISE = 8
 MASS_NOISE = 6
 CHARGE_NOISE = 4
 
