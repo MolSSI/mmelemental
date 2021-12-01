@@ -12,6 +12,7 @@ dependencies:
       - pyyaml
       - 'git+https://github.com/MolSSI/mm_data'
       - cmselemental
+      - qcelemental
       - sphinx
       - sphinx-rtd-theme
       - sphinx_autodoc_typehints
