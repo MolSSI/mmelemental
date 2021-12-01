@@ -8,10 +8,10 @@ dependencies:
   - pytest-cov
   - codecov
   - pip:
-      - qcelemental
+      - pint
       - pyyaml
       - 'git+https://github.com/MolSSI/mm_data'
-      - 'git+https://github.com/MolSSI/cmselemental@v0.2.0'
+      - cmselemental
       - sphinx
       - sphinx-rtd-theme
       - sphinx_autodoc_typehints
