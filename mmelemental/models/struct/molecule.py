@@ -703,10 +703,12 @@ class Molecule(ProtoModel):
                 yaml = yaml_import(raise_error=True)
                 assert isinstance(data, str)
                 input_dict = yaml.safe_load(data)
+            elif dtype == "smiles":
+                input_dict = {
+                    "identifiers": {dtype: data},
+                    "symbols": list(data),
+                }  # move this to mmic_translator? Must be generalized
             else:
-                # input_dict = {"identifiers": {dtype: data}}
-                # try to construct a molecule from one of the supported identifiers
-                # to be implemented in mmic_translator?
                 raise NotImplementedError(f"Data type {dtype} not understood.")
             kwargs.pop("dtype", None)
             kwargs.update(input_dict)
