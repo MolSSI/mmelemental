@@ -22,8 +22,8 @@ except Exception:
 setup(
     # Self-descriptive entries which should always be present
     name="mmelemental",
-    author="Andrew Abi-Mansour",
-    author_email="andrewabimansour@vt.edu",
+    author="MolSSI",
+    author_email="support@molssi.edu",
     description=short_description[0],
     long_description=long_description,
     long_description_content_type="text/markdown",
